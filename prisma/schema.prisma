@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  files     File[] // Relation to File model
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model File {
+  id           Int            @id @default(autoincrement())
+  fileName     String
+  filePath     String
+  fileType     String
+  fileSize     Int
+  uploadedAt   DateTime       @default(now())
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  Category     Category?      @relation(fields: [categoryId], references: [id])
+  categoryId   Int?
+  FileCategory FileCategory[]
+}
+
+model Category {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  description  String?
+  files        File[] // Files can belong to a category
+  FileCategory FileCategory[]
+}
+
+model FileCategory {
+  fileId     Int
+  categoryId Int
+  file       File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([fileId, categoryId]) // Composite key
+}
