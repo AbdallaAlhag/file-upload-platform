@@ -1,7 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
-  <%- include("./partials/head.ejs") %>
+<%- include("./partials/head.ejs") %>
   <body>
-    <h1>hello world!</h1>
+    <%- include("./partials/header.ejs") %>
+    <div class="container">
+      <aside class="sidebar">
+        <button class="new-button">New</button>
+        <nav>
+          <ul>
+            <li>
+              <a href="#files"><i class="fas fa-file"></i> Files</a>
+            </li>
+            <li>
+              <a href="#folders"><i class="fas fa-folder"></i> Folders</a>
+            </li>
+            <li>
+              <a href="#recent"><i class="fas fa-clock"></i> Recent</a>
+            </li>
+            <li>
+              <a href="#starred"><i class="fas fa-star"></i> Starred</a>
+            </li>
+            <li>
+              <a href="#shared"
+                ><i class="fas fa-share-alt"></i> Shared with me</a
+              >
+            </li>
+            <li>
+              <a href="#deleted"><i class="fas fa-trash"></i> Deleted</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      <main>
+        <header>
+          <div class="search-bar">
+            <input type="text" placeholder="Search files and folders" />
+            <button><i class="fas fa-search"></i></button>
+          </div>
+          <div class="view-options">
+            <button class="toggle-view">
+              <i class="fas fa-th-large"></i>
+              <i class="fas fa-list"></i>
+            </button>
+          </div>
+        </header>
+        <div class="filters">
+          <button>Type <i class="fas fa-chevron-down"></i></button>
+          <button>People <i class="fas fa-chevron-down"></i></button>
+          <button>Modified <i class="fas fa-chevron-down"></i></button>
+          <button>Location <i class="fas fa-chevron-down"></i></button>
+        </div>
+        <div class="file-list">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Last opened</th>
+                <th>Owner</th>
+                <th>Location</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Example row, you'll populate this dynamically -->
+              <tr>
+                <td>
+                  <i class="fas fa-file-alt"></i>
+                  Document.docx
+                </td>
+                <td>May 1, 2023</td>
+                <td>John Doe</td>
+                <td>My Files</td>
+                <td class="actions">
+                  <button><i class="fas fa-share"></i></button>
+                  <button><i class="fas fa-download"></i></button>
+                  <button><i class="fas fa-edit"></i></button>
+                  <button><i class="fas fa-star"></i></button>
+                  <button class="more-options">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
   </body>
 </html>
