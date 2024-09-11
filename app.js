@@ -5,6 +5,8 @@ const passport = require("passport");
 const expressSession = require('express-session');
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 const { PrismaClient } = require('@prisma/client');
+const authRouter = require('./routes/authRouter');
+const indexRouter = require('./routes/indexRouter');
 
 const app = express();
 app.set('views', path.join(__dirname, 'views'));
@@ -63,7 +65,8 @@ process.on('SIGTERM', async () => {
 });
 
 
-app.get("/", (req, res) => res.render("index"));
+app.use('/', indexRouter);
+app.use("/", authRouter);
 
 app.listen(3000, () => console.log("app listening on port 3000!"));
 

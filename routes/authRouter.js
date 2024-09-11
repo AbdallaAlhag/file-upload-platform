@@ -3,18 +3,10 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 
 // haven't created authController yet
-router.get('/signup', (req, res) => res.render("sign-up-form"));
-router.post('/signup', async (req, res, next) => {
-    try {
-        await pool.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
-            req.body.username,
-            req.body.password,
-        ]);
-        res.redirect("/");
-    } catch (err) {
-        return next(err);
-    }
-});
+router.get('/signup', authController.getSignupForm);
+router.post('/signup', authController.signUp);
 
+router.get('/login', authController.getLoginForm);
+router.post('/login', authController.login);
 
 module.exports = router;
