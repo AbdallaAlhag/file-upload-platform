@@ -53,3 +53,10 @@ model FileCategory {
 
   @@id([fileId, categoryId]) // Composite key
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   
+  expiresAt DateTime
+}
