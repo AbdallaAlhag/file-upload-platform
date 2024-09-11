@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) 
   username  String   @unique
   email     String   @unique
   password  String
-  files     File[] // Relation to File model
+  files     File[]   // Relation to File model
   createdAt DateTime @default(now())
 }
+
 
 model File {
   id           String         @id @default(uuid())

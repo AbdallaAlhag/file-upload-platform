@@ -2,15 +2,46 @@
 <html lang="en">
   <%- include("./partials/head.ejs") %>
   <body>
-    <h1>Sign Up</h1>
-    <form action="signup" method="POST">
-      <label for="username">Username</label>
-      <input id="username" name="username" placeholder="username" type="text" />
-      <label for="email">Email</label>
-      <input id="email" name="email" placeholder="email" type="text" />
-      <label for="password">Password</label>
-      <input id="password" name="password" type="password" />
-      <button>Sign Up</button>
-    </form>
+    <div class="container auth-container">
+      <main class="auth-main">
+        <h1>Sign Up</h1>
+        <form action="/signup" method="POST" class="auth-form">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              id="username"
+              name="username"
+              placeholder="Choose a username"
+              type="text"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              type="email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              placeholder="Create a password"
+              type="password"
+              required
+            />
+          </div>
+          <button type="submit" class="auth-button">Sign Up</button>
+        </form>
+        <p class="auth-link">
+          Already have an account? <a href="/login">Log in</a>
+        </p>
+      </main>
+    </div>
   </body>
 </html>

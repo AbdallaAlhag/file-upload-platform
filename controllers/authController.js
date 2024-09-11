@@ -23,6 +23,7 @@ exports.signUp = async (req, res, next) => {
         res.redirect('/');
     } catch (err) {
         next(err);
+        res.redirect('/signup');
     }
 };
 
@@ -39,6 +40,6 @@ exports.login = (req, res, next) => {
 exports.logOut = (req, res, next) => {
     req.logout((err) => {
         if (err) return next(err);
-        res.redirect('/');
+        res.redirect('/login');
     });
 };
