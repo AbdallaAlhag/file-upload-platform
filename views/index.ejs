@@ -80,6 +80,27 @@
                   </button>
                 </td>
               </tr>
+              <!-- Add more rows here -->
+              <% for (const file of indexData) { %>
+                <tr>
+                  <td>
+                    <i class="fas fa-file-alt"></i>
+                    <%= file.fileName %>
+                  </td>
+                  <td><%= file.lastOpenedAt ? file.lastOpenedAt.toLocaleString() : 'N/A' %></td>
+                  <td><%= file.owner %></td>
+                  <td><%= file.filePath %></td>
+                  <td class="actions">
+                    <button><i class="fas fa-share"></i></button>
+                    <button><i class="fas fa-download"></i></button>
+                    <button><i class="fas fa-edit"></i></button>
+                    <button><i class="fas fa-star"></i></button>
+                    <button class="more-options">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                  </td>
+                </tr>
+              <% } %>
             </tbody>
           </table>
         </div>

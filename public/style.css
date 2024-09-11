@@ -251,6 +251,7 @@ header {
   background-color: var(--sidebar-color);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
+  margin-bottom: 1px;
 }
 
 .header-content {
@@ -259,6 +260,7 @@ header {
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
+  gap: 20px;
 }
 
 .logo a {

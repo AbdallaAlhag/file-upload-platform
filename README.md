@@ -5,4 +5,4 @@ reference:
     - nolesdrive: aaa, aaa@aaa,aaa
 # todo:
     - validate and sanizitze sign up form
-    - create index page and style it
+    - grab files and display them in the index page
