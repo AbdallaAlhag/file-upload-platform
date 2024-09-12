@@ -8,7 +8,7 @@ window.showRenamePrompt = async function (fileId, currentFileName) {
         cancelButtonText: 'Cancel',
         confirmButtonText: 'Rename',
         customClass: {
-            confirmButton: 'custom-button' // Apply custom class to the confirm button
+            confirmButton: 'custom-button',
         },
         inputValidator: (value) => {
             if (!value) {
@@ -29,7 +29,10 @@ window.showRenamePrompt = async function (fileId, currentFileName) {
 
             if (response.ok) {
                 Swal.fire('Success!', 'File name updated.', 'success');
+                window.location.reload(); // Or update the UI to reflect changes
+
             } else {
+                console.log(response)
                 Swal.fire('Error!', 'Failed to update file name.', 'error');
             }
         } catch (error) {

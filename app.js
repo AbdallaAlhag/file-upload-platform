@@ -10,6 +10,7 @@ const appRouter = require('./routes/appRouter');
 const uploadRouter = require('./routes/uploadRouter');
 
 const app = express();
+app.use(express.json()); // Middleware to parse JSON bodies
 app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "ejs");
 

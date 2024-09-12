@@ -81,8 +81,10 @@ exports.fileDownload = async (req, res) => {
 };
 
 exports.fileRename = async (req, res) => {
-    const { fileId } = req.params;
+    console.log(req.params.id, req.body);
+    const fileId  = req.params.id;
     const { newFileName } = req.body;
+    console.log(fileId, newFileName);
     try {
         await prisma.file.update({
             where: { id: fileId },
@@ -90,8 +92,6 @@ exports.fileRename = async (req, res) => {
         });
 
         res.status(200).send('File renamed successfully');
-        // go reload page
-        res.redirect('/');
     } catch (err) {
         console.error('Error renaming file:', err);
         res.status(500).send('Error renaming file');
