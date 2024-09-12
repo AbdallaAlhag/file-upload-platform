@@ -20,7 +20,7 @@ exports.signUp = async (req, res, next) => {
                 password: hashedPassword,
             },
         });
-        res.redirect('/');
+        res.redirect('/login');
     } catch (err) {
         next(err);
         res.redirect('/signup');

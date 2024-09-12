@@ -12,6 +12,6 @@ exports.getHome = async (req, res) => {
         },
     });
 
-    console.log(indexData);
+    // console.log(indexData);
     res.render('index', { indexData });
 }

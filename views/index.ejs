@@ -4,7 +4,28 @@
     <%- include("./partials/header.ejs") %>
     <div class="container">
       <aside class="sidebar">
-        <button class="new-button">New</button>
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+          <input type="file" name="file" id="fileInput" style="display: none;" />
+          <button type="button" class="new-button" id="uploadButton">New</button>
+        </form>
+        
+        <script>
+          const fileInput = document.getElementById('fileInput');
+          const uploadButton = document.getElementById('uploadButton');
+          const uploadForm = document.getElementById('uploadForm');
+        
+          // When the button is clicked, trigger the file input
+          uploadButton.addEventListener('click', () => {
+            fileInput.click(); // Open file explorer
+          });
+        
+          // When a file is selected, submit the form
+          fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+              uploadForm.submit(); // Submit form after selecting file
+            }
+          });
+        </script>
         <nav>
           <ul>
             <li>
