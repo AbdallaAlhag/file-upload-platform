@@ -11,4 +11,6 @@ router.get('/download/:id', uploadController.fileDownload);
 // rename file
 router.patch('/rename/:id', uploadController.fileRename);
 
+// star file
+router.patch('/starred/:id', uploadController.fileStarred);
 module.exports = router;

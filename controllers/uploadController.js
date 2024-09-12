@@ -81,10 +81,8 @@ exports.fileDownload = async (req, res) => {
 };
 
 exports.fileRename = async (req, res) => {
-    console.log(req.params.id, req.body);
-    const fileId  = req.params.id;
-    const { newFileName } = req.body;
-    console.log(fileId, newFileName);
+    const fileId = req.params.id;
+    const newFileName = req.body.newFileName;
     try {
         await prisma.file.update({
             where: { id: fileId },
@@ -97,3 +95,26 @@ exports.fileRename = async (req, res) => {
         res.status(500).send('Error renaming file');
     }
 }
+
+exports.fileStarred = async (req, res) => {
+    const fileId = req.params.id;
+    try {
+        const file = await prisma.file.findUnique({
+            where: { id: fileId },
+            select: { starred: true }
+        });
+
+        if (!file) {
+            return res.status(404).send('File not found');
+        }
+
+        await prisma.file.update({
+            where: { id: fileId },
+            data: { starred: !file.starred }  // Toggle starred status
+        });
+        res.status(200).send('File starred successfully');
+    } catch (err) {
+        console.error('Error renaming file:', err);
+        res.status(500).send('Error renaming file');
+    }
+}   

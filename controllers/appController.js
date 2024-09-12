@@ -10,9 +10,17 @@ exports.getHome = async (req, res) => {
             lastOpenedAt: true,
             user: true,
             filePath: true,
+            starred: true
         },
+        orderBy: {
+            // starred: 'desc',
+            lastOpenedAt: 'desc'
+        }
     });
 
     // console.log(indexData);
+
+    // Sort indexData by starred in descending order
+    // indexData.sort((a, b) => (a.starred < b.starred) ? 1 : -1);
     res.render('index', { indexData });
 }

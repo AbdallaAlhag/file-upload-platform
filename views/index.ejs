@@ -86,16 +86,16 @@
               <tr>
                 <td>
                   <i class="fas fa-file-alt"></i>
-                  Document.docx
+                  Example-Doc.docx
                 </td>
-                <td>May 1, 2023</td>
-                <td>John Doe</td>
+                <td>Month Date, Year</td>
+                <td>First Last</td>
                 <td>My Files</td>
                 <td class="actions">
                   <button><i class="fas fa-share"></i></button>
                   <button><i class="fas fa-download"></i></button>
                   <button><i class="fas fa-edit"></i></button>
-                  <button><i class="fas fa-star"></i></button>
+                  <button><i class="fa-solid fa-star" style="color: #FFD43B;"></i></button>
                   <button class="more-options">
                     <i class="fas fa-ellipsis-v"></i>
                   </button>
@@ -108,14 +108,37 @@
                     <i class="fas fa-file-alt"></i>
                     <%= file.fileName %>
                   </td>
-                  <td><%= file.lastOpenedAt ? file.lastOpenedAt.toLocaleString() : 'N/A' %></td>
+                  <td><%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }).format(file.lastOpenedAt) : 'N/A' %></td>
                   <td><%= file.user.username %></td>
                   <td><%= file.filePath %></td>
                   <td class="actions">
                     <button><i class="fas fa-share"></i></button>
                     <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
                     <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i class="fas fa-edit"></i></button>
-                    <button><i class="fas fa-star"></i></button>
+                    <button onclick="starFile('<%= file.id %>')">
+                      <% if (file.starred) { %>
+                        <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
+                      <% } else { %>
+                        <i class="fas fa-star"></i>
+                      <% } %>
+                    </button>
+                    <script>
+                      async function starFile(fileId) {
+                        try {
+                          const response = await fetch(`/starred/${fileId}`, {
+                            method: 'PATCH',
+                          });
+                    
+                          if (response.ok) {
+                            location.reload(); // Reload the page to reflect the changes
+                          } else {
+                            console.error('Error starring file');
+                          }
+                        } catch (error) {
+                          console.error('Error:', error);
+                        }
+                      }
+                    </script>
                     <button class="more-options">
                       <i class="fas fa-ellipsis-v"></i>
                     </button>

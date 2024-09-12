@@ -28,15 +28,43 @@ window.showRenamePrompt = async function (fileId, currentFileName) {
             });
 
             if (response.ok) {
-                Swal.fire('Success!', 'File name updated.', 'success');
-                window.location.reload(); // Or update the UI to reflect changes
+                const swalPopup = Swal.fire({
+                    title: 'Success!',
+                    text: 'File name updated.',
+                    icon: 'success',
+                    confirmButtonText: 'Close',
+                    customClass: {
+                        confirmButton: 'custom-button',
+                    },
+                });
+                await swalPopup.then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload(); // Or update the UI to reflect changes
+                    }
+                });
 
             } else {
                 console.log(response)
-                Swal.fire('Error!', 'Failed to update file name.', 'error');
+                const swalPopup = Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to update file name.',
+                    icon: 'error',
+                    confirmButtonText: 'Close',
+                    customClass: {
+                        confirmButton: 'custom-button',
+                    },
+                });
             }
         } catch (error) {
-            Swal.fire('Error!', 'An error occurred while updating file name.', 'error');
+            const swalPopup = Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while updating file name.',
+                icon: 'error',
+                confirmButtonText: 'Close',
+                customClass: {
+                    confirmButton: 'custom-button',
+                },
+            });
         }
     }
 }

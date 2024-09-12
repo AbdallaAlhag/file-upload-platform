@@ -28,6 +28,7 @@ model File {
   filePath     String
   fileType     String
   fileSize     Int
+  starred      Boolean   @default(false)
   uploadedAt   DateTime  @default(now())
   lastOpenedAt DateTime? @updatedAt
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
