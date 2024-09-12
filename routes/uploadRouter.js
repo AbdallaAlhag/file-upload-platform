@@ -8,4 +8,7 @@ router.post('/upload', uploadController.fileUpload);
 // Get files from server and download them
 router.get('/download/:id', uploadController.fileDownload);
 
+// rename file
+router.patch('/rename/:id', uploadController.fileRename);
+
 module.exports = router;

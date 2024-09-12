@@ -360,3 +360,14 @@ header {
     display: none;
   }
 }
+
+.swal2-confirm.custom-button {
+  background-color: var(--primary-color); /* Set your custom color */
+  color: white; /* Text color */
+}
+
+.swal2-confirm.custom-button:hover {
+  background-color: var(
+    --secondary-color
+  ); /* Darker shade on hover, if desired */
+}

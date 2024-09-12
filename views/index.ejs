@@ -114,7 +114,7 @@
                   <td class="actions">
                     <button><i class="fas fa-share"></i></button>
                     <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
-                    <button><i class="fas fa-edit"></i></button>
+                    <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i class="fas fa-edit"></i></button>
                     <button><i class="fas fa-star"></i></button>
                     <button class="more-options">
                       <i class="fas fa-ellipsis-v"></i>
@@ -127,5 +127,7 @@
         </div>
       </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/sweetAlertUtils.js"></script>
   </body>
 </html>

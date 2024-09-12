@@ -79,3 +79,21 @@ exports.fileDownload = async (req, res) => {
         res.status(500).send('Error fetching file information');
     }
 };
+
+exports.fileRename = async (req, res) => {
+    const { fileId } = req.params;
+    const { newFileName } = req.body;
+    try {
+        await prisma.file.update({
+            where: { id: fileId },
+            data: { fileName: newFileName }
+        });
+
+        res.status(200).send('File renamed successfully');
+        // go reload page
+        res.redirect('/');
+    } catch (err) {
+        console.error('Error renaming file:', err);
+        res.status(500).send('Error renaming file');
+    }
+}
