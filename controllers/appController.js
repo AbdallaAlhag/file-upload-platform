@@ -7,7 +7,7 @@ exports.getHome = async (req, res) => {
             fileName: true,
             fileType: true,
             lastOpenedAt: true,
-            owner: true,
+            user: true,
             filePath: true,
         },
     });

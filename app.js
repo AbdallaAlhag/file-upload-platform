@@ -71,9 +71,9 @@ process.on('SIGTERM', async () => {
 });
 
 app.use('/uploads', express.static('uploads')); // Serve static files from 'uploads' directory
-app.use('/upload', uploadRouter); // Route for handling file uploads
+app.use('/', uploadRouter); // Route for handling file uploads
 app.use('/', appRouter);
-app.use("/", authRouter);
+app.use('/', authRouter);
 
 app.listen(3000, () => console.log("app listening on port 3000!"));
 

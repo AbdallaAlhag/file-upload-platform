@@ -16,10 +16,12 @@ const upload = multer({
     limits: { fileSize: 5000000 }, // 5MB limit (you can adjust this)
     fileFilter: (req, file, cb) => {
         const filetypes = /docx|pdf|xlsx|txt|pptx|jpg|jpeg|png|gif/;
-        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = filetypes.test(file.mimetype);
+        const mimetype = /application\/vnd.openxmlformats-officedocument.wordprocessingml.document|application\/pdf|application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet|text\/plain|application\/vnd.openxmlformats-officedocument.presentationml.presentation|image\/jpeg|image\/png|image\/gif/;
 
-        if (mimetype && extname) {
+        const validMimetype = mimetype.test(file.mimetype);
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+        if (validMimetype && extname) {
             return cb(null, true);
         } else {
             cb('Error: Supported file types are .docx, .pdf, .xlsx, .txt, .pptx, .jpg, .jpeg, .png, .gif');
