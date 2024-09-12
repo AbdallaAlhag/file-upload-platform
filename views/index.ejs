@@ -109,11 +109,11 @@
                     <%= file.fileName %>
                   </td>
                   <td><%= file.lastOpenedAt ? file.lastOpenedAt.toLocaleString() : 'N/A' %></td>
-                  <td><%= file.user %></td>
+                  <td><%= file.user.username %></td>
                   <td><%= file.filePath %></td>
                   <td class="actions">
                     <button><i class="fas fa-share"></i></button>
-                    <button><i class="fas fa-download"></i></button>
+                    <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
                     <button><i class="fas fa-edit"></i></button>
                     <button><i class="fas fa-star"></i></button>
                     <button class="more-options">

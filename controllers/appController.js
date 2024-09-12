@@ -4,6 +4,7 @@ const prisma = require("../db/prisma");
 exports.getHome = async (req, res) => {
     const indexData = await prisma.file.findMany({
         select: {
+            id: true,
             fileName: true,
             fileType: true,
             lastOpenedAt: true,

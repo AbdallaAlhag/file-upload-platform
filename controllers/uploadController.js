@@ -1,5 +1,8 @@
-const upload = require("../middleware/upload")
+const upload = require("../middleware/upload");
 const prisma = require("../db/prisma");
+const path = require("path");
+const fs = require('fs');
+
 
 exports.fileUpload = (req, res) => {
     upload(req, res, async (err) => {
@@ -24,7 +27,7 @@ exports.fileUpload = (req, res) => {
             await prisma.file.create({
                 data: {
                     fileName: req.file.originalname,
-                    filePath: req.file.path,
+                    filePath: req.file.filename,
                     fileType: req.file.mimetype,
                     fileSize: req.file.size,
                     user: {
@@ -41,4 +44,38 @@ exports.fileUpload = (req, res) => {
             return res.status(500).send('Error saving file information to the database.');
         }
     });
+};
+
+exports.fileDownload = async (req, res) => {
+    try {
+        const fileId = req.params.id;
+        // Fetch file information from the database
+        const file = await prisma.file.findUnique({
+            where: { id: fileId }
+        });
+
+        if (!file) {
+            return res.status(404).send('File not found');
+        }
+
+        // Generate the correct file path
+        const filePath = path.join(file.filePath);
+
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                console.error('File not found:', err);
+                return res.status(404).send('File not found');
+            }
+
+            res.download(filePath, file.fileName, (err) => {
+                if (err) {
+                    console.error('Error downloading file:', err);
+                    res.status(500).send('Error downloading file');
+                }
+            });
+        });
+    } catch (err) {
+        console.error('Error fetching file from database:', err);
+        res.status(500).send('Error fetching file information');
+    }
 };
