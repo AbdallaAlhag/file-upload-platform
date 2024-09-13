@@ -96,8 +96,9 @@
                   <button><i class="fas fa-download"></i></button>
                   <button><i class="fas fa-edit"></i></button>
                   <button><i class="fa-solid fa-star" style="color: #FFD43B;"></i></button>
-                  <button class="more-options">
-                    <i class="fas fa-ellipsis-v"></i>
+                  <!-- <button class="more-options"> -->
+                  <button>
+                      <i class="fas fa-ellipsis-v"></i>
                   </button>
                 </td>
               </tr>
@@ -142,15 +143,61 @@
                     <button class="more-options">
                       <i class="fas fa-ellipsis-v"></i>
                     </button>
+                    
                   </td>
                 </tr>
-              <% } %>
-            </tbody>
-          </table>
-        </div>
-      </main>
-    </div>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+      <div class="custom-context-menu" id="contextMenu">
+        <ul>
+            <li onclick="handleCopy()">Copy</li>
+            <li onclick="handlePaste()">Paste</li>
+            <li onclick="handleCut()">Cut</li>
+        </ul>
+      </div>
+              <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const contextMenu = document.getElementById('contextMenu');
+                    let currentButton = null;
+
+                    document.querySelectorAll('.more-options').forEach(button => {
+                      console.log('clicked outside');
+                        button.addEventListener('click', (event) => {
+                            event.preventDefault(); // Prevent default browser context menu
+                            currentButton = button;
+                            contextMenu.style.top = `${event.clientY}px`;
+                            contextMenu.style.left = `${event.clientX}px`;
+                            contextMenu.classList.add('visible');
+                            console.log('clicked inside');
+                        });
+                    });
+
+                    document.addEventListener('click', (event) => {
+                        if (!contextMenu.contains(event.target) && currentButton && !currentButton.contains(event.target)) {
+                            contextMenu.classList.remove('visible');
+                        }
+                    });
+
+                    function handleCopy() {
+                        console.log('Copy clicked');
+                    }
+
+                    function handlePaste() {
+                        console.log('Paste clicked');
+                    }
+
+                    function handleCut() {
+                        console.log('Cut clicked');
+                    }
+                });
+            </script>
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-context-menu/dist/vanilla-context-menu.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/contextMenuScript.js"></script>
     <script src="/js/sweetAlertUtils.js"></script>
   </body>
 </html>

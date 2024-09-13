@@ -371,3 +371,29 @@ header {
     --secondary-color
   ); /* Darker shade on hover, if desired */
 }
+
+/* eclipse menu style */
+/* Basic styles for the context menu */
+.custom-context-menu {
+  display: none;
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1000;
+}
+.custom-context-menu.visible {
+  display: block;
+}
+.custom-context-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.custom-context-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.custom-context-menu li:hover {
+  background: #f0f0f0;
+}
