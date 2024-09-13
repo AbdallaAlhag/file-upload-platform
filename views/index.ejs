@@ -74,11 +74,11 @@
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Last opened</th>
-                <th>Owner</th>
-                <th>Location</th>
-                <th>Actions</th>
+                <th><strong>Name</strong></th>
+                <th><strong>Last opened</strong></th>
+                <th><strong>Owner</strong></th>
+                <th><strong>Location</strong></th>
+                <th><strong>Actions</strong></th>
               </tr>
             </thead>
             <tbody>
@@ -154,9 +154,9 @@
       </div>
       <div class="custom-context-menu" id="contextMenu">
         <ul>
-            <li onclick="handleCopy()">Copy</li>
-            <li onclick="handlePaste()">Paste</li>
-            <li onclick="handleCut()">Cut</li>
+          <li data-action="copy" onclick="handleCopy()">Copy</li>
+          <li data-action="paste" onclick="handlePaste()">Paste</li>
+          <li data-action="cut" onclick="handleCut()">Cut</li>
         </ul>
       </div>
               <script>
@@ -165,21 +165,34 @@
                     let currentButton = null;
 
                     document.querySelectorAll('.more-options').forEach(button => {
-                      console.log('clicked outside');
                         button.addEventListener('click', (event) => {
                             event.preventDefault(); // Prevent default browser context menu
                             currentButton = button;
                             contextMenu.style.top = `${event.clientY}px`;
                             contextMenu.style.left = `${event.clientX}px`;
                             contextMenu.classList.add('visible');
-                            console.log('clicked inside');
                         });
                     });
 
+                    // document.addEventListener('click', (event) => {
+                    //     if (!contextMenu.contains(event.target) && currentButton && !currentButton.contains(event.target)) {
+                    //         contextMenu.classList.remove('visible');
+                    //     }
+                    // });
+                    // Function to hide the context menu
+                    function hideContextMenu(event) {
+                      // console.log(`contextMenu:`, contextMenu);
+                      // console.log(`event.target:`, event.target);
+                      // console.log(`currentButton:`, currentButton);
+                      // console.log(`currentButton.contains(event.target):`, currentButton?.contains(event.target));
+                      if (!contextMenu.contains(event.target) && currentButton && !currentButton.contains(event.target)) {
+                          contextMenu.classList.remove('visible');
+                      }
+                    }
+
+                    // Add click event listener (left-click)
                     document.addEventListener('click', (event) => {
-                        if (!contextMenu.contains(event.target) && currentButton && !currentButton.contains(event.target)) {
-                            contextMenu.classList.remove('visible');
-                        }
+                        hideContextMenu(event);
                     });
 
                     function handleCopy() {
