@@ -125,7 +125,7 @@
                             <i class="fas fa-star"></i>
                             <% } %>
                       </button>
-                      <button class="more-options">
+                      <button class="more-options" data-id="<%= file.id %>">
                         <i class="fas fa-ellipsis-v"></i>
                       </button>
                     </td>
@@ -139,9 +139,9 @@
 
       <div class="custom-context-menu" id="contextMenu">
         <ul>
-          <li data-action="preview" onclick="handlePreview()">Preview</li>
-          <li data-action="share" onclick="handleShare()">Share</li>
-          <li data-action="delete" onclick="handleDelete()">Delete</li>
+          <li data-action="preview">Preview</li>
+          <li data-action="share">Share</li>
+          <li data-action="delete">Delete</li>
         </ul>
       </div>
 
@@ -175,7 +175,13 @@
               contextMenu.style.top = `${event.clientY}px`;
               contextMenu.style.left = `${event.clientX}px`;
               contextMenu.classList.add('visible');
+
+              const fileId = event.currentTarget.getAttribute('data-id');
+              document.querySelector('[data-action="delete"]').onclick = () => handleDelete(fileId);
+              document.querySelector('[data-action="preview"]').onclick = () => handlePreview(fileId);
+              document.querySelector('[data-action="share"]').onclick = () => handleShare(fileId);
             });
+
           });
 
           // Function to hide the context menu
@@ -195,7 +201,20 @@
           function handleShare() {
           }
 
-          function handleDelete() {
+          async function handleDelete(fileId) {
+            try {
+              const response = await fetch(`/delete/${fileId}`, {
+                method: 'DELETE',
+              });
+
+              if (response.ok) {
+                location.reload(); // Reload the page to reflect the changes
+              } else {
+                console.error('Error Deleting file');
+              }
+            } catch (error) {
+              console.error('Error:', error);
+            }
           }
         });
 
