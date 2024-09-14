@@ -1,216 +1,228 @@
 <!DOCTYPE html>
 <%- include("./partials/head.ejs") %>
+
   <body>
     <%- include("./partials/header.ejs") %>
-    <div class="container">
-      <aside class="sidebar">
-        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
-          <input type="file" name="file" id="fileInput" style="display: none;" />
-          <button type="button" class="new-button" id="uploadButton">New</button>
-        </form>
-        
-        <script>
-          const fileInput = document.getElementById('fileInput');
-          const uploadButton = document.getElementById('uploadButton');
-          const uploadForm = document.getElementById('uploadForm');
-        
-          // When the button is clicked, trigger the file input
-          uploadButton.addEventListener('click', () => {
-            fileInput.click(); // Open file explorer
-          });
-        
-          // When a file is selected, submit the form
-          fileInput.addEventListener('change', () => {
-            if (fileInput.files.length > 0) {
-              uploadForm.submit(); // Submit form after selecting file
-            }
-          });
-        </script>
-        <nav>
-          <ul>
-            <li>
-              <a href="#files"><i class="fas fa-file"></i> Files</a>
-            </li>
-            <li>
-              <a href="#folders"><i class="fas fa-folder"></i> Folders</a>
-            </li>
-            <li>
-              <a href="#recent"><i class="fas fa-clock"></i> Recent</a>
-            </li>
-            <li>
-              <a href="#starred"><i class="fas fa-star"></i> Starred</a>
-            </li>
-            <li>
-              <a href="#shared"
-                ><i class="fas fa-share-alt"></i> Shared with me</a
-              >
-            </li>
-            <li>
-              <a href="#deleted"><i class="fas fa-trash"></i> Deleted</a>
-            </li>
-          </ul>
-        </nav>
-      </aside>
-      <main>
-        <header>
-          <div class="search-bar">
-            <input type="text" placeholder="Search files and folders" />
-            <button><i class="fas fa-search"></i></button>
+      <div class="container">
+        <aside class="sidebar">
+          <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" id="fileInput" style="display: none;" />
+            <button type="button" class="new-button" id="uploadButton">New</button>
+          </form>
+
+          <script>
+            const fileInput = document.getElementById('fileInput');
+            const uploadButton = document.getElementById('uploadButton');
+            const uploadForm = document.getElementById('uploadForm');
+
+            // When the button is clicked, trigger the file input
+            uploadButton.addEventListener('click', () => {
+              fileInput.click(); // Open file explorer
+            });
+
+            // When a file is selected, submit the form
+            fileInput.addEventListener('change', () => {
+              if (fileInput.files.length > 0) {
+                uploadForm.submit(); // Submit form after selecting file
+              }
+            });
+          </script>
+
+          <nav>
+            <ul>
+              <li><a href="#files"><i class="fas fa-file"></i> Files</a></li>
+              <li><a href="#folders"><i class="fas fa-folder"></i> Folders</a></li>
+              <li><a href="#recent"><i class="fas fa-clock"></i> Recent</a></li>
+              <li><a href="#starred"><i class="fas fa-star"></i> Starred</a></li>
+              <li><a href="#shared"><i class="fas fa-share-alt"></i> Shared with me</a></li>
+              <li><a href="#deleted"><i class="fas fa-trash"></i> Deleted</a></li>
+            </ul>
+          </nav>
+        </aside>
+
+        <main>
+          <h1>Welcome to FileVault</h1>
+          <header>
+            <div class="search-bar">
+              <input type="text" placeholder="Search files and folders" />
+              <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="view-options">
+              <button class="toggle-view">
+                <i class="fas fa-th-large"></i>
+                <i class="fas fa-list"></i>
+              </button>
+            </div>
+          </header>
+
+          <div class="filters">
+            <button>Type <i class="fas fa-chevron-down"></i></button>
+            <button>People <i class="fas fa-chevron-down"></i></button>
+            <button>Modified <i class="fas fa-chevron-down"></i></button>
+            <button>Location <i class="fas fa-chevron-down"></i></button>
           </div>
-          <div class="view-options">
-            <button class="toggle-view">
-              <i class="fas fa-th-large"></i>
-              <i class="fas fa-list"></i>
-            </button>
-          </div>
-        </header>
-        <div class="filters">
-          <button>Type <i class="fas fa-chevron-down"></i></button>
-          <button>People <i class="fas fa-chevron-down"></i></button>
-          <button>Modified <i class="fas fa-chevron-down"></i></button>
-          <button>Location <i class="fas fa-chevron-down"></i></button>
-        </div>
-        <div class="file-list">
-          <table>
-            <thead>
-              <tr>
-                <th><strong>Name</strong></th>
-                <th><strong>Last opened</strong></th>
-                <th><strong>Owner</strong></th>
-                <th><strong>Location</strong></th>
-                <th><strong>Actions</strong></th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Example row, you'll populate this dynamically -->
-              <tr>
-                <td>
-                  <i class="fas fa-file-alt"></i>
-                  Example-Doc.docx
-                </td>
-                <td>Month Date, Year</td>
-                <td>First Last</td>
-                <td>My Files</td>
-                <td class="actions">
-                  <button><i class="fas fa-share"></i></button>
-                  <button><i class="fas fa-download"></i></button>
-                  <button><i class="fas fa-edit"></i></button>
-                  <button><i class="fa-solid fa-star" style="color: #FFD43B;"></i></button>
-                  <!-- <button class="more-options"> -->
-                  <button>
-                      <i class="fas fa-ellipsis-v"></i>
-                  </button>
-                </td>
-              </tr>
-              <!-- Add more rows here -->
-              <% for (const file of indexData) { %>
+
+          <div class="file-list">
+            <table>
+              <thead>
                 <tr>
-                  <td>
-                    <i class="fas fa-file-alt"></i>
-                    <%= file.fileName %>
-                  </td>
-                  <td><%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }).format(file.lastOpenedAt) : 'N/A' %></td>
-                  <td><%= file.user.username %></td>
-                  <td><%= file.filePath %></td>
+                  <th><strong>Name</strong></th>
+                  <th><strong>Last opened</strong></th>
+                  <th><strong>Owner</strong></th>
+                  <th><strong>Location</strong></th>
+                  <th><strong>Actions</strong></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><i class="fas fa-file-alt"></i> Example-Doc.docx</td>
+                  <td>Month Date, Year</td>
+                  <td>First Last</td>
+                  <td>My Files</td>
                   <td class="actions">
                     <button><i class="fas fa-share"></i></button>
-                    <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
-                    <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i class="fas fa-edit"></i></button>
-                    <button onclick="starFile('<%= file.id %>')">
-                      <% if (file.starred) { %>
-                        <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                      <% } else { %>
-                        <i class="fas fa-star"></i>
-                      <% } %>
-                    </button>
-                    <script>
-                      async function starFile(fileId) {
-                        try {
-                          const response = await fetch(`/starred/${fileId}`, {
-                            method: 'PATCH',
-                          });
-                    
-                          if (response.ok) {
-                            location.reload(); // Reload the page to reflect the changes
-                          } else {
-                            console.error('Error starring file');
-                          }
-                        } catch (error) {
-                          console.error('Error:', error);
-                        }
-                      }
-                    </script>
-                    <button class="more-options">
-                      <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    
+                    <button><i class="fas fa-download"></i></button>
+                    <button><i class="fas fa-edit"></i></button>
+                    <button><i class="fa-solid fa-star" style="color: #FFD43B;"></i></button>
+                    <button><i class="fas fa-ellipsis-v"></i></button>
                   </td>
                 </tr>
-                <% } %>
+
+                <% for (const file of indexData) { %>
+                  <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>">
+                    <td>
+                      <span>
+                        <i class="fas fa-file-alt"></i>
+                        <%= file.fileName %>
+                      </span>
+                    </td>
+                    <td>
+                      <span>
+                        <%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric' , month: '2-digit' ,
+                          day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12: true
+                          }).format(file.lastOpenedAt) : 'N/A' %>
+                      </span>
+                    </td>
+                    <td>
+                      <span>
+                        <%= file.user.username %>
+                      </span>
+                    </td>
+                    <td>
+                      <span>
+                        <%= file.filePath %>
+                      </span>
+                    </td>
+                    <td class="actions">
+                      <button><i class="fas fa-share"></i></button>
+                      <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
+                      <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
+                          class="fas fa-edit"></i></button>
+                      <button onclick="starFile('<%= file.id %>')">
+                        <% if (file.starred) { %>
+                          <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
+                          <% } else { %>
+                            <i class="fas fa-star"></i>
+                            <% } %>
+                      </button>
+                      <button class="more-options">
+                        <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <% } %>
               </tbody>
             </table>
           </div>
         </main>
       </div>
+
       <div class="custom-context-menu" id="contextMenu">
         <ul>
-          <li data-action="copy" onclick="handleCopy()">Copy</li>
-          <li data-action="paste" onclick="handlePaste()">Paste</li>
-          <li data-action="cut" onclick="handleCut()">Cut</li>
+          <li data-action="preview" onclick="handlePreview()">Preview</li>
+          <li data-action="share" onclick="handleShare()">Share</li>
+          <li data-action="delete" onclick="handleDelete()">Delete</li>
         </ul>
       </div>
-              <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const contextMenu = document.getElementById('contextMenu');
-                    let currentButton = null;
 
-                    document.querySelectorAll('.more-options').forEach(button => {
-                        button.addEventListener('click', (event) => {
-                            event.preventDefault(); // Prevent default browser context menu
-                            currentButton = button;
-                            contextMenu.style.top = `${event.clientY}px`;
-                            contextMenu.style.left = `${event.clientX}px`;
-                            contextMenu.classList.add('visible');
-                        });
-                    });
+      <script>
+        // script to activate files row
+        document.addEventListener('DOMContentLoaded', function () {
+          const tbody = document.querySelector('tbody');
 
-                    // document.addEventListener('click', (event) => {
-                    //     if (!contextMenu.contains(event.target) && currentButton && !currentButton.contains(event.target)) {
-                    //         contextMenu.classList.remove('visible');
-                    //     }
-                    // });
-                    // Function to hide the context menu
-                    function hideContextMenu(event) {
-                      // console.log(`contextMenu:`, contextMenu);
-                      // console.log(`event.target:`, event.target);
-                      // console.log(`currentButton:`, currentButton);
-                      // console.log(`currentButton.contains(event.target):`, currentButton?.contains(event.target));
-                      if (!contextMenu.contains(event.target) && currentButton && !currentButton.contains(event.target)) {
-                          contextMenu.classList.remove('visible');
-                      }
-                    }
+          tbody.addEventListener('click', function (e) {
+            const clickedRow = e.target.closest('.files');
+            if (clickedRow) {
+              // Remove 'active' class from all rows
+              tbody.querySelectorAll('.files').forEach(row => row.classList.remove('active'));
 
-                    // Add click event listener (left-click)
-                    document.addEventListener('click', (event) => {
-                        hideContextMenu(event);
-                    });
+              // Add 'active' class to the clicked row
+              clickedRow.classList.add('active');
+            }
+          });
 
-                    function handleCopy() {
-                        console.log('Copy clicked');
-                    }
+        });
 
-                    function handlePaste() {
-                        console.log('Paste clicked');
-                    }
+        // script to show/hide context menu
+        document.addEventListener('DOMContentLoaded', () => {
+          const contextMenu = document.getElementById('contextMenu');
+          let currentButton = null;
 
-                    function handleCut() {
-                        console.log('Cut clicked');
-                    }
-                });
-            </script>
-    <script src="https://cdn.jsdelivr.net/npm/vanilla-context-menu/dist/vanilla-context-menu.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/js/contextMenuScript.js"></script>
-    <script src="/js/sweetAlertUtils.js"></script>
+          document.querySelectorAll('.more-options').forEach(button => {
+            button.addEventListener('click', (event) => {
+              event.preventDefault(); // Prevent default browser context menu
+              currentButton = button;
+              contextMenu.style.top = `${event.clientY}px`;
+              contextMenu.style.left = `${event.clientX}px`;
+              contextMenu.classList.add('visible');
+            });
+          });
+
+          // Function to hide the context menu
+          function hideContextMenu(event) {
+            if (!contextMenu.contains(event.target) && currentButton && !currentButton.contains(event.target)) {
+              contextMenu.classList.remove('visible');
+            }
+          }
+
+          document.addEventListener('click', (event) => {
+            hideContextMenu(event);
+          });
+
+          function handlePreview() {
+            console.log('Preview clicked');
+          }
+
+          function handleShare() {
+            console.log('Share clicked');
+          }
+
+          function handleDelete() {
+            console.log('Delete clicked');
+          }
+        });
+
+        async function starFile(fileId) {
+          try {
+            const response = await fetch(`/starred/${fileId}`, {
+              method: 'PATCH',
+            });
+
+            if (response.ok) {
+              location.reload(); // Reload the page to reflect the changes
+            } else {
+              console.error('Error starring file');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+      </script>
+
+      <script src="https://cdn.jsdelivr.net/npm/vanilla-context-menu/dist/vanilla-context-menu.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script src="/js/contextMenuScript.js"></script>
+      <script src="/js/sweetAlertUtils.js"></script>
   </body>
-</html>
+
+  </html>
