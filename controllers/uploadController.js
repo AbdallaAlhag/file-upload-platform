@@ -117,4 +117,51 @@ exports.fileStarred = async (req, res) => {
         console.error('Error renaming file:', err);
         res.status(500).send('Error renaming file');
     }
-}   
+}
+
+exports.fileCopy = async (req, res) => {
+    const fileId = req.params.id; // Get the file ID from the request body
+    console.log(req.params);
+    console.log('hiiii file copy', fileId);
+
+    // Retrieve the original file from the database
+    const originalFile = await prisma.file.findUnique({ where: { id: fileId }, select: { id: true, fileName: true, fileType: true, filePath: true, fileSize: true, userId: true } });
+
+    if (!originalFile) {
+        return res.status(404).send('File not found');
+    }
+
+    // Extract the file extension from the original file name
+    const ext = path.extname(originalFile.fileName); // '.txt'
+    const baseName = path.basename(originalFile.fileName, ext); // 'teststest'
+
+    // Construct the new file name
+    const newFileName = `${baseName}_copy${ext}`; // 'teststest_copy.txt'
+
+    // Construct the new file path
+    const newFilePath = path.join(path.dirname(originalFile.filePath), newFileName); // Path for the new file
+
+
+    console.log('new file path', newFilePath);
+    try {
+        // Copy the file in the file system
+        fs.copyFileSync(originalFile.filePath, newFilePath);
+        console.log('File copied successfully!');
+        // Insert the new file entry into the database
+        const newFile = await prisma.file.create({
+            data: {
+                fileName: newFileName,
+                filePath: newFilePath,
+                fileType: originalFile.fileType,
+                fileSize: originalFile.fileSize,
+                userId: originalFile.userId, // Ensure the file is associated with the same user
+            },
+        });
+
+        // Send success response
+        return res.status(200).send('File copied successfully');
+    } catch (error) {
+        console.error('Error copying file:', error);
+        return res.status(500).send('Error copying file');
+    }
+}

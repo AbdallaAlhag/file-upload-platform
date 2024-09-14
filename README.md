@@ -5,10 +5,10 @@ reference:
     - nolesdrive: aaa, aaa@aaa,aaa
 # todo:
     - validate and sanitize sign up form
-    - Work on actions (share, , more options(delete, rename,move, copy))
-        -(open, make a copy,)
-            - share -> share, copy link
-            - organize -> move
+    - Work on actions:
+        - (preview, make a copy)
+        - share -> share, copy link
+        - organize -> move
         - move to trash
     - test different types of files(working: .docx, .pdf, .txt)
 

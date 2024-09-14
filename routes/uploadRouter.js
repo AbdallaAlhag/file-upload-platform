@@ -13,4 +13,8 @@ router.patch('/rename/:id', uploadController.fileRename);
 
 // star file
 router.patch('/starred/:id', uploadController.fileStarred);
+
+// copy file
+router.post('/copy/:id', uploadController.fileCopy);
+
 module.exports = router;

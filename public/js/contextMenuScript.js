@@ -7,7 +7,6 @@ window.onload = function () {
         const fileName = file.getAttribute('data-fileName');
         new VanillaContextMenu({
             scope: file, // Apply context menu to each .file-item element
-
             menuItems: [
                 {
                     label: 'Preview',
@@ -27,7 +26,7 @@ window.onload = function () {
                 },
                 {
                     label: 'Make a copy',
-                    callback: handleCopy,
+                    callback: () => handleCopy(fileId),
                     iconClass: 'fa fa-copy',
                 },
                 'hr', // Horizontal line in the menu
@@ -37,7 +36,7 @@ window.onload = function () {
                     nestedMenu: [
                         {
                             label: 'Share',
-                            callback: handleShare,
+                            callback: () => handleShare(fileId),
                             iconClass: 'fa fa-share',
                         },
                         {
@@ -58,7 +57,7 @@ window.onload = function () {
                         },
                         {
                             label: 'Star',
-                            callback: () => handleStarred(fileId),
+                            callback: () => handleStar(fileId),
                             iconClass: 'fa fa-star',
                         }
                     ]
@@ -79,7 +78,6 @@ window.onload = function () {
 
     // Menu item handlers
     function handleDelete() {
-        console.log('Delete clicked');
         // Add your functionality here
     }
     async function handleRename(fileId, fileName) {
@@ -114,22 +112,33 @@ window.onload = function () {
             link.click(); // Trigger the download
             document.body.removeChild(link); // Remove the link element after triggering the download
             window.URL.revokeObjectURL(url); // Release the URL object
-            console.log('File downloaded successfully');
         } catch (error) {
             console.error('Error downloading file:', error);
         }
     }
     function handlePreview() {
-        console.log('Preview clicked');
         // Add your functionality here
     }
 
-    function handleCopy() {
-        console.log('Copy clicked');
-        // Add your functionality here
+    async function handleCopy(fileId) {
+        console.log('hiiiiiiiiii')
+        console.log('hiiii', fileId);
+        try {
+            const response = await fetch(`/copy/${fileId}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                location.reload(); // Reload the page to reflect the changes
+            } else {
+                console.error('Error Copying file');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
-    async function handleStarred(fileId) {
+    async function handleStar(fileId) {
         try {
             const response = await fetch(`/starred/${fileId}`, {
                 method: 'PATCH',
@@ -146,17 +155,14 @@ window.onload = function () {
     }
 
     function handleShare() {
-        console.log('Share clicked');
         // Add your functionality here
     }
 
     function handleMove() {
-        console.log('Move clicked');
         // Add your functionality here
     }
 
     function handleCopyLink() {
-        console.log('Copy Link clicked');
         // Add your functionality here
     }
 

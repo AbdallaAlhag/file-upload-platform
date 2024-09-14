@@ -18,7 +18,6 @@ exports.getHome = async (req, res) => {
         }
     });
 
-    // console.log(indexData);
 
     // Sort indexData by starred in descending order
     // indexData.sort((a, b) => (a.starred < b.starred) ? 1 : -1);

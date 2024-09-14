@@ -29,7 +29,6 @@ exports.signUp = async (req, res, next) => {
 
 // basic login
 exports.login = (req, res, next) => {
-    console.log('logging in');
     passport.authenticate("local", {
         successRedirect: "/",
         failureRedirect: "/"

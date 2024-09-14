@@ -44,7 +44,6 @@ window.showRenamePrompt = async function (fileId, currentFileName) {
                 });
 
             } else {
-                console.log(response)
                 const swalPopup = Swal.fire({
                     title: 'Error!',
                     text: 'Failed to update file name.',
