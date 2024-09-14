@@ -65,7 +65,7 @@ window.onload = function () {
                 'hr', // Horizontal line in the menu
                 {
                     label: 'Move to Trash',
-                    callback: handleDelete,
+                    callback: () => handleDelete(fileId),
                     iconClass: 'fa fa-trash',
                 },
             ],
@@ -77,8 +77,20 @@ window.onload = function () {
 
 
     // Menu item handlers
-    function handleDelete() {
-        // Add your functionality here
+    async function handleDelete(fileId) {
+        try {
+            const response = await fetch(`/delete/${fileId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                location.reload(); // Reload the page to reflect the changes
+            } else {
+                console.error('Error Deleting file');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
     async function handleRename(fileId, fileName) {
         // contextMenu.close();
@@ -121,8 +133,6 @@ window.onload = function () {
     }
 
     async function handleCopy(fileId) {
-        console.log('hiiiiiiiiii')
-        console.log('hiiii', fileId);
         try {
             const response = await fetch(`/copy/${fileId}`, {
                 method: 'POST',

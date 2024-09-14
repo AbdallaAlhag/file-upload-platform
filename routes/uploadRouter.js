@@ -17,4 +17,6 @@ router.patch('/starred/:id', uploadController.fileStarred);
 // copy file
 router.post('/copy/:id', uploadController.fileCopy);
 
+// delete file
+router.delete('/delete/:id', uploadController.fileDelete);
 module.exports = router;

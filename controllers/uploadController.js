@@ -121,8 +121,6 @@ exports.fileStarred = async (req, res) => {
 
 exports.fileCopy = async (req, res) => {
     const fileId = req.params.id; // Get the file ID from the request body
-    console.log(req.params);
-    console.log('hiiii file copy', fileId);
 
     // Retrieve the original file from the database
     const originalFile = await prisma.file.findUnique({ where: { id: fileId }, select: { id: true, fileName: true, fileType: true, filePath: true, fileSize: true, userId: true } });
@@ -142,7 +140,6 @@ exports.fileCopy = async (req, res) => {
     const newFilePath = path.join(path.dirname(originalFile.filePath), newFileName); // Path for the new file
 
 
-    console.log('new file path', newFilePath);
     try {
         // Copy the file in the file system
         fs.copyFileSync(originalFile.filePath, newFilePath);
@@ -163,5 +160,48 @@ exports.fileCopy = async (req, res) => {
     } catch (error) {
         console.error('Error copying file:', error);
         return res.status(500).send('Error copying file');
+    }
+}
+
+exports.fileDelete = async (req, res) => {
+    const fileId = req.params.id;
+    try {
+        const file = await prisma.file.findUnique({
+            where: { id: fileId },
+        });
+
+        if (!file) {
+            const deletedFile = await prisma.RecentlyDeleted.findUnique({
+                where: { id: fileId },
+                select: { filePath: true }  // Select the filePath field
+            });
+            if (!deletedFile) {
+                return res.status(404).send('File not found');
+            }
+        }
+
+        if (file) {
+            await prisma.RecentlyDeleted.create({
+                data: {
+                    filePath: file.filePath,
+                    userId: file.userId,
+                    fileName: file.fileName,
+                    fileType: file.fileType,
+                    fileSize: file.fileSize,
+                }
+            });
+            await prisma.file.delete({ where: { id: fileId } });
+
+            fs.unlink(file.filePath, (err) => {
+                if (err) {
+                    console.error('Error deleting file:', err);
+                    return res.status(500).send('Error deleting file');
+                }
+                res.status(200).send('File deleted successfully');
+            });
+        }
+    } catch (err) {
+        console.error('Error deleting file:', err);
+        res.status(500).send('Error deleting file');
     }
 }

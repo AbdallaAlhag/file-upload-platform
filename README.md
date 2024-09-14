@@ -6,7 +6,7 @@ reference:
 # todo:
     - validate and sanitize sign up form
     - Work on actions:
-        - (preview, make a copy)
+        - (preview)
         - share -> share, copy link
         - organize -> move
         - move to trash
