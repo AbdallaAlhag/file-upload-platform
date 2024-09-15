@@ -133,6 +133,13 @@ header {
   border-collapse: collapse;
 }
 
+.file-list table td {
+  max-width: 200px; /* Adjust this value as needed */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .file-list th,
 .file-list td {
   text-align: left;
@@ -162,7 +169,7 @@ tbody .files.active {
   background-color: #e8f0fe;
 }
 
-.files span{
+.files span {
   pointer-events: none;
   user-select: none;
 }
@@ -519,4 +526,142 @@ tbody .files.active {
   margin-right: 8px;
   width: 16px;
   text-align: center;
+}
+
+/* page toggle */
+/* Existing styles */
+.file-list {
+  transition: all 0.3s ease;
+}
+
+.file-list.box-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.file-list.box-view table {
+  display: none;
+}
+
+.file-box {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  overflow: hidden; /* Ensure content doesn't overflow */
+}
+
+.file-box:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.file-box .file-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.file-box .file-name {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 8px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-box .file-info {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  width: 100%;
+}
+
+.file-box .actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.file-box .actions button {
+  margin: 0 4px;
+}
+
+.file-box .file-info div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Add a tooltip for truncated text */
+.truncate-with-tooltip {
+  position: relative;
+}
+
+.truncate-with-tooltip:hover::after {
+  content: attr(data-full-text);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  z-index: 1;
+  white-space: normal;
+  max-width: 200px;
+  word-wrap: break-word;
+}
+
+/* view toggle */
+
+.switch-container {
+  display: flex;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  padding: 4px;
+}
+
+.switch-button {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.switch-button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.switch-button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.switch-label {
+  margin: 0 8px;
+}
+
+.check-icon {
+  position: absolute;
+  right: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.switch-button.active .check-icon {
+  opacity: 1;
 }

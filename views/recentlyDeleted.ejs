@@ -1,209 +1,88 @@
 <!DOCTYPE html>
+<html lang="en">
 <%- include("./partials/head.ejs") %>
 
   <body>
     <%- include("./partials/header.ejs") %>
       <div class="container">
         <%- include("./partials/sidebar.ejs") %>
-        <main>
-          <h1>Welcome to FileVault</h1>
-          <header>
-            <div class="search-bar">
-              <input type="text" placeholder="Search files and folders" />
-              <button><i class="fas fa-search"></i></button>
-            </div>
-            <div class="view-options">
-              <button class="toggle-view">
-                <i class="fas fa-th-large"></i>
-                <i class="fas fa-list"></i>
-              </button>
-            </div>
-          </header>
+          <main>
+            <h1>Welcome to FileVault</h1>
+            <header>
+              <div class="search-bar">
+                <input type="text" placeholder="Search files and folders" />
+                <button><i class="fas fa-search"></i></button>
+              </div>
+              <!-- Replace the existing view-options div with this: -->
+              <%- include("./partials/viewOption.ejs") %>
+            </header>
 
-          <div class="filters">
-            <button>Type <i class="fas fa-chevron-down"></i></button>
-            <button>People <i class="fas fa-chevron-down"></i></button>
-            <button>Modified <i class="fas fa-chevron-down"></i></button>
-            <button>Location <i class="fas fa-chevron-down"></i></button>
-          </div>
+            <%- include("./partials/filter.ejs") %>
 
-          <div class="file-list">
-            <table>
-              <thead>
-                <tr>
-                  <th><strong>Name</strong></th>
-                  <th><strong>Last opened</strong></th>
-                  <th><strong>Owner</strong></th>
-                  <th><strong>Location</strong></th>
-                  <th><strong>Actions</strong></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><i class="fas fa-file-alt"></i> Example-Doc.docx</td>
-                  <td>Month Date, Year</td>
-                  <td>First Last</td>
-                  <td>My Files</td>
-                  <td class="actions">
-                    <button><i class="fas fa-share"></i></button>
-                    <button><i class="fas fa-download"></i></button>
-                    <button><i class="fas fa-edit"></i></button>
-                    <button><i class="fa-solid fa-star" style="color: #FFD43B;"></i></button>
-                    <button><i class="fas fa-ellipsis-v"></i></button>
-                  </td>
-                </tr>
+              <div id="fileContainer" class="file-list">
+                <table>
+                  <%- include("./partials/tableHead.ejs") %>
+                    <tbody>
+                      <% for (const file of indexData) { %>
+                        <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>">
+                          <td class="truncate-with-tooltip" data-full-text="<%= file.fileName %>">
+                            <span>
+                              <i class="fas fa-file-alt"></i>
+                              <%= file.fileName %>
+                            </span>
+                          </td>
+                          <td class="truncate-with-tooltip"
+                            data-full-text="<%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }).format(file.lastOpenedAt) : 'N/A' %>">
+                            <span>
+                              <%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric' ,
+                                month: '2-digit' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12: true
+                                }).format(file.lastOpenedAt) : 'N/A' %>
+                            </span>
+                          </td>
+                          <td class="truncate-with-tooltip" data-full-text="<%= file.user.username %>">
+                            <span>
+                              <%= file.user.username %>
+                            </span>
+                          </td>
+                          <td class="truncate-with-tooltip" data-full-text="<%= file.filePath %>">
+                            <span>
+                              <%= file.filePath %>
+                            </span>
+                          </td>
+                          <td class="actions">
+                            <button><i class="fas fa-share"></i></button>
+                            <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
+                            <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
+                                class="fas fa-edit"></i></button>
+                            <button onclick="starFile('<%= file.id %>')">
+                              <% if (file.starred) { %>
+                                <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
+                                <% } else { %>
+                                  <i class="fas fa-star"></i>
+                                  <% } %>
+                            </button>
+                            <button class="more-options" data-id="<%= file.id %>">
+                              <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <% } %>
 
-                <% for (const file of indexData) { %>
-                  <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>">
-                    <td>
-                      <span>
-                        <i class="fas fa-file-alt"></i>
-                        <%= file.fileName %>
-                      </span>
-                    </td>
-                    <td>
-                      <span>
-                        <%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric' , month: '2-digit' ,
-                          day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12: true
-                          }).format(file.lastOpenedAt) : 'N/A' %>
-                      </span>
-                    </td>
-                    <td>
-                      <span>
-                        <%= file.user.username %>
-                      </span>
-                    </td>
-                    <td>
-                      <span>
-                        <%= file.filePath %>
-                      </span>
-                    </td>
-                    <td class="actions">
-                      <button><i class="fas fa-share"></i></button>
-                      <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
-                      <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
-                          class="fas fa-edit"></i></button>
-                      <button onclick="starFile('<%= file.id %>')">
-                        <% if (file.starred) { %>
-                          <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                          <% } else { %>
-                            <i class="fas fa-star"></i>
-                            <% } %>
-                      </button>
-                      <button class="more-options" data-id="<%= file.id %>">
-                        <i class="fas fa-ellipsis-v"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <% } %>
-              </tbody>
-            </table>
-          </div>
-        </main>
+
+                    </tbody>
+                </table>
+              </div>
+          </main>
       </div>
 
-      <div class="custom-context-menu" id="contextMenu">
-        <ul>
-          <li data-action="preview">Preview</li>
-          <li data-action="share">Share</li>
-          <li data-action="delete">Delete</li>
-        </ul>
-      </div>
+      <%- include("./partials/customContextMenu.ejs") %>
 
-      <script>
-        // script to activate files row
-        document.addEventListener('DOMContentLoaded', function () {
-          const tbody = document.querySelector('tbody');
-
-          tbody.addEventListener('click', function (e) {
-            const clickedRow = e.target.closest('.files');
-            if (clickedRow) {
-              // Remove 'active' class from all rows
-              tbody.querySelectorAll('.files').forEach(row => row.classList.remove('active'));
-
-              // Add 'active' class to the clicked row
-              clickedRow.classList.add('active');
-            }
-          });
-
-        });
-
-        // script to show/hide context menu
-        document.addEventListener('DOMContentLoaded', () => {
-          const contextMenu = document.getElementById('contextMenu');
-          let currentButton = null;
-
-          document.querySelectorAll('.more-options').forEach(button => {
-            button.addEventListener('click', (event) => {
-              event.preventDefault(); // Prevent default browser context menu
-              currentButton = button;
-              contextMenu.style.top = `${event.clientY}px`;
-              contextMenu.style.left = `${event.clientX}px`;
-              contextMenu.classList.add('visible');
-
-              const fileId = event.currentTarget.getAttribute('data-id');
-              document.querySelector('[data-action="delete"]').onclick = () => handleDelete(fileId);
-              document.querySelector('[data-action="preview"]').onclick = () => handlePreview(fileId);
-              document.querySelector('[data-action="share"]').onclick = () => handleShare(fileId);
-            });
-
-          });
-
-          // Function to hide the context menu
-          function hideContextMenu(event) {
-            if (!contextMenu.contains(event.target) && currentButton && !currentButton.contains(event.target)) {
-              contextMenu.classList.remove('visible');
-            }
-          }
-
-          document.addEventListener('click', (event) => {
-            hideContextMenu(event);
-          });
-
-          function handlePreview() {
-          }
-
-          function handleShare() {
-          }
-
-          async function handleDelete(fileId) {
-            try {
-              const response = await fetch(`/delete/${fileId}`, {
-                method: 'DELETE',
-              });
-
-              if (response.ok) {
-                location.reload(); // Reload the page to reflect the changes
-              } else {
-                console.error('Error Deleting file');
-              }
-            } catch (error) {
-              console.error('Error:', error);
-            }
-          }
-        });
-
-        async function starFile(fileId) {
-          try {
-            const response = await fetch(`/starred/${fileId}`, {
-              method: 'PATCH',
-            });
-
-            if (response.ok) {
-              location.reload(); // Reload the page to reflect the changes
-            } else {
-              console.error('Error starring file');
-            }
-          } catch (error) {
-            console.error('Error:', error);
-          }
-        }
-      </script>
-
-      <script src="https://cdn.jsdelivr.net/npm/vanilla-context-menu/dist/vanilla-context-menu.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <script src="/js/contextMenuScript.js"></script>
-      <script src="/js/sweetAlertUtils.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vanilla-context-menu/dist/vanilla-context-menu.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/js/contextMenuScript.js"></script>
+        <script src="/js/sweetAlertUtils.js"></script>
+        <script src="/js/fileViewToggle.js"></script>
+        <script src="/js/eclipseMenuHelper.js"></script>
   </body>
 
-  </html>
+</html>
