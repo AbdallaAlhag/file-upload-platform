@@ -9,9 +9,8 @@ reference:
         - (preview)
         - share -> share, copy link
         - organize -> move
-        - move to trash
     - test different types of files(working: .docx, .pdf, .txt)
-
+    - Add folder view
 Bug: 
     - uploading file, renaming, and downloading causes errors
     - ! can we upload multiple files with the same name? = Yes

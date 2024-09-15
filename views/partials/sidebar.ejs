@@ -1,0 +1,35 @@
+<aside class="sidebar">
+    <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+      <input type="file" name="file" id="fileInput" style="display: none;" />
+      <button type="button" class="new-button" id="uploadButton">New</button>
+    </form>
+
+    <script>
+      const fileInput = document.getElementById('fileInput');
+      const uploadButton = document.getElementById('uploadButton');
+      const uploadForm = document.getElementById('uploadForm');
+
+      // When the button is clicked, trigger the file input
+      uploadButton.addEventListener('click', () => {
+        fileInput.click(); // Open file explorer
+      });
+
+      // When a file is selected, submit the form
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+          uploadForm.submit(); // Submit form after selecting file
+        }
+      });
+    </script>
+
+    <nav>
+      <ul>
+        <li><a href="/" ><i class="fas fa-file"></i> Files</a></li>
+        <li><a href="/folder"><i class="fas fa-folder"></i> Folders</a></li>
+        <li><a href="/recent"><i class="fas fa-clock"></i> Recent</a></li>
+        <li><a href="/starred"><i class="fas fa-star"></i> Starred</a></li>
+        <li><a href="#shared"><i class="fas fa-share-alt"></i> Shared with me</a></li>
+        <li><a href="/recentlyDeleted"><i class="fas fa-trash"></i> Deleted</a></li>
+      </ul>
+    </nav>
+  </aside>

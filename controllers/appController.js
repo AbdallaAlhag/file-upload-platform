@@ -23,3 +23,87 @@ exports.getHome = async (req, res) => {
     // indexData.sort((a, b) => (a.starred < b.starred) ? 1 : -1);
     res.render('index', { indexData });
 }
+
+exports.getFolder = async (req, res) => {
+    const indexData = await prisma.folder.findMany({
+        select: {
+            id: true,
+            name: true,
+            files: true,
+            user: true,
+            updatedAt: true,
+        },
+        orderBy: {
+            updatedAt: 'desc'
+        }
+    });
+
+    // Sort indexData by starred in descending order
+    // indexData.sort((a, b) => (a.starred < b.starred) ? 1 : -1);
+    res.render('folder', { indexData });
+}
+
+exports.getRecent = async (req, res) => {
+
+    const twoWeeksAgo = new Date(Date.now() - 1000 * 60 * 60 * 24 * 14);
+    const indexData = await prisma.file.findMany({
+        select: {
+            id: true,
+            fileName: true,
+            fileType: true,
+            lastOpenedAt: true,
+            user: true,
+            filePath: true,
+            starred: true
+        },
+        where: {
+            lastOpenedAt: {
+                gt: twoWeeksAgo
+            }
+        },
+        orderBy: {
+            lastOpenedAt: 'desc'
+        }
+    });
+    res.render('recent', { indexData });
+}
+
+exports.getStarred = async (req, res) => {
+    const indexData = await prisma.file.findMany({
+        select: {
+            id: true,
+            fileName: true,
+            fileType: true,
+            lastOpenedAt: true,
+            user: true,
+            filePath: true,
+            starred: true
+        },
+        where: {
+            starred: true
+        },
+        orderBy: {
+            lastOpenedAt: 'desc'
+        }
+    });
+    res.render('starred', { indexData });
+}
+
+exports.getRecentlyDeleted = async (req, res) => {
+    const indexData = await prisma.recentlyDeleted.findMany({
+        select: {
+            id: true,
+            fileName: true,
+            fileType: true,
+            deletedAt: true,
+            user: true,
+            filePath: true,
+        },
+        orderBy: {
+            deletedAt: 'desc'
+        }
+
+    });
+    res.render('recentlyDeleted', { indexData });
+}
+
