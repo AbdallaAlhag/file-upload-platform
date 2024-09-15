@@ -57,3 +57,5 @@ ALTER TABLE "FileCategory" ADD CONSTRAINT "FileCategory_fileId_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "FileCategory" ADD CONSTRAINT "FileCategory_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+

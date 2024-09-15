@@ -10,11 +10,15 @@ exports.getHome = async (req, res) => {
             lastOpenedAt: true,
             user: true,
             filePath: true,
+            location: true,
             starred: true
         },
         orderBy: {
             // starred: 'desc',
             lastOpenedAt: 'desc'
+        },
+        where: {
+            userId: req.user.id
         }
     });
 
@@ -35,6 +39,9 @@ exports.getFolder = async (req, res) => {
         },
         orderBy: {
             updatedAt: 'desc'
+        },
+        where: {
+            userId: req.user.id
         }
     });
 
@@ -54,12 +61,16 @@ exports.getRecent = async (req, res) => {
             lastOpenedAt: true,
             user: true,
             filePath: true,
+            location: true,
             starred: true
         },
         where: {
             lastOpenedAt: {
                 gt: twoWeeksAgo
             }
+        },
+        where: {
+            userId: req.user.id
         },
         orderBy: {
             lastOpenedAt: 'desc'
@@ -77,10 +88,12 @@ exports.getStarred = async (req, res) => {
             lastOpenedAt: true,
             user: true,
             filePath: true,
+            location: true,
             starred: true
         },
         where: {
-            starred: true
+            starred: true,
+            userId: req.user.id
         },
         orderBy: {
             lastOpenedAt: 'desc'
@@ -98,6 +111,9 @@ exports.getRecentlyDeleted = async (req, res) => {
             deletedAt: true,
             user: true,
             filePath: true,
+        },
+        where: {
+            userId: req.user.id
         },
         orderBy: {
             deletedAt: 'desc'

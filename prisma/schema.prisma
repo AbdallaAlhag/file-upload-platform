@@ -27,6 +27,8 @@ model User {
 model File {
   id           String    @id @default(uuid())
   fileName     String
+  // maybe get rid of filePath
+  location     String
   filePath     String
   fileType     String
   fileSize     Int
@@ -35,22 +37,21 @@ model File {
   lastOpenedAt DateTime? @updatedAt
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
-  Folder       Folder?   @relation(fields: [folderId], references: [id])
-  folderId     String?
+  Folder       Folder?   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId     String? // Relation to the folder. Can be null if pointing to the root folder.
 }
 
 // parent folders and subfolders are probably going to be saved for last
 model Folder {
-  id             String   @id @default(uuid())
-  name           String
-  files          File[] // Files inside the folder
-  parentFolder   Folder?  @relation("Subfolders", fields: [parentFolderId], references: [id]) // Self-relation for subfolders
-  parentFolderId String? // Optional, for root folders with no parent
-  subfolders     Folder[] @relation("Subfolders") // Recursive relation for subfolders
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id        String   @id @default(uuid())
+  name      String
+  files     File[] // Files inside the folder
+  // maybe get rid of filePath
+  filePath  String   @default("/") // Add this line
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model RecentlyDeleted {

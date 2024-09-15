@@ -24,12 +24,31 @@ exports.fileUpload = (req, res) => {
 
         try {
             // Create new file entry in Prisma DB
-            await prisma.file.create({
+            // FIX THIS 
+            const rootFolderName = 'root';
+            const rootFolder = await prisma.folder.findFirst({ where: { name: 'root' } });
+
+            if (!rootFolder) {
+                // Handle the case where the root folder is not found
+                // You may want to create it here if it's critical for your application
+                rootFolder = await prisma.folder.create({
+                    data: {
+                        name: rootFolderName,
+                        filePath: '/root',  // Or another default value if needed
+                        userId: req.user.id // Ensure you provide the correct user ID
+                    }
+                });
+            }
+
+            // Create a new file
+            const newFile = await prisma.file.create({
                 data: {
                     fileName: req.file.originalname,
-                    filePath: req.file.filename,
                     fileType: req.file.mimetype,
                     fileSize: req.file.size,
+                    filePath: req.file.filename,
+                    location: rootFolder.name + '/' + req.file.originalname,
+                    Folder: { connect: { id: rootFolder.id } },
                     user: {
                         connect: { id: req.user.id }  // Correct relation mapping
                     }
@@ -59,8 +78,7 @@ exports.fileDownload = async (req, res) => {
         }
 
         // Generate the correct file path
-        const filePath = path.join(file.filePath);
-
+        const filePath = path.join(__dirname, '../uploads', file.filePath);
         fs.access(filePath, fs.constants.F_OK, (err) => {
             if (err) {
                 console.error('File not found:', err);
@@ -123,11 +141,12 @@ exports.fileCopy = async (req, res) => {
     const fileId = req.params.id; // Get the file ID from the request body
 
     // Retrieve the original file from the database
-    const originalFile = await prisma.file.findUnique({ where: { id: fileId }, select: { id: true, fileName: true, fileType: true, filePath: true, fileSize: true, userId: true } });
+    const originalFile = await prisma.file.findUnique({ where: { id: fileId }, select: { id: true, fileName: true, fileType: true, filePath: true, location: true, fileSize: true, userId: true } });
 
     if (!originalFile) {
         return res.status(404).send('File not found');
     }
+
 
     // Extract the file extension from the original file name
     const ext = path.extname(originalFile.fileName); // '.txt'
@@ -137,20 +156,29 @@ exports.fileCopy = async (req, res) => {
     const newFileName = `${baseName}_copy${ext}`; // 'teststest_copy.txt'
 
     // Construct the new file path
-    const newFilePath = path.join(path.dirname(originalFile.filePath), newFileName); // Path for the new file
+    const newFilePath = path.join(__dirname, '../uploads', newFileName);
 
 
+    const oldFilePath = path.join(__dirname, '../uploads', originalFile.filePath);
+
+    // Create the directory if it doesn't exist
+    const dir = path.dirname(newFilePath);
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
     try {
         // Copy the file in the file system
-        fs.copyFileSync(originalFile.filePath, newFilePath);
+        fs.copyFileSync(oldFilePath, newFilePath);
         console.log('File copied successfully!');
         // Insert the new file entry into the database
+        const rootFolder = await prisma.folder.findFirst({ where: { name: 'root' } });
         const newFile = await prisma.file.create({
             data: {
                 fileName: newFileName,
                 filePath: newFilePath,
                 fileType: originalFile.fileType,
                 fileSize: originalFile.fileSize,
+                location: rootFolder.name + '/' + newFileName,
                 userId: originalFile.userId, // Ensure the file is associated with the same user
             },
         });
@@ -192,7 +220,8 @@ exports.fileDelete = async (req, res) => {
             });
             await prisma.file.delete({ where: { id: fileId } });
 
-            fs.unlink(file.filePath, (err) => {
+            const filePath = path.join(__dirname, '../uploads', file.filePath);
+            fs.unlink(filePath, (err) => {
                 if (err) {
                     console.error('Error deleting file:', err);
                     return res.status(500).send('Error deleting file');

@@ -13,13 +13,24 @@ exports.getLoginForm = (req, res) => {
 exports.signUp = async (req, res, next) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        await prisma.user.create({
+        const newAccount = await prisma.user.create({
             data: {
                 username: req.body.username,
                 email: req.body.email,
                 password: hashedPassword,
             },
         });
+
+        console.log('New account created:', newAccount);
+        // Create the root folder for the user
+        const rootFolder = await prisma.folder.create({
+            data: {
+                name: 'root', // The root folder name
+                filePath: '/', // File path for the root folder
+                userId: newAccount.id, // Associate it with the newly created user
+            },
+        });
+
         res.redirect('/login');
     } catch (err) {
         next(err);
