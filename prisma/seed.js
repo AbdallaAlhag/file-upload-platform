@@ -2,32 +2,29 @@ const prisma = require('../db/prisma');
 
 
 async function main() {
+
+    // Reset the database
+    await prisma.$executeRaw`DELETE FROM public."RecentlyDeleted";`;
+    await prisma.$executeRaw`DELETE FROM public."Folder";`;
+    await prisma.$executeRaw`DELETE FROM public."File";`;
+    await prisma.$executeRaw`DELETE FROM public."User";`;
     // Create initial users
-    await prisma.user.createMany({
-        data: [
-            {
-                username: 'john_doe',
-                password: 'hashed_password_123', // Ideally, use bcrypt to hash this
-                email: 'john@example.com',
-            },
-            {
-                username: 'jane_doe',
-                password: 'hashed_password_456',
-                email: 'jane@example.com',
-            },
-        ],
-    });
+    // await prisma.user.createMany({
+    //     data: [
+    //         {
+    //             username: 'test',
+    //             password: 'test', // Ideally, use bcrypt to hash this
+    //             email: 'test@test.com',
+    //         },
+    //         {
+    //             username: 'guest',
+    //             password: 'guest',
+    //             email: 'guest@guest.com',
+    //         },
+    //     ],
+    // });
 
-    // Create initial posts (for example)
-    await prisma.post.create({
-        data: {
-            title: 'First Post',
-            content: 'This is my first post!',
-            userId: 1, // Reference to the first user
-        },
-    });
-
-    console.log('Seed data has been added.');
+    console.log('Data has be reset.');
 }
 
 main()

@@ -24,7 +24,8 @@
                   <%- include("./partials/tableHead.ejs") %>
                     <tbody>
                       <% for (const file of indexData) { %>
-                        <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>">
+                        <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>"
+                          data-filePath="<%= file.filePath %>">
                           <td class="truncate-with-tooltip" data-full-text="<%= file.fileName %>">
                             <span>
                               <i class="fas fa-file-alt"></i>
@@ -73,10 +74,31 @@
                 </table>
               </div>
           </main>
+
       </div>
 
       <%- include("./partials/customContextMenu.ejs") %>
 
+        <div id="previewModal" class="modal fade" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">File Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><svg width="24"
+                    height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                      fill="currentColor" />
+                  </svg></button>
+              </div>
+              <div class="modal-body">
+                <iframe id="filePreview" width="100%" height="500px" frameborder="0"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vanilla-context-menu/dist/vanilla-context-menu.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="/js/contextMenuScript.js"></script>

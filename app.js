@@ -36,6 +36,8 @@ app.use(
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files from the "uploads" directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(passport.session());
 
 app.use((req, res, next) => {

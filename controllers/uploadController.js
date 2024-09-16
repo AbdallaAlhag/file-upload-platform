@@ -6,6 +6,7 @@ const fs = require('fs');
 
 exports.fileUpload = (req, res) => {
     upload(req, res, async (err) => {
+        const fileUploadPath = path.join(req.file.destination, req.file.filename);
         if (err) {
             // Handle multer errors (e.g. file too large)
             console.error('Upload Error:', err);
@@ -46,7 +47,7 @@ exports.fileUpload = (req, res) => {
                     fileName: req.file.originalname,
                     fileType: req.file.mimetype,
                     fileSize: req.file.size,
-                    filePath: req.file.filename,
+                    filePath: fileUploadPath,
                     location: rootFolder.name + '/' + req.file.originalname,
                     Folder: { connect: { id: rootFolder.id } },
                     user: {
@@ -78,8 +79,8 @@ exports.fileDownload = async (req, res) => {
         }
 
         // Generate the correct file path
-        const filePath = path.join(__dirname, '../uploads', file.filePath);
-        fs.access(filePath, fs.constants.F_OK, (err) => {
+        const filePath = file.filePath;
+        fs.access(file.filePath, fs.constants.F_OK, (err) => {
             if (err) {
                 console.error('File not found:', err);
                 return res.status(404).send('File not found');
@@ -156,13 +157,15 @@ exports.fileCopy = async (req, res) => {
     const newFileName = `${baseName}_copy${ext}`; // 'teststest_copy.txt'
 
     // Construct the new file path
-    const newFilePath = path.join(__dirname, '../uploads', newFileName);
+    const newFilePath = `uploads/${newFileName}`;
 
 
-    const oldFilePath = path.join(__dirname, '../uploads', originalFile.filePath);
+    const oldFilePath = originalFile.filePath;
 
     // Create the directory if it doesn't exist
+
     const dir = path.dirname(newFilePath);
+
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
@@ -220,7 +223,7 @@ exports.fileDelete = async (req, res) => {
             });
             await prisma.file.delete({ where: { id: fileId } });
 
-            const filePath = path.join(__dirname, '../uploads', file.filePath);
+            const filePath = file.filePath;
             fs.unlink(filePath, (err) => {
                 if (err) {
                     console.error('Error deleting file:', err);

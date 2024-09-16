@@ -665,3 +665,107 @@ tbody .files.active {
 .switch-button.active .check-icon {
   opacity: 1;
 }
+
+/* Modal overlay */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/* Modal content */
+/* Modal overlay */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+/* Modal content */
+.modal-content {
+  position: relative;
+  background-color: #fff;
+  margin: 2% auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 1200px;
+  height: 90vh;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #5f6368;
+}
+
+/* Close button */
+.btn-close {
+  color: #5f6368;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.btn-close:hover,
+.btn-close:focus {
+  background-color: rgba(95, 99, 104, 0.1);
+}
+
+.btn-close svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Body */
+
+/* Modal body styling */
+.modal-body {
+  flex-grow: 1;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Iframe styling */
+#filePreview {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 8px; /* Rounded corners for the iframe */
+  background-color: white; /* Set the iframe background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a shadow for the iframe */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    height: 95vh;
+    margin: 2.5% auto;
+  }
+}

@@ -1,16 +1,20 @@
+
 window.onload = function () {
+
+
     const files = document.querySelectorAll('.files');
     // const contextMenuRightClick = new VanillaContextMenu({
     // scope: document.querySelector('.file-list'), // Right-click on the main area
     files.forEach(file => {
         const fileId = file.getAttribute('data-id');
         const fileName = file.getAttribute('data-fileName');
+        const filePath = file.getAttribute('data-filePath');
         new VanillaContextMenu({
             scope: file, // Apply context menu to each .file-item element
             menuItems: [
                 {
                     label: 'Preview',
-                    callback: handlePreview,
+                    callback: () => handlePreview(fileName, filePath),
                     iconClass: 'fa fa-eye',
                 },
                 'hr', // Horizontal line in the menu
@@ -128,9 +132,56 @@ window.onload = function () {
             console.error('Error downloading file:', error);
         }
     }
-    function handlePreview() {
-        // Add your functionality here
+
+    let modalInstance = null;
+    function initializeModal() {
+        const previewModal = document.getElementById('previewModal');
+        if (previewModal) {
+            modalInstance = new bootstrap.Modal(previewModal, {
+                backdrop: 'static',
+                keyboard: false,
+            });
+        }
     }
+    function handlePreview(fileName, filePath) {
+        const menu = document.querySelector('.vanillaContextMenu');
+        if (menu) {
+            menu.style.display = 'none'; // Hides the context menu
+        }
+        const previewModal = document.getElementById('previewModal');
+        if (!previewModal) {
+            console.error("Preview modal not found in the DOM.");
+            return;
+        }
+        const modalLabel = document.getElementById('previewModalLabel');
+        const filePreview = document.getElementById('filePreview');
+
+
+        // Check if elements exist before accessing properties
+        if (modalLabel && filePreview && previewModal) {
+            modalLabel.textContent = fileName;
+            filePreview.src = filePath;
+            filePreview.style = "width: 100%";
+            // Initialize the Bootstrap modal if not already initialized
+            if (!modalInstance) {
+                initializeModal();
+            }
+            modalInstance.show();
+        } else {
+            console.error("Modal elements not found in the DOM.");
+        }
+
+    }
+
+    // window.hideModal = function () {
+    //     if (modalInstance) {
+    //         modalInstance.hide();
+    //     } else {
+    //         console.error("Modal instance not initialized.");
+    //     }
+    // };
+    document.addEventListener('DOMContentLoaded', initializeModal);
+
 
     async function handleCopy(fileId) {
         try {
