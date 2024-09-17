@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const fileName = event.currentTarget.getAttribute('data-name');
             const filePath = event.currentTarget.getAttribute('data-path');
 
-            console.log(fileId, fileName, filePath)
             document.querySelector('[data-action="delete"]').onclick = () => handleDelete(fileId);
             document.querySelector('[data-action="preview"]').onclick = () => togglePreviewModal(fileName, filePath);
             document.querySelector('[data-action="share"]').onclick = () => handleShare(fileId);
@@ -97,7 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function handleShare() {
+    function handleShare(fileId) {
+        contextMenu.classList.remove('visible');
+        sharePrompt(fileId);
     }
 
     async function handleDelete(fileId) {

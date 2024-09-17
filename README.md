@@ -14,6 +14,7 @@ reference:
     - Add search function and the filters functionality
     - !!! LET's leave folder alone for now
     -> Error when uploading diff files not supported
+    - When you share a file, both users have complete access to that file
 Bug: 
     - uploading file, renaming, and downloading causes errors
     - ! can we upload multiple files with the same name? = Yes

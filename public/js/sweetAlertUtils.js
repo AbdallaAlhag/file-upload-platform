@@ -67,7 +67,7 @@ window.showRenamePrompt = async function (fileId, currentFileName) {
     }
 }
 
-window.sharePrompt = async function (fileId, currentFileName) {
+window.sharePrompt = async function (fileId) {
 
     const { value: userEmail } = await Swal.fire({
         title: 'Insert Email Address',

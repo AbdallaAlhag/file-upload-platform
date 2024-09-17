@@ -102,7 +102,9 @@ window.onload = function () {
         if (menu) {
             menu.style.display = 'none'; // Hides the context menu
         }
-
+        if (menu) {
+            menu.style.display = 'none'; // Hides the context menu
+        }
         showRenamePrompt(fileId, fileName);
     }
     async function handleDownload(fileId, fileName) {
@@ -214,8 +216,16 @@ window.onload = function () {
         }
     }
 
-    function handleShare() {
-        // Add your functionality here
+    function handleShare(fileId) {
+        const menu = document.querySelector('.vanillaContextMenu');
+        const nestedMenu = document.querySelector('.nested-context-menu');
+        if (menu) {
+            menu.style.display = 'none'; // Hides the context menu
+        }
+        if (nestedMenu) {
+            nestedMenu.style.display = 'none'; // Hides the context menu
+        }
+        sharePrompt(fileId);
     }
 
     function handleMove() {
