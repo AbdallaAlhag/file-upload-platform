@@ -17,3 +17,5 @@ reference:
 Bug: 
     - uploading file, renaming, and downloading causes errors
     - ! can we upload multiple files with the same name? = Yes
+    - Can't style the iframe document and some files don't work (working = txt)
+        - docs not working: https://stackoverflow.com/questions/27957766/how-do-i-render-a-word-document-doc-docx-in-the-browser-using-javascript

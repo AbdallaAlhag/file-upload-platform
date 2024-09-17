@@ -161,7 +161,6 @@ window.onload = function () {
         if (modalLabel && filePreview && previewModal) {
             modalLabel.textContent = fileName;
             filePreview.src = filePath;
-            filePreview.style = "width: 100%";
             // Initialize the Bootstrap modal if not already initialized
             if (!modalInstance) {
                 initializeModal();

@@ -29,8 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
             contextMenu.classList.add('visible');
 
             const fileId = event.currentTarget.getAttribute('data-id');
+            const fileName = event.currentTarget.getAttribute('data-name');
+            const filePath = event.currentTarget.getAttribute('data-path');
+
+            console.log(fileId, fileName, filePath)
             document.querySelector('[data-action="delete"]').onclick = () => handleDelete(fileId);
-            document.querySelector('[data-action="preview"]').onclick = () => handlePreview(fileId);
+            document.querySelector('[data-action="preview"]').onclick = () => togglePreviewModal(fileName, filePath);
             document.querySelector('[data-action="share"]').onclick = () => handleShare(fileId);
         });
 
@@ -47,8 +51,51 @@ document.addEventListener('DOMContentLoaded', () => {
         hideContextMenu(event);
     });
 
-    function handlePreview() {
+    // Preview modal function
+    let modalInstance = null;
+    function togglePreviewModal(fileName, filePath) {
+        const menu = document.querySelector('.vanillaContextMenu');
+        const previewModal = document.getElementById('previewModal');
+        if (!previewModal) {
+            console.error("Preview modal not found in the DOM.");
+            return;
+        }
+
+        // Check if elements exist before accessing properties
+        const modalLabel = document.getElementById('previewModalLabel');
+        const filePreview = document.getElementById('filePreview');
+
+        if (modalLabel && filePreview && previewModal) {
+            if (modalInstance) {
+                modalInstance.hide();
+                modalInstance = null;
+            } else {
+                modalLabel.textContent = fileName;
+                filePreview.src = filePath;
+                // Initialize the Bootstrap modal if not already initialized
+                if (!modalInstance) {
+                    modalInstance = new bootstrap.Modal(previewModal, {
+                        backdrop: 'static',
+                        keyboard: false,
+                    });
+                }
+                modalInstance.show();
+            }
+        } else {
+            console.error("Modal elements not found in the DOM.");
+        }
     }
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!modalInstance) {
+            const previewModal = document.getElementById('previewModal');
+            if (previewModal) {
+                modalInstance = new bootstrap.Modal(previewModal, {
+                    backdrop: 'static',
+                    keyboard: false,
+                });
+            }
+        }
+    });
 
     function handleShare() {
     }
