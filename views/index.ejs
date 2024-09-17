@@ -42,7 +42,11 @@
                           </td>
                           <td class="truncate-with-tooltip" data-full-text="<%= file.user.username %>">
                             <span>
-                              <%= file.user.username %>
+                              <% if (file.user.username === currentUser.username) { %>
+                                Me
+                              <% } else { %>
+                                <%= file.user.username %>
+                              <% } %>
                             </span>
                           </td>
                           <td class="truncate-with-tooltip" data-full-text="<%= file.location %>">
@@ -51,7 +55,7 @@
                             </span>
                           </td>
                           <td class="actions">
-                            <button><i class="fas fa-share"></i></button>
+                            <button onclick="sharePrompt('<%= file.id %>', '<%= file.fileName %>')"><i class="fas fa-share"></i></button>
                             <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
                             <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
                                 class="fas fa-edit"></i></button>

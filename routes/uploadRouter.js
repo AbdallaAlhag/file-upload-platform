@@ -11,6 +11,9 @@ router.get('/download/:id', uploadController.fileDownload);
 // rename file
 router.patch('/rename/:id', uploadController.fileRename);
 
+// share file
+router.patch('/share/:id', uploadController.fileShare);
+
 // star file
 router.patch('/starred/:id', uploadController.fileStarred);
 

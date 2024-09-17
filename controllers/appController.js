@@ -18,8 +18,11 @@ exports.getHome = async (req, res) => {
             lastOpenedAt: 'desc'
         },
         where: {
-            userId: req.user.id
-        }
+            OR: [
+                { userId: req.user.id },
+                { sharedWith: { some: { email: req.user.email } } }
+            ],
+        },
     });
 
 

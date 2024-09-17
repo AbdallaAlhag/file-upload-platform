@@ -114,6 +114,39 @@ exports.fileRename = async (req, res) => {
         res.status(500).send('Error renaming file');
     }
 }
+exports.fileShare = async (req, res) => {
+    const fileId = req.params.id;
+    const userEmail = req.body.userEmail;
+    try {
+        const allUsers = await prisma.user.findMany();
+        for (const user of allUsers) {
+            if (user.email === userEmail) {
+                // current file
+                const file = await prisma.file.findUnique({
+                    where: { id: fileId },
+                });
+                if (!file) {
+                    return res.status(404).send('File not found');
+                }
+
+                // No need to upload the file again, just add the new user to the sharedWith relation
+                await prisma.file.update({
+                    where: { id: fileId },
+                    data: {
+                        sharedWith: {
+                            connect: { id: user.id } // Connect the user you want to share the file with
+                        }
+                    }
+                });
+            }
+        }
+        res.status(200).send('File shared successfully');
+    }
+    catch (err) {
+        console.error('Error sharing file:', err);
+        res.status(500).send('Error sharing file');
+    }
+}
 
 exports.fileStarred = async (req, res) => {
     const fileId = req.params.id;
