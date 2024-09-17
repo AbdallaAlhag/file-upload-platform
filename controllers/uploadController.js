@@ -171,6 +171,39 @@ exports.fileStarred = async (req, res) => {
     }
 }
 
+exports.fileMove = async (req, res) => {
+    const { folder: folderId, id: fileId } = req.params;
+    console.log(`Moving file ${fileId} to folder ${folderId}`);
+
+    try {
+        const folder = await prisma.folder.findUnique({
+            where: { id: folderId },
+        });
+
+        if (!folder) {
+            return res.status(404).send('Folder not found');
+        }
+        console.log('Folder found:', folder);
+
+        const file = await prisma.file.findUnique({
+            where: { id: fileId },
+        });
+        await prisma.file.update({
+            where: { id: fileId },
+            data: {
+                folderId,
+                location: `${folder.location}/${file.fileName}`
+            }
+        });
+        console.log(file.location);
+        res.status(200).send('File moved successfully');
+    } catch (err) {
+        console.error('Error moving file:', err);
+        res.status(500).send('Error moving file');
+    }
+}
+
+
 exports.fileCopy = async (req, res) => {
     const fileId = req.params.id; // Get the file ID from the request body
 

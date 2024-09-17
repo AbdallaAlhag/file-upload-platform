@@ -25,7 +25,7 @@
                     <tbody>
                       <% for (const file of indexData) { %>
                         <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>"
-                          data-filePath="<%= file.filePath %>">
+                          data-filePath="<%= file.filePath %>" data-folder="<%= JSON.stringify(folders) %>">
                           <td class="truncate-with-tooltip" data-full-text="<%= file.fileName %>">
                             <span>
                               <i class="fas fa-file-alt"></i>
@@ -42,11 +42,11 @@
                           </td>
                           <td class="truncate-with-tooltip" data-full-text="<%= file.user.username %>">
                             <span>
-                              <% if (file.user.username === currentUser.username) { %>
+                              <% if (file.user.username===currentUser.username) { %>
                                 Me
-                              <% } else { %>
-                                <%= file.user.username %>
-                              <% } %>
+                                <% } else { %>
+                                  <%= file.user.username %>
+                                    <% } %>
                             </span>
                           </td>
                           <td class="truncate-with-tooltip" data-full-text="<%= file.location %>">
@@ -55,7 +55,8 @@
                             </span>
                           </td>
                           <td class="actions">
-                            <button onclick="sharePrompt('<%= file.id %>', '<%= file.fileName %>')"><i class="fas fa-share"></i></button>
+                            <button onclick="sharePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
+                                class="fas fa-share"></i></button>
                             <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
                             <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
                                 class="fas fa-edit"></i></button>

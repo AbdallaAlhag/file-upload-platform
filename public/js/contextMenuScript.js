@@ -9,6 +9,7 @@ window.onload = function () {
         const fileId = file.getAttribute('data-id');
         const fileName = file.getAttribute('data-fileName');
         const filePath = file.getAttribute('data-filePath');
+        const folder = JSON.parse(file.getAttribute('data-folder'));
         new VanillaContextMenu({
             scope: file, // Apply context menu to each .file-item element
             menuItems: [
@@ -33,6 +34,11 @@ window.onload = function () {
                     callback: () => handleCopy(fileId),
                     iconClass: 'fa fa-copy',
                 },
+                {
+                    label: 'Star',
+                    callback: () => handleStar(fileId),
+                    iconClass: 'fa fa-star',
+                },
                 'hr', // Horizontal line in the menu
                 {
                     label: 'Share',
@@ -51,19 +57,15 @@ window.onload = function () {
                     ]
                 },
                 {
-                    label: 'Organize',
-                    iconClass: 'fa fa-folder-open',
+                    label: 'Move',
+                    // callback: handleMove(folder),
+                    iconClass: 'fa fa-right-long',
                     nestedMenu: [
-                        {
-                            label: 'Move',
-                            callback: handleMove,
-                            iconClass: 'fa fa-right-long',
-                        },
-                        {
-                            label: 'Star',
-                            callback: () => handleStar(fileId),
-                            iconClass: 'fa fa-star',
-                        }
+                        ...folder.map(folder => ({
+                            label: folder.name,
+                            callback: () => handleMove(folder.id, fileId),
+                            iconClass: 'fa fa-folder',
+                        }))
                     ]
                 },
                 'hr', // Horizontal line in the menu
@@ -228,8 +230,29 @@ window.onload = function () {
         sharePrompt(fileId);
     }
 
-    function handleMove() {
-        // Add your functionality here
+    async function handleMove(folderId, fileId) {
+        console.log(folderId, fileId);
+        const menu = document.querySelector('.vanillaContextMenu');
+        const nestedMenu = document.querySelector('.nested-context-menu');
+        if (menu) {
+            menu.style.display = 'none'; // Hides the context menu
+        }
+        if (nestedMenu) {
+            nestedMenu.style.display = 'none'; // Hides the context menu
+        }
+        try {
+            const response = await fetch(`/move/${folderId}/${fileId}`, {
+                method: 'PATCH',
+            });
+
+            if (response.ok) {
+                location.reload(); // Reload the page to reflect the changes
+            } else {
+                console.error('Error moving file');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
     function handleCopyLink() {

@@ -7,8 +7,7 @@ reference:
     - validate and sanitize sign up form
     - test different types of files(working: .docx, .pdf, .txt)
     - Work on actions:
-        - (preview) => prety big task 
-        - share -> share, copy link => have no idea yet
+        - share -> copy link => have no idea yet (save for later)
         - organize -> move => have no idea yet but we can just add  to folders that they are not in
     - try to figure out shared with me and shared in general, save for later
     - Add search function and the filters functionality

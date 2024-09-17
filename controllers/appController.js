@@ -2,6 +2,18 @@ const prisma = require("../db/prisma");
 
 // appController.js -> appRouter.js
 exports.getHome = async (req, res) => {
+    const folders = await prisma.folder.findMany({
+        where: {
+            userId: req.user.id
+        }
+    });
+    // fetch all the folders that the user has created
+    // and pass them to the home page so that the user can
+    // see them in the sidebar
+
+    // fetch all the files that are not in a folder
+    // and pass them to the home page so that the user can
+    // see them in the main area of the page
     const indexData = await prisma.file.findMany({
         select: {
             id: true,
@@ -25,10 +37,10 @@ exports.getHome = async (req, res) => {
         },
     });
 
-
     // Sort indexData by starred in descending order
     // indexData.sort((a, b) => (a.starred < b.starred) ? 1 : -1);
-    res.render('index', { indexData });
+    res.render('index', { indexData, folders });
+
 }
 
 exports.getFolder = async (req, res) => {

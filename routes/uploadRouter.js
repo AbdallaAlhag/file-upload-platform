@@ -22,4 +22,6 @@ router.post('/copy/:id', uploadController.fileCopy);
 
 // delete file
 router.delete('/delete/:id', uploadController.fileDelete);
+
+router.patch('/move/:folder/:id', uploadController.fileMove);
 module.exports = router;
