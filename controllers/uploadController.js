@@ -173,7 +173,7 @@ exports.fileStarred = async (req, res) => {
 
 exports.fileMove = async (req, res) => {
     const { folder: folderId, id: fileId } = req.params;
-    console.log(`Moving file ${fileId} to folder ${folderId}`);
+    // console.log(`Moving file ${fileId} to folder ${folderId}`);
 
     try {
         const folder = await prisma.folder.findUnique({
@@ -183,7 +183,7 @@ exports.fileMove = async (req, res) => {
         if (!folder) {
             return res.status(404).send('Folder not found');
         }
-        console.log('Folder found:', folder);
+        // console.log('Folder found:', folder);
 
         const file = await prisma.file.findUnique({
             where: { id: fileId },
@@ -192,10 +192,10 @@ exports.fileMove = async (req, res) => {
             where: { id: fileId },
             data: {
                 folderId,
-                location: `${folder.location}/${file.fileName}`
+                location: `${folder.filePath}/${file.fileName}`
             }
         });
-        console.log(file.location);
+        // console.log(folder.filePath, file.fileName);
         res.status(200).send('File moved successfully');
     } catch (err) {
         console.error('Error moving file:', err);

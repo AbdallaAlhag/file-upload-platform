@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
   const rowViewSwitch = document.getElementById('rowViewSwitch');
   const boxViewSwitch = document.getElementById('boxViewSwitch');
@@ -18,13 +19,67 @@ document.addEventListener('DOMContentLoaded', function () {
       boxViewSwitch.classList.remove('active');
       fileContainer.classList.remove('box-view');
       removeBoxView();
+      addRowViewTooltips();
     } else {
       boxViewSwitch.classList.add('active');
       rowViewSwitch.classList.remove('active');
       fileContainer.classList.add('box-view');
       createBoxView();
     }
+    const fileBoxes = document.querySelectorAll('.file-box');
+    const fileList = document.querySelector('.file-list');
+
+    fileBoxes.forEach(fileBox => {
+      const fileId = fileBox.getAttribute('data-id');
+      const fileName = fileBox.getAttribute('data-fileName');
+      const filePath = fileBox.getAttribute('data-filePath');
+      const folder = JSON.parse(fileBox.getAttribute('data-folder'));
+
+      new VanillaContextMenu({
+        scope: fileBox, // Apply context menu to each .file-item element
+        menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder),
+        customThemeClass: 'vanillaContextMenu-theme',
+        customClass: 'vanillaContextMenu',
+        preventCloseOnClick: true,
+      });
+    });
+
+    if (fileList) {
+      fileList.addEventListener('contextmenu', (event) => {
+        event.preventDefault();
+        const contextMenu = document.getElementById('contextMenu');
+        contextMenu.style.top = `${event.clientY}px`;
+        contextMenu.style.left = `${event.clientX}px`;
+        contextMenu.classList.remove('visible');
+      });
+    }
+    // Hide context menu on right-click outside the file list
+    document.addEventListener('contextmenu', (event) => {
+      const contextMenu = document.getElementById('contextMenu');
+      const fileList = document.querySelector('.file-list');
+
+      if (contextMenu && contextMenu.classList.contains('visible') && !fileList.contains(event.target)) {
+        contextMenu.classList.remove('visible');
+      }
+    });
+
+    // if user right clicks, it activetes the row and highlights it
+    document.addEventListener('DOMContentLoaded', function () {
+      const tbody = document.querySelector('tbody');
+
+      tbody.addEventListener('contextmenu', function (e) {
+        const clickedRow = e.target.closest('.files');
+        if (clickedRow) {
+          // Remove 'active' class from all rows
+          tbody.querySelectorAll('.files').forEach(row => row.classList.remove('active'));
+
+          // Add 'active' class to the clicked row
+          clickedRow.classList.add('active');
+        }
+      });
+    });
   }
+
 
   function createBoxView() {
     if (fileContainer.querySelector('.file-box')) return;
@@ -33,7 +88,9 @@ document.addEventListener('DOMContentLoaded', function () {
       const boxElement = document.createElement('div');
       boxElement.className = 'file-box';
       boxElement.dataset.id = file.dataset.id;
-      boxElement.dataset.fileName = file.dataset.fileName;
+      boxElement.dataset.fileName = file.dataset.filename;
+      boxElement.dataset.filePath = file.dataset.filepath;
+      boxElement.dataset.folder = file.dataset.folder;
 
       const fileIcon = document.createElement('div');
       fileIcon.className = 'file-icon';
@@ -67,9 +124,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
       fileContainer.appendChild(boxElement);
     });
+
+    // Re-initialize context menu for box view
+    // initializeContextMenu();
   }
 
-  // Add this function to handle tooltips for the row view
   function addRowViewTooltips() {
     const tableCells = document.querySelectorAll('.file-list table td');
     tableCells.forEach(cell => {
@@ -79,11 +138,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Call this function when the page loads
-  addRowViewTooltips();
-
   function removeBoxView() {
     const boxElements = fileContainer.querySelectorAll('.file-box');
     boxElements.forEach(box => box.remove());
   }
+
+  // Initialize tooltips and row view on page load
+  addRowViewTooltips();
+  setActiveView('row'); // Set default view to row
+
+
 });
