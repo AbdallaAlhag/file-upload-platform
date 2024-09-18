@@ -14,8 +14,8 @@ reference:
     -> box view resets every time we reload :/
     -> do shareWithMe page
     - !!! LET's leave folder alone for now(can't access files in folders)
-Bug: 
-    -> Fix shared with me 
+    -> delete from recently deleted after 30 days!
+# Bug: 
     -> Deleting from deleted not working 
     -> Error when uploading diff files not supported
     - uploading file, renaming, and downloading causes errors

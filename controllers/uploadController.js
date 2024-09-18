@@ -296,6 +296,15 @@ exports.fileDelete = async (req, res) => {
             if (!deletedFile) {
                 return res.status(404).send('File not found');
             }
+            const filePath = deletedFile.filePath;
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error('Error deleting file:', err);
+                    return res.status(500).send('Error deleting file');
+                }
+
+            });
+            await prisma.RecentlyDeleted.delete({ where: { id: fileId } });
         }
 
         if (file) {
@@ -310,15 +319,8 @@ exports.fileDelete = async (req, res) => {
             });
             await prisma.file.delete({ where: { id: fileId } });
 
-            const filePath = file.filePath;
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    console.error('Error deleting file:', err);
-                    return res.status(500).send('Error deleting file');
-                }
-                res.status(200).send('File deleted successfully');
-            });
         }
+        res.status(200).send('File deleted successfully');
     } catch (err) {
         console.error('Error deleting file:', err);
         res.status(500).send('Error deleting file');

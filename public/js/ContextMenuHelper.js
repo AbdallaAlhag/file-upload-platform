@@ -1,5 +1,9 @@
 // Menu item handlers
 window.handleDelete = async function (fileId) {
+    const menu = document.querySelector('.vanillaContextMenu');
+    if (menu) {
+        menu.style.display = 'none'; // Hides the context menu
+    }
     try {
         const response = await fetch(`/delete/${fileId}`, {
             method: 'DELETE',
