@@ -9,10 +9,12 @@
           <main>
             <h1>Welcome to FileVault</h1>
             <header>
-              <div class="search-bar">
-                <input type="text" placeholder="Search files and folders" />
-                <button><i class="fas fa-search"></i></button>
-              </div>
+              <form action="/search" method="GET">
+                <div class="search-bar">
+                  <input type="search" name="query" placeholder="Search files and folders" />
+                  <button type="submit" ><i class="fas fa-search"></i></button>
+                </div>
+              </form>
               <!-- Replace the existing view-options div with this: -->
               <%- include("./partials/viewOption.ejs") %>
             </header>

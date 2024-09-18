@@ -4,6 +4,8 @@ const appController = require('../controllers/appController');
 
 router.get('/', appController.getHome);
 
+router.get('/search', appController.getSearch);
+
 router.get('/folder', appController.getFolder);
 
 router.get('/recent', appController.getRecent);

@@ -1,7 +1,6 @@
 // script to activate files row
 document.addEventListener('DOMContentLoaded', function () {
     const tbody = document.querySelector('tbody');
-    console.log(tbody.children);
     tbody.addEventListener('click', function (e) {
         const clickedRow = e.target.closest('.files');
         const clickedBox = e.target.closest('.file-box');

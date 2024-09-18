@@ -207,3 +207,48 @@ exports.getShared = async (req, res) => {
     console.log(indexData)
     res.render('index', { indexData, folders });
 };
+
+exports.getSearch = async (req, res) => {
+    // Log the search query to debug
+    console.log(req.query.query);  // Make sure the correct query parameter is being used
+
+    const folders = await prisma.folder.findMany({
+        where: {
+            userId: req.user.id  // Fetch folders related to the logged-in user
+        }
+    });
+
+    // Fetch files matching the search query and belonging to the current user
+    const indexData = await prisma.file.findMany({
+        select: {
+            id: true,
+            fileName: true,
+            fileType: true,
+            lastOpenedAt: true,
+            user: true,
+            filePath: true,
+            location: true,
+            starred: true
+        },
+        where: {
+            userId: req.user.id,  // Only fetch files belonging to the current user
+            OR: [{
+                fileName: {
+                    contains: req.query.query,
+                    mode: 'insensitive'  // Optional: makes the search case-insensitive
+                }
+            }, {
+                location: {
+                    contains: req.query.query,
+                    mode: 'insensitive'
+                }
+            }]
+        },
+        orderBy: {
+            lastOpenedAt: 'desc'  // Order by last opened date in descending order
+        }
+    });
+
+    // Render the index page with the search results
+    res.render('index', { indexData, folders });
+};
