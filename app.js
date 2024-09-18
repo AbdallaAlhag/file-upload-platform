@@ -78,5 +78,10 @@ app.use('/', uploadRouter); // Route for handling file uploads
 app.use('/', appRouter);
 app.use('/', authRouter);
 
+
+app.use((req, res) => {
+    res.status(404).render('404', { title: '404' });
+});
+
 app.listen(3000, () => console.log("app listening on port 3000!"));
 

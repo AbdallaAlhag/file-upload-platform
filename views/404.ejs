@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+
+    <body>
+        <%- include("./partials/header.ejs") %>
+            <div class="container">
+                <%- include("./partials/sidebar.ejs") %>
+                    <main>
+                        <h1>Welcome to FileVault</h1>
+                        <header>
+                            <div class="search-bar">
+                                <input type="text" placeholder="Search files and folders" />
+                                <button><i class="fas fa-search"></i></button>
+                            </div>
+                            <!-- Replace the existing view-options div with this: -->
+                            <%- include("./partials/viewOption.ejs") %>
+                        </header>
+
+                        <%- include("./partials/filter.ejs") %>
+                            <h1>Page Not Found</h1>
+
+                    </main>
+
+            </div>
+
+
+    </body>
+
+</html>
