@@ -1,9 +1,10 @@
 // script to activate files row
 document.addEventListener('DOMContentLoaded', function () {
     const tbody = document.querySelector('tbody');
-
+    console.log(tbody.children);
     tbody.addEventListener('click', function (e) {
         const clickedRow = e.target.closest('.files');
+        const clickedBox = e.target.closest('.file-box');
         if (clickedRow) {
             // Remove 'active' class from all rows
             tbody.querySelectorAll('.files').forEach(row => row.classList.remove('active'));
@@ -11,6 +12,13 @@ document.addEventListener('DOMContentLoaded', function () {
             // Add 'active' class to the clicked row
             clickedRow.classList.add('active');
         }
+        if (clickedBox) {
+            // Remove 'active' class from all rows
+            tbody.querySelectorAll('.file-box').forEach(row => row.classList.remove('active'));
+
+            // Add 'active' class to the clicked row
+            clickedRow.classList.add('active');
+        };
     });
 
 });
@@ -22,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.more-options').forEach(button => {
         button.addEventListener('click', (event) => {
+            console.log(event);
             event.preventDefault(); // Prevent default browser context menu
             currentButton = button;
             contextMenu.style.top = `${event.clientY}px`;
@@ -50,51 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
         hideContextMenu(event);
     });
 
-    // Preview modal function
-    let modalInstance = null;
-    function togglePreviewModal(fileName, filePath) {
-        const menu = document.querySelector('.vanillaContextMenu');
-        const previewModal = document.getElementById('previewModal');
-        if (!previewModal) {
-            console.error("Preview modal not found in the DOM.");
-            return;
-        }
-
-        // Check if elements exist before accessing properties
-        const modalLabel = document.getElementById('previewModalLabel');
-        const filePreview = document.getElementById('filePreview');
-
-        if (modalLabel && filePreview && previewModal) {
-            if (modalInstance) {
-                modalInstance.hide();
-                modalInstance = null;
-            } else {
-                modalLabel.textContent = fileName;
-                filePreview.src = filePath;
-                // Initialize the Bootstrap modal if not already initialized
-                if (!modalInstance) {
-                    modalInstance = new bootstrap.Modal(previewModal, {
-                        backdrop: 'static',
-                        keyboard: false,
-                    });
-                }
-                modalInstance.show();
-            }
-        } else {
-            console.error("Modal elements not found in the DOM.");
-        }
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-        if (!modalInstance) {
-            const previewModal = document.getElementById('previewModal');
-            if (previewModal) {
-                modalInstance = new bootstrap.Modal(previewModal, {
-                    backdrop: 'static',
-                    keyboard: false,
-                });
-            }
-        }
-    });
 
     function handleShare(fileId) {
         contextMenu.classList.remove('visible');

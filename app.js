@@ -45,7 +45,6 @@ app.post('/set-view', (req, res) => {
 
 // Route to get saved view preference
 app.get('/get-view', (req, res) => {
-
     const viewPreference = req.session.viewPreference || 'row'; // Default to 'row' view if not set
     res.status(200).json({ view: viewPreference });
 });

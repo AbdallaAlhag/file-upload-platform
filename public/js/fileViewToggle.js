@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
   fetch('/get-view')
     .then(response => response.json())
     .then(data => {
+      const savedView = data.view || 'row'; // Default to 'row' if no saved preference
       setActiveView(data.view);
     })
     .catch(err => console.error('Error fetching view preference:', err));
@@ -31,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
       body: JSON.stringify({ view: view })
     })
       .then(response => response.json())
-      .then(data => console.log('View preference saved:', data.message))
       .catch(err => console.error('Error saving view preference:', err));
   }
   function setActiveView(view) {
@@ -52,10 +52,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     fileBoxes.forEach(fileBox => {
       const fileId = fileBox.getAttribute('data-id');
-      const fileName = fileBox.getAttribute('data-fileName');
-      const filePath = fileBox.getAttribute('data-filePath');
+      const fileName = fileBox.getAttribute('data-file-name');
+      const filePath = fileBox.getAttribute('data-file-path');
       const folder = JSON.parse(fileBox.getAttribute('data-folder'));
-
+      console.log(fileId, fileName, filePath, folder);
       new VanillaContextMenu({
         scope: fileBox, // Apply context menu to each .file-item element
         menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder),
@@ -136,6 +136,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const actions = document.createElement('div');
       actions.className = 'actions';
+      // selects all the action buttons but removes the last one
+      const actionElements = file.querySelectorAll('td.actions > *');
+      actionElements[actionElements.length - 1].remove();
+
       actions.innerHTML = file.querySelector('td.actions').innerHTML;
 
       boxElement.appendChild(fileIcon);

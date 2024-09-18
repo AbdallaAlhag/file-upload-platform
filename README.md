@@ -25,6 +25,8 @@ reference:
     -> restore files from recently deleted
     -> use more button in box mode
 # Bug: 
+    -> just gonna get rid of ellipse menu in box mode lol too much work atm to transfer it to row
+    -> preview on box mode just opens up the page in iframe lol
     -> Can't preview pdf files
     -> Deleting from deleted not working 
     -> Error when uploading diff files not supported

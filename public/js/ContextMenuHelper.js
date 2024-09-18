@@ -68,6 +68,7 @@ window.initializeModal = function () {
     }
 }
 window.handlePreview = function (fileName, filePath) {
+    console.log(fileName, filePath)
     const menu = document.querySelector('.vanillaContextMenu');
     if (menu) {
         menu.style.display = 'none'; // Hides the context menu
@@ -84,6 +85,7 @@ window.handlePreview = function (fileName, filePath) {
     // Check if elements exist before accessing properties
     if (modalLabel && filePreview && previewModal) {
         modalLabel.textContent = fileName;
+        console.log(filePath);
         filePreview.src = filePath;
         // Initialize the Bootstrap modal if not already initialized
         if (!modalInstance) {
