@@ -74,6 +74,10 @@ main {
   padding: 20px;
 }
 
+main h1 {
+  margin-left: 15px;
+}
+
 header {
   display: flex;
   justify-content: space-between;
