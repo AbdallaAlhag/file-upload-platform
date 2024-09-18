@@ -15,6 +15,8 @@ reference:
     -> do shareWithMe page
     - !!! LET's leave folder alone for now(can't access files in folders)
 Bug: 
+    -> Fix shared with me 
+    -> Deleting from deleted not working 
     -> Error when uploading diff files not supported
     - uploading file, renaming, and downloading causes errors
     - ! can we upload multiple files with the same name? = Yes

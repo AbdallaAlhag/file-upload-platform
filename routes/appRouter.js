@@ -11,4 +11,6 @@ router.get('/recent', appController.getRecent);
 router.get('/starred', appController.getStarred);
 
 router.get('/recentlyDeleted', appController.getRecentlyDeleted);
+
+router.get('/shared', appController.getShared);
 module.exports = router

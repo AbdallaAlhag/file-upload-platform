@@ -117,29 +117,48 @@ exports.fileRename = async (req, res) => {
 exports.fileShare = async (req, res) => {
     const fileId = req.params.id;
     const userEmail = req.body.userEmail;
-    try {
-        const allUsers = await prisma.user.findMany();
-        for (const user of allUsers) {
-            if (user.email === userEmail) {
-                // current file
-                const file = await prisma.file.findUnique({
-                    where: { id: fileId },
-                });
-                if (!file) {
-                    return res.status(404).send('File not found');
-                }
 
-                // No need to upload the file again, just add the new user to the sharedWith relation
-                await prisma.file.update({
-                    where: { id: fileId },
-                    data: {
-                        sharedWith: {
-                            connect: { id: user.id } // Connect the user you want to share the file with
-                        }
-                    }
-                });
-            }
+    try {
+        // Find the user by email
+        const user = await prisma.user.findUnique({
+            where: { email: userEmail }
+        });
+
+        if (!user) {
+            return res.status(404).send('User not found');
         }
+
+        // Find the file by ID
+        const file = await prisma.file.findUnique({
+            where: { id: fileId }
+        });
+
+        if (!file) {
+            return res.status(404).send('File not found');
+        }
+
+        // Check if the file is already shared with the user
+        const existingShare = await prisma.sharedFile.findUnique({
+            where: {
+                fileId_userId: {
+                    fileId: fileId,
+                    userId: user.id
+                }
+            }
+        });
+
+        if (existingShare) {
+            return res.status(400).send('File already shared with this user');
+        }
+
+        // Share the file with the user
+        await prisma.sharedFile.create({
+            data: {
+                fileId: fileId,
+                userId: user.id
+            }
+        });
+
         res.status(200).send('File shared successfully');
     }
     catch (err) {
@@ -147,6 +166,8 @@ exports.fileShare = async (req, res) => {
         res.status(500).send('Error sharing file');
     }
 }
+
+
 
 exports.fileStarred = async (req, res) => {
     const fileId = req.params.id;

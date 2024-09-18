@@ -40,11 +40,11 @@
                                 }).format(file.lastOpenedAt) : 'N/A' %>
                             </span>
                           </td>
-                          <td class="truncate-with-tooltip" data-full-text="<%= file.user.username %>">
+                          <td class="truncate-with-tooltip" data-full-text="<%= file.user ? file.user.username : '' %>">
                             <span>
-                              <% if (file.user.username===currentUser.username) { %>
+                              <% if (file.user && currentUser && file.user.username===currentUser.username) { %>
                                 Me
-                                <% } else { %>
+                                <% } else if (file.user && file.user.username) { %>
                                   <%= file.user.username %>
                                     <% } %>
                             </span>
