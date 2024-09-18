@@ -44,6 +44,7 @@ exports.getHome = async (req, res) => {
 }
 
 exports.getFolder = async (req, res) => {
+
     const indexData = await prisma.folder.findMany({
         select: {
             id: true,
@@ -66,7 +67,11 @@ exports.getFolder = async (req, res) => {
 }
 
 exports.getRecent = async (req, res) => {
-
+    const folders = await prisma.folder.findMany({
+        where: {
+            userId: req.user.id
+        }
+    });
     const twoWeeksAgo = new Date(Date.now() - 1000 * 60 * 60 * 24 * 14);
     const indexData = await prisma.file.findMany({
         select: {
@@ -91,10 +96,15 @@ exports.getRecent = async (req, res) => {
             lastOpenedAt: 'desc'
         }
     });
-    res.render('recent', { indexData });
+    res.render('index', { indexData, folders });
 }
 
 exports.getStarred = async (req, res) => {
+    const folders = await prisma.folder.findMany({
+        where: {
+            userId: req.user.id
+        }
+    });
     const indexData = await prisma.file.findMany({
         select: {
             id: true,
@@ -114,10 +124,15 @@ exports.getStarred = async (req, res) => {
             lastOpenedAt: 'desc'
         }
     });
-    res.render('starred', { indexData });
+    res.render('index', { indexData, folders });
 }
 
 exports.getRecentlyDeleted = async (req, res) => {
+    const folders = await prisma.folder.findMany({
+        where: {
+            userId: req.user.id
+        }
+    });
     const indexData = await prisma.recentlyDeleted.findMany({
         select: {
             id: true,
@@ -135,6 +150,6 @@ exports.getRecentlyDeleted = async (req, res) => {
         }
 
     });
-    res.render('recentlyDeleted', { indexData });
+    res.render('index', { indexData, folders });
 }
 
