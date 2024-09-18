@@ -33,6 +33,23 @@ app.use(
     })
 );
 
+app.post('/set-view', (req, res) => {
+    const { view } = req.body; // 'row' or 'box'
+    if (view === 'row' || view === 'box') {
+        req.session.viewPreference = view;
+        res.status(200).json({ message: 'View preference saved' });
+    } else {
+        res.status(400).json({ error: 'Invalid view type' });
+    }
+});
+
+// Route to get saved view preference
+app.get('/get-view', (req, res) => {
+
+    const viewPreference = req.session.viewPreference || 'row'; // Default to 'row' view if not set
+    res.status(200).json({ view: viewPreference });
+});
+
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));

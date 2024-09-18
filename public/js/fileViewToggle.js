@@ -5,14 +5,35 @@ document.addEventListener('DOMContentLoaded', function () {
   const fileContainer = document.getElementById('fileContainer');
   const files = document.querySelectorAll('.files');
 
+  fetch('/get-view')
+    .then(response => response.json())
+    .then(data => {
+      setActiveView(data.view);
+    })
+    .catch(err => console.error('Error fetching view preference:', err));
+
   rowViewSwitch.addEventListener('click', function () {
     setActiveView('row');
+    saveViewPreference('row'); // Save preference when user switches
   });
 
   boxViewSwitch.addEventListener('click', function () {
     setActiveView('box');
+    saveViewPreference('box'); // Save preference when user switches
   });
 
+  function saveViewPreference(view) {
+    fetch('/set-view', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ view: view })
+    })
+      .then(response => response.json())
+      .then(data => console.log('View preference saved:', data.message))
+      .catch(err => console.error('Error saving view preference:', err));
+  }
   function setActiveView(view) {
     if (view === 'row') {
       rowViewSwitch.classList.add('active');
@@ -145,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Initialize tooltips and row view on page load
   addRowViewTooltips();
-  setActiveView('row'); // Set default view to row
 
 
 });

@@ -1,5 +1,5 @@
 const prisma = require('./prisma');
-
+// kinda forgot about this file, just wrote my queries on the controller file
 // Fetch all users
 const getAllUsers = async () => {
     return await prisma.user.findMany();
