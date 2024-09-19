@@ -267,7 +267,7 @@ exports.fileCopy = async (req, res) => {
     try {
         // Copy the file in the file system
         fs.copyFileSync(oldFilePath, newFilePath);
-        console.log('File copied successfully!');
+        // console.log('File copied successfully!');
         // Insert the new file entry into the database
         const rootFolder = await prisma.folder.findFirst({ where: { name: 'root' } });
         const newFile = await prisma.file.create({

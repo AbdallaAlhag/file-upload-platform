@@ -204,13 +204,12 @@ exports.getShared = async (req, res) => {
         },
     });
     const indexData = sharedFiles.map(item => item.file);
-    console.log(indexData)
     res.render('index', { indexData, folders });
 };
 
 exports.getSearch = async (req, res) => {
     // Log the search query to debug
-    console.log(req.query.query);  // Make sure the correct query parameter is being used
+    // console.log(req.query.query);  // Make sure the correct query parameter is being used
 
     const folders = await prisma.folder.findMany({
         where: {
@@ -251,4 +250,94 @@ exports.getSearch = async (req, res) => {
 
     // Render the index page with the search results
     res.render('index', { indexData, folders });
+};
+
+
+exports.getFilter = async (req, res) => {
+    console.log('Entering filter controller');
+    console.log('Query params:', req.query);  // Log incoming query params
+
+    const { type, people, modified } = req.query;
+    try {
+        const filter = {};
+
+        if (type) {
+            filter.fileType = type;
+        }
+
+        if (people) {
+            if (people === 'shared') {
+                filter.sharedWith = { none: {} };
+            }
+            if (people === 'me') {
+                filter.userId = req.user.id;
+            } else {
+                filter.OR = [
+                    { userId: req.user.id },
+                    { sharedWith: { none: {} } }
+                ];
+            }
+            
+        }
+
+        // Get today's date and times
+        const today = new Date();
+        const startOfToday = new Date(today.setHours(0, 0, 0, 0)).toISOString();
+        const endOfToday = new Date(today.setHours(23, 59, 59, 999)).toISOString();
+
+        if (modified) {
+            switch (modified) {
+                case 'today':
+                    filter.lastOpenedAt = {
+                        gte: startOfToday,
+                        lt: endOfToday
+                    };
+                    break;
+                case 'week':
+                    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                    filter.lastOpenedAt = {
+                        gte: oneWeekAgo.toISOString(),
+                        lt: new Date().toISOString()
+                    };
+                    break;
+                case 'month':
+                    const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+                    filter.lastOpenedAt = {
+                        gte: oneMonthAgo.toISOString(),
+                        lt: new Date().toISOString()
+                    };
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+        // Fetch files based on filter
+        const indexData = await prisma.file.findMany({
+            where: filter,
+            orderBy: {
+                lastOpenedAt: 'desc'
+            }
+        });
+
+        // Fetch folders
+        const folders = await prisma.folder.findMany({
+
+            where: {
+                userId: req.user.id
+            }
+        });
+
+
+        // Check if indexData or folders are empty or undefined
+        if (!indexData || !folders) {
+            throw new Error('Failed to fetch data for rendering');
+        }
+
+        res.render('index', { indexData: indexData, folders });
+    } catch (error) {
+        console.error('Error fetching filtered data:', error);  // Log any errors that occur
+        res.status(500).send('Server Error');
+    }
 };

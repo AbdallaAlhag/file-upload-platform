@@ -1,8 +1,3 @@
-<!-- <div class="filters">
-  <button>Type <i class="fas fa-chevron-down"></i></button>
-  <button>People <i class="fas fa-chevron-down"></i></button>
-  <button>Modified <i class="fas fa-chevron-down"></i></button>
-</div> -->
 <div class="filters">
   <form id="filterForm" action="/search" method="GET">
     <div class="filter-row">
@@ -12,12 +7,18 @@
         </button>
         <ul class="dropdown-menu" role="menu">
           <li><a href="#" data-value=""><i class="fas fa-file text-primary"></i> All</a></li>
-          <li><a href="#" data-value="document"><i class="fas fa-file-word text-primary"></i> Document</a></li>
-          <li><a href="#" data-value="spreadsheet"><i class="fas fa-file-excel text-success"></i> Spreadsheet</a></li>
-          <li><a href="#" data-value="presentation"><i class="fas fa-file-powerpoint text-warning"></i> Presentation</a>
+          <li><a href="#" data-value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"><i
+                class="fas fa-file-word text-primary"></i> Document</a></li>
+          <li><a href="#" data-value="application/pdf"><i class="fas fa-file-pdf text-primary"></i> PDF</a></li>
+          <li><a href="#" data-value="application/vnd.openxmlformats-officedocument.presentationml.presentation"><i
+                class="fas fa-file-powerpoint text-warning"></i> PowerPoint</a>
           </li>
-          <li><a href="#" data-value="image"><i class="fas fa-file-image text-info"></i> Image</a></li>
-          <li><a href="#" data-value="video"><i class="fas fa-file-video text-danger"></i> Video</a></li>
+          <li><a href="#" data-value="text/plain"><i class="fas fa-file-alt text-info"></i> Text file</a></li>
+          <li><a href="#" data-value="image/jpeg"><i class="fas fa-file-image text-info"></i> JPG</a></li>
+          <li><a href="#" data-value="image/png"><i class="fas fa-file-image text-info"></i> PNG</a></li>
+          <li><a href="#" data-value="image/gif"><i class="fas fa-file-image text-info"></i> GIF</a></li>
+          <li><a href="#" data-value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><i
+                class="fas fa-file-excel text-success"></i> Excel</a></li>
         </ul>
         <input type="hidden" name="type" id="typeInput" value="">
       </div>
@@ -253,7 +254,7 @@
           const selectedValue = e.target.getAttribute('data-value');
           const selectedText = e.target.textContent;
 
-          button.innerHTML = button.textContent.split(':')[0] + ': ' + selectedText + ' <i class="fas fa-chevron-down"></i>';
+          button.innerHTML = `${selectedText} <i class="fas fa-chevron-down"></i>`;
           input.value = selectedValue;
           menu.classList.remove('show');
           button.setAttribute('aria-expanded', 'false');
@@ -272,53 +273,36 @@
       });
     }
 
-    filterForm.addEventListener('submit', function (e) {
-      e.preventDefault();
+    filterForm.addEventListener('submit', async function (e) {
 
       const formData = new FormData(filterForm);
       const searchParams = new URLSearchParams(formData);
-
       // Remove empty parameters
       for (const [key, value] of searchParams.entries()) {
         if (value === '') {
           searchParams.delete(key);
         }
       }
-
-      // Send the search request
-      fetch('/search?' + searchParams.toString())
-        .then(response => response.json())
-        .then(data => {
-          // Handle the search results
-          console.log(data);
-          // Update your file list or perform any other necessary actions
-          updateFileList(data);
-        })
-        .catch(error => {
-          console.error('Error:', error);
+      try {
+        const response = await fetch('/filter?' + searchParams.toString(), {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         });
-    });
 
-    function updateFileList(data) {
-      const fileContainer = document.getElementById('fileContainer');
-      fileContainer.innerHTML = ''; // Clear existing content
-
-      if (data.length === 0) {
-        fileContainer.innerHTML = '<p>No files found matching the selected criteria.</p>';
-        return;
+        if (response.ok) {
+          console.log('Filter applied successfully');
+        } else {
+          console.error('Error filtering files');
+        }
+      } catch (error) {
+        console.error('Error:', error);
       }
 
-      data.forEach(file => {
-        const fileElement = document.createElement('div');
-        fileElement.className = 'file-item';
-        fileElement.innerHTML = `
-        <span>${file.name}</span>
-        <span>${file.type}</span>
-        <span>${file.lastModified}</span>
-        <span>${file.owner}</span>
-      `;
-        fileContainer.appendChild(fileElement);
-      });
-    }
+      // window.location.href = '/filter?' + searchParams.toString();
+      // console.log('/filter?' + searchParams.toString());
+
+    });
   });
 </script>

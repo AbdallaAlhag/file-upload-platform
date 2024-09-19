@@ -12,7 +12,7 @@
               <form action="/search" method="GET">
                 <div class="search-bar">
                   <input type="search" name="query" placeholder="Search files and folders" />
-                  <button type="submit" ><i class="fas fa-search"></i></button>
+                  <button type="submit"><i class="fas fa-search"></i></button>
                 </div>
               </form>
               <!-- Replace the existing view-options div with this: -->
@@ -25,6 +25,12 @@
                 <table>
                   <%- include("./partials/tableHead.ejs") %>
                     <tbody>
+                      <pre>
+                        <%= JSON.stringify(indexData, null, 2) %>
+                      </pre>
+                      <pre>
+                        <%= JSON.stringify(folders, null, 2) %>
+                      </pre>
                       <% for (const file of indexData) { %>
                         <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>"
                           data-filePath="<%= file.filePath %>" data-folder="<%= JSON.stringify(folders) %>">

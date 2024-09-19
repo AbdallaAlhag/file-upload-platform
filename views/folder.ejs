@@ -35,9 +35,9 @@
                           <td class="truncate-with-tooltip"
                             data-full-text="<%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }).format(file.lastOpenedAt) : 'N/A' %>">
                             <span>
-                              <%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric' ,
+                              <%= file.updatedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric' ,
                                 month: '2-digit' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12: true
-                                }).format(file.lastOpenedAt) : 'N/A' %>
+                                }).format(file.updatedAt) : 'N/A' %>
                             </span>
                           </td>
                           <td class="truncate-with-tooltip" data-full-text="<%= file.user.username %>">

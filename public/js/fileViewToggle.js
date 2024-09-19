@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const fileName = fileBox.getAttribute('data-file-name');
       const filePath = fileBox.getAttribute('data-file-path');
       const folder = JSON.parse(fileBox.getAttribute('data-folder'));
-      console.log(fileId, fileName, filePath, folder);
       new VanillaContextMenu({
         scope: fileBox, // Apply context menu to each .file-item element
         menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder),

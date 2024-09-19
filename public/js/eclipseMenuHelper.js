@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.more-options').forEach(button => {
         button.addEventListener('click', (event) => {
-            console.log(event);
             event.preventDefault(); // Prevent default browser context menu
             currentButton = button;
             contextMenu.style.top = `${event.clientY}px`;
