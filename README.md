@@ -16,13 +16,16 @@ reference:
     - Work on actions:
         - share -> copy link => have no idea yet (save for later)
     - !!! LET's leave folder alone for now(can't access files in folders)
-    -> delete from recently deleted after 30 days!
-    -> restore files from recently deleted
+        ->have a root folder in my root directory that I need to move to uploads folder
+        -> create add folder 
+    EXTRA(Low Priority, not essential):
     -> right click should active file.active 
     -> Add sort asc, desc and sort by option (name, modified, types, size)
     -> Add file size label
     -> drag and drop files would be cool but idk
+    -> Add little popdown to tell you what action name is   
 # Bug: 
+    -> recently deleted files action do not work(can only preview)
     -> if you delete a shared file, it just goes  to the recently deleted of the person who owns it, interesting
     -> filter resets after results
     -> people filter doesn't work correctly with shared with me

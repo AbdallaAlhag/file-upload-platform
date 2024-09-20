@@ -54,24 +54,31 @@
                               <%= file.location %>
                             </span>
                           </td>
-                          <td class="actions">
-                            <button onclick="sharePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
-                                class="fas fa-share"></i></button>
-                            <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
-                            <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
-                                class="fas fa-edit"></i></button>
-                            <button onclick="starFile('<%= file.id %>')">
-                              <% if (file.starred) { %>
-                                <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                                <% } else { %>
-                                  <i class="fas fa-star"></i>
-                                  <% } %>
-                            </button>
-                            <button class="more-options" data-id="<%= file.id %>" data-name="<%= file.fileName %>"
-                              data-path="<%= file.filePath %>">
-                              <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                          </td>
+                          <% if (typeof action === 'undefined') { %>
+                            <td class="actions">
+                              <button onclick="sharePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
+                                  class="fas fa-share"></i></button>
+                              <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
+                              <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
+                                  class="fas fa-edit"></i></button>
+                              <button onclick="starFile('<%= file.id %>')">
+                                <% if (file.starred) { %>
+                                  <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
+                                  <% } else { %>
+                                    <i class="fas fa-star"></i>
+                                    <% } %>
+                              </button>
+                              <button class="more-options" data-id="<%= file.id %>" data-name="<%= file.fileName %>"
+                                data-path="<%= file.filePath %>">
+                                <i class="fas fa-ellipsis-v"></i>
+                              </button>
+                            </td>
+                            <% } else if (action==='recentlyDeleted' ) { %>
+                              <td class="actions">
+                                <button class="btn btn-danger" onclick="restoreFile('<%= file.id %>')"><i class="fas fa-undo"></i></button>
+                                <button class="btn btn-danger" onclick="deletePermanently('<%= file.id %>')"><i class="fas fa-trash"></i></button>
+                              </td>
+                            <% } %>
                         </tr>
                         <% } %>
                     </tbody>

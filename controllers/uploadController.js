@@ -334,3 +334,42 @@ exports.fileDelete = async (req, res) => {
         res.status(500).send('Error deleting file');
     }
 }
+
+exports.fileRestore = async (req, res) => {
+    const fileId = req.params.id;
+
+    try {
+        const fileToRestore = await prisma.recentlyDeleted.findUnique({
+            where: {
+                id: fileId
+            }
+        });
+
+        if (!fileToRestore) {
+            return res.status(404).send('File not found');
+        }
+
+        await prisma.file.create({
+            data: {
+                fileName: fileToRestore.fileName,
+                location: 'root/' + fileToRestore.fileName,
+                filePath: fileToRestore.filePath,
+                fileType: fileToRestore.fileType,
+                fileSize: fileToRestore.fileSize,
+                userId: fileToRestore.userId,
+                lastOpenedAt: new Date(),
+            }
+        });
+
+        await prisma.recentlyDeleted.delete({
+            where: {
+                id: fileId
+            }
+        });
+
+        res.redirect('/');
+    } catch (error) {
+        console.error('Error restoring file:', error);
+        res.status(500).send('Server Error');
+    }
+}

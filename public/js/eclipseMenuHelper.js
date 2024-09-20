@@ -95,3 +95,16 @@ async function starFile(fileId) {
         console.error('Error:', error);
     }
 }
+
+async function restoreFile(fileId) {
+    try {
+        const response = await fetch(`/restore/${fileId}`, {
+            method: 'PATCH',
+        });
+        if (response.redirected) {
+            window.location.href = response.url;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}

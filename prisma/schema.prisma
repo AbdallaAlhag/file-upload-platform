@@ -67,6 +67,7 @@ model RecentlyDeleted {
   deletedAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+
 }
 
 model SharedFile {

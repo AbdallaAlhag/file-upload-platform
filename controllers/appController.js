@@ -169,7 +169,7 @@ exports.getRecentlyDeleted = async (req, res) => {
         }
 
     });
-    res.render('index', { indexData, folders });
+    res.render('index', { indexData, folders, action: 'recentlyDeleted' });
 }
 
 exports.getShared = async (req, res) => {
@@ -350,3 +350,4 @@ exports.getFilter = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
