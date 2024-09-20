@@ -20,7 +20,12 @@ reference:
     -> delete from recently deleted after 30 days!
     -> restore files from recently deleted
     -> right click should active file.active 
+    -> Add sort asc, desc and sort by option (name, modified, types, size)
+    -> Add file size label
+    -> drag and drop files would be cool but idk
 # Bug: 
+    -> filter resets after results
+    -> people filter doesn't work correctly with shared with me
     -> box view resets every time we reload :/
     -> right click is working but placement is weird
         -> attempted but kinda broke it so left it alone

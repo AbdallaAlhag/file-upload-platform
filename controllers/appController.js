@@ -267,7 +267,7 @@ exports.getFilter = async (req, res) => {
 
         if (people) {
             if (people === 'shared') {
-                filter.sharedWith = { none: {} };
+                filter.userId = { not: req.user.id };
             }
             if (people === 'me') {
                 filter.userId = req.user.id;
@@ -277,7 +277,7 @@ exports.getFilter = async (req, res) => {
                     { sharedWith: { none: {} } }
                 ];
             }
-            
+
         }
 
         // Get today's date and times
@@ -316,6 +316,16 @@ exports.getFilter = async (req, res) => {
         // Fetch files based on filter
         const indexData = await prisma.file.findMany({
             where: filter,
+            select: {
+                id: true,
+                fileName: true,
+                fileType: true,
+                lastOpenedAt: true,
+                user: true,
+                filePath: true,
+                location: true,
+                starred: true
+            },
             orderBy: {
                 lastOpenedAt: 'desc'
             }
@@ -323,7 +333,6 @@ exports.getFilter = async (req, res) => {
 
         // Fetch folders
         const folders = await prisma.folder.findMany({
-
             where: {
                 userId: req.user.id
             }
@@ -335,7 +344,7 @@ exports.getFilter = async (req, res) => {
             throw new Error('Failed to fetch data for rendering');
         }
 
-        res.render('index', { indexData: indexData, folders });
+        res.render('index', { indexData, folders });
     } catch (error) {
         console.error('Error fetching filtered data:', error);  // Log any errors that occur
         res.status(500).send('Server Error');

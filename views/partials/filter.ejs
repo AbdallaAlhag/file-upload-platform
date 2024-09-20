@@ -1,5 +1,5 @@
 <div class="filters">
-  <form id="filterForm" action="/search" method="GET">
+  <form id="filterForm" action="/filter" method="GET">
     <div class="filter-row">
       <div class="custom-dropdown">
         <button type="button" class="dropdown-toggle type-dropdown" aria-haspopup="true" aria-expanded="false">
@@ -13,12 +13,12 @@
           <li><a href="#" data-value="application/vnd.openxmlformats-officedocument.presentationml.presentation"><i
                 class="fas fa-file-powerpoint text-warning"></i> PowerPoint</a>
           </li>
+          <li><a href="#" data-value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><i
+                class="fas fa-file-excel text-success"></i> Excel</a></li>
           <li><a href="#" data-value="text/plain"><i class="fas fa-file-alt text-info"></i> Text file</a></li>
           <li><a href="#" data-value="image/jpeg"><i class="fas fa-file-image text-info"></i> JPG</a></li>
           <li><a href="#" data-value="image/png"><i class="fas fa-file-image text-info"></i> PNG</a></li>
           <li><a href="#" data-value="image/gif"><i class="fas fa-file-image text-info"></i> GIF</a></li>
-          <li><a href="#" data-value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><i
-                class="fas fa-file-excel text-success"></i> Excel</a></li>
         </ul>
         <input type="hidden" name="type" id="typeInput" value="">
       </div>
@@ -253,13 +253,15 @@
           e.preventDefault();
           const selectedValue = e.target.getAttribute('data-value');
           const selectedText = e.target.textContent;
+          const icon = e.target.querySelector('i').cloneNode(true);
 
-          button.innerHTML = `${selectedText} <i class="fas fa-chevron-down"></i>`;
+          button.innerHTML = `${icon.outerHTML} ${selectedText} <i class="fas fa-chevron-down"></i>`;
           input.value = selectedValue;
           menu.classList.remove('show');
           button.setAttribute('aria-expanded', 'false');
         }
       });
+
     });
 
     document.addEventListener('click', closeAllDropdowns);
