@@ -54,7 +54,7 @@
                               <%= file.location %>
                             </span>
                           </td>
-                          <% if (typeof action === 'undefined') { %>
+                          <% if (typeof action==='undefined' ) { %>
                             <td class="actions">
                               <button onclick="sharePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
                                   class="fas fa-share"></i></button>
@@ -75,10 +75,12 @@
                             </td>
                             <% } else if (action==='recentlyDeleted' ) { %>
                               <td class="actions">
-                                <button class="btn btn-danger" onclick="restoreFile('<%= file.id %>')"><i class="fas fa-undo"></i></button>
-                                <button class="btn btn-danger" onclick="deletePermanently('<%= file.id %>')"><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-danger" onclick="restoreFile('<%= file.id %>')"><i
+                                    class="fas fa-undo"></i></button>
+                                <button class="btn btn-danger" onclick="handleDelete('<%= file.id %>')"><i
+                                    class="fas fa-trash"></i></button>
                               </td>
-                            <% } %>
+                              <% } %>
                         </tr>
                         <% } %>
                     </tbody>
