@@ -16,12 +16,73 @@ document.addEventListener('DOMContentLoaded', function () {
   rowViewSwitch.addEventListener('click', function () {
     setActiveView('row');
     saveViewPreference('row'); // Save preference when user switches
+
   });
 
   boxViewSwitch.addEventListener('click', function () {
     setActiveView('box');
     saveViewPreference('box'); // Save preference when user switches
   });
+  function checkForNoResults() {
+    const fileBoxes = document.querySelectorAll('.file-box');
+    const fileList = document.querySelector('.file-list'); // Assuming file-list is the table
+
+    if (!fileList) return; // Exit if fileList doesn't exist
+
+    // Remove existing empty state if it exists
+    const existingEmptyStateRow = fileList.querySelector('.empty-state');
+    if (existingEmptyStateRow) {
+      existingEmptyStateRow.remove();
+    }
+
+    // Create and append empty state if no file boxes are present
+    if (fileBoxes.length === 0) {
+      const emptyStateRow = document.createElement('tr');
+      emptyStateRow.classList.add('empty-state');
+
+      const emptyStateCell = document.createElement('td');
+      emptyStateCell.setAttribute('colspan', '7'); // Adjust colspan as necessary
+      emptyStateRow.appendChild(emptyStateCell);
+
+      const emptyStateContainer = document.createElement('div');
+      emptyStateCell.appendChild(emptyStateContainer);
+
+      const emptyStateIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      emptyStateIcon.setAttribute('viewBox', '0 0 24 24');
+      emptyStateIcon.setAttribute('width', '40');
+      emptyStateIcon.setAttribute('height', '40');
+      emptyStateContainer.appendChild(emptyStateIcon);
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z');
+      emptyStateIcon.appendChild(path);
+
+      const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+      polyline.setAttribute('points', '14 2 14 8 20 8');
+      emptyStateIcon.appendChild(polyline);
+
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', '9');
+      line.setAttribute('y1', '15');
+      line.setAttribute('x2', '15');
+      line.setAttribute('y2', '15');
+      emptyStateIcon.appendChild(line);
+
+      const emptyStateMessage = document.createElement('p');
+      emptyStateMessage.classList.add('message');
+      emptyStateMessage.textContent = 'No results found';
+      emptyStateContainer.appendChild(emptyStateMessage);
+
+      const emptyStateSubMessage = document.createElement('p');
+      emptyStateSubMessage.classList.add('sub-message');
+      emptyStateSubMessage.textContent = 'Try adjusting your search or filters to find what you are looking for.';
+      emptyStateContainer.appendChild(emptyStateSubMessage);
+
+      fileList.appendChild(emptyStateRow);
+    }
+  }
+
+
 
   function saveViewPreference(view) {
     fetch('/set-view', {
@@ -47,6 +108,9 @@ document.addEventListener('DOMContentLoaded', function () {
       fileContainer.classList.add('box-view');
       createBoxView();
     }
+
+    checkForNoResults();
+
     const fileBoxes = document.querySelectorAll('.file-box');
     const fileList = document.querySelector('.file-list');
 
@@ -129,8 +193,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const owner = file.querySelector('td:nth-child(3) span').textContent;
 
       fileInfo.innerHTML = `
-        <div class="truncate-with-tooltip" data-full-text="${lastOpened}">${lastOpened}</div>
-        <div class="truncate-with-tooltip" data-full-text="${owner}">${owner}</div>
+      <div class="truncate-with-tooltip" data-full-text="${lastOpened}">${lastOpened}</div>
+      <div class="truncate-with-tooltip" data-full-text="${owner}">${owner}</div>
       `;
 
       const actions = document.createElement('div');
@@ -147,6 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
       boxElement.appendChild(actions);
 
       fileContainer.appendChild(boxElement);
+
     });
 
     // Re-initialize context menu for box view

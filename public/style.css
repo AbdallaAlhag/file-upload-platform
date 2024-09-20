@@ -778,6 +778,7 @@ tbody .files.active {
 .empty-state {
   height: 200px;
   text-align: center;
+  
 }
 .empty-state div {
   display: flex;

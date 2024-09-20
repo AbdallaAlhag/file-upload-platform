@@ -21,27 +21,25 @@ reference:
             ->have a root folder in my root directory that I need to move to uploads folder
             -> create add folder 
     EXTRA(Low Priority, not essential):
+    -> Add little popdown to tell you what action name is   
     -> right click should active file.active 
     -> double click should preview file
     -> Add sort asc, desc and sort by option (name, modified, types, size)
-    -> Add file size label
-    -> drag and drop files would be cool but idk
-    -> Add little popdown to tell you what action name is   
     -> would be cool to integrate a little step by step tutorial on the site to showcase features
+    -> drag and drop files would be cool but idk
 # Bug: 
     -> recently deleted files action do not work(can only preview)
         -> Context menu looks for file modal and not recentlyDeleted modal, so just catches an error: file not found for these functions. Not bad, i'll stick with it for now
     -> if you delete a shared file, it just goes  to the recently deleted of the person who owns it, interesting
     -> filter resets after results
-    -> people filter doesn't work correctly with shared with me
-    -> box view resets every time we reload :/
+    -> people filter doesn't work!!! correctly with shared with me
     -> right click is working but placement is weird
         -> attempted but kinda broke it so left it alone
-    - Can't style the iframe document and some files don't work (working = txt)
+    - Can't style the iframe document and some files don't work (Not working = microsoft office files)
         - docs not working: https://stackoverflow.com/questions/27957766/how-do-i-render-a-word-document-doc-docx-in-the-browser-using-javascript
 
 # Realization:
     - Didn't use the queries file and wrote my queries in the controller, might be useful to split it
     - had a lot of script and style files in ejs, seemed easier to group them where they belong
     - refactored views page to be more dynamic
-    -
+    
