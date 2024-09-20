@@ -19,7 +19,8 @@ exports.getHome = async (req, res) => {
             user: true,
             filePath: true,
             location: true,
-            starred: true
+            starred: true,
+            fileSize: true
         },
         orderBy: {
             lastOpenedAt: 'desc'
@@ -82,7 +83,7 @@ exports.getFolder = async (req, res) => {
 
     // Sort indexData by starred in descending order
     // indexData.sort((a, b) => (a.starred < b.starred) ? 1 : -1);
-    res.render('folder', { indexData });
+    res.render('folder', { indexData, title: '➤ Folders' });
 }
 
 exports.getRecent = async (req, res) => {
@@ -101,7 +102,8 @@ exports.getRecent = async (req, res) => {
             user: true,
             filePath: true,
             location: true,
-            starred: true
+            starred: true,
+            fileSize: true
         },
         where: {
             lastOpenedAt: {
@@ -115,7 +117,7 @@ exports.getRecent = async (req, res) => {
             lastOpenedAt: 'desc'
         }
     });
-    res.render('index', { indexData, folders });
+    res.render('index', { indexData, folders, title: '➤ Recent Files' });
 }
 
 exports.getStarred = async (req, res) => {
@@ -133,7 +135,8 @@ exports.getStarred = async (req, res) => {
             user: true,
             filePath: true,
             location: true,
-            starred: true
+            starred: true,
+            fileSize: true
         },
         where: {
             starred: true,
@@ -143,7 +146,7 @@ exports.getStarred = async (req, res) => {
             lastOpenedAt: 'desc'
         }
     });
-    res.render('index', { indexData, folders });
+    res.render('index', { indexData, folders, title: '➤ Starred Files' });
 }
 
 exports.getRecentlyDeleted = async (req, res) => {
@@ -160,6 +163,7 @@ exports.getRecentlyDeleted = async (req, res) => {
             deletedAt: true,
             user: true,
             filePath: true,
+            fileSize: true
         },
         where: {
             userId: req.user.id
@@ -169,7 +173,7 @@ exports.getRecentlyDeleted = async (req, res) => {
         }
 
     });
-    res.render('index', { indexData, folders, action: 'recentlyDeleted' });
+    res.render('index', { indexData, folders, action: 'recentlyDeleted', title: '➤ Recently Deleted' });
 }
 
 exports.getShared = async (req, res) => {
@@ -204,7 +208,7 @@ exports.getShared = async (req, res) => {
         },
     });
     const indexData = sharedFiles.map(item => item.file);
-    res.render('index', { indexData, folders });
+    res.render('index', { indexData, folders, title: '➤ Shared Files' });
 };
 
 exports.getSearch = async (req, res) => {
@@ -227,7 +231,8 @@ exports.getSearch = async (req, res) => {
             user: true,
             filePath: true,
             location: true,
-            starred: true
+            starred: true,
+            fileSize: true
         },
         where: {
             userId: req.user.id,  // Only fetch files belonging to the current user
@@ -249,7 +254,7 @@ exports.getSearch = async (req, res) => {
     });
 
     // Render the index page with the search results
-    res.render('index', { indexData, folders });
+    res.render('index', { indexData, folders, title: '➤ Search Results' });
 };
 
 
@@ -324,7 +329,8 @@ exports.getFilter = async (req, res) => {
                 user: true,
                 filePath: true,
                 location: true,
-                starred: true
+                starred: true,
+                fileSize: true
             },
             orderBy: {
                 lastOpenedAt: 'desc'
@@ -344,7 +350,7 @@ exports.getFilter = async (req, res) => {
             throw new Error('Failed to fetch data for rendering');
         }
 
-        res.render('index', { indexData, folders });
+        res.render('index', { indexData, folders, title: '➤ Filtered Results' });
     } catch (error) {
         console.error('Error fetching filtered data:', error);  // Log any errors that occur
         res.status(500).send('Server Error');

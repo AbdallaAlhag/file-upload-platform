@@ -319,10 +319,11 @@ exports.fileDelete = async (req, res) => {
             await prisma.RecentlyDeleted.create({
                 data: {
                     filePath: file.filePath,
-                    userId: file.userId,
                     fileName: file.fileName,
                     fileType: file.fileType,
                     fileSize: file.fileSize,
+                    deletedAt: new Date(),
+                    userId: file.userId,
                 }
             });
             await prisma.file.delete({ where: { id: fileId } });

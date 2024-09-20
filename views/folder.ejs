@@ -7,7 +7,13 @@
       <div class="container">
         <%- include("./partials/sidebar.ejs") %>
           <main>
-            <h1>Welcome to FileVault</h1>
+            <h1>
+              <% if (typeof title !=='undefined' && title) { %>
+                <%= title %>
+                  <% } else { %>
+                    Welcome to FileVault
+                    <% } %>
+            </h1>
             <header>
               <div class="search-bar">
                 <input type="text" placeholder="Search files and folders" />
@@ -35,8 +41,8 @@
                           <td class="truncate-with-tooltip"
                             data-full-text="<%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }).format(file.lastOpenedAt) : 'N/A' %>">
                             <span>
-                              <%= file.updatedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric' ,
-                                month: '2-digit' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12: true
+                              <%= file.updatedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric' , month: '2-digit'
+                                , day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12: true
                                 }).format(file.updatedAt) : 'N/A' %>
                             </span>
                           </td>
@@ -51,7 +57,20 @@
                           </td>
                           <td class="truncate-with-tooltip" data-full-text="<%= file.location %>">
                             <span>
-                              <%= file.location %>
+                              <%= '/' + file.name %>
+                            </span>
+                          </td>
+                          <td class="truncate-with-tooltip" data-full-text="<%= file.fileSize %>">
+                            <span>
+                              <% if (file.fileSize) { %>
+                                <% if (file.fileSize < 1048576) { %>
+                                  <%= Math.floor(file.fileSize / 1024) %> KB
+                                    <% } else { %>
+                                      <%= Math.floor(file.fileSize / 1048576) %> MB
+                                        <% } %>
+                                          <% } else { %>
+                                            N/A
+                                            <% } %>
                             </span>
                           </td>
                           <td class="actions">

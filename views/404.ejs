@@ -7,7 +7,9 @@
             <div class="container">
                 <%- include("./partials/sidebar.ejs") %>
                     <main>
-                        <h1>Welcome to FileVault</h1>
+                        <h1>
+                            <%= title ? title : 'Error' %>
+                        </h1>
                         <header>
                             <div class="search-bar">
                                 <input type="text" placeholder="Search files and folders" />

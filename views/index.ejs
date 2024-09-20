@@ -7,7 +7,14 @@
       <div class="container">
         <%- include("./partials/sidebar.ejs") %>
           <main>
-            <h1> Welcome to FileVault</h1>
+            <!-- <h1> Welcome to FileVault</h1> -->
+            <h1>
+              <% if (typeof title !=='undefined' && title) { %>
+                <%= title %>
+                  <% } else { %>
+                    Welcome to FileVault
+                    <% } %>
+            </h1>
             <header>
               <form action="/search" method="GET">
                 <div class="search-bar">
@@ -24,9 +31,6 @@
                   <%- include("./partials/tableHead.ejs") %>
                     <tbody>
                       <% if (indexData.length===0) { %>
-                        <!-- <tr>
-                          <td colspan="4">Nothing found</td>
-                        </tr> -->
                         <tr>
                           <td colspan="6" class="empty-state">
                             <div>
@@ -58,7 +62,10 @@
                                 <span>
                                   <%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric' ,
                                     month: '2-digit' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12:
-                                    true }).format(file.lastOpenedAt) : 'N/A' %>
+                                    true }).format(file.lastOpenedAt) : file.deletedAt ? new
+                                    Intl.DateTimeFormat('en-US', { year: 'numeric' , month: '2-digit' , day: '2-digit' ,
+                                    hour: '2-digit' , minute: '2-digit' , hour12: true }).format(file.deletedAt) : 'N/A'
+                                    %>
                                 </span>
                               </td>
                               <td class="truncate-with-tooltip"
@@ -73,7 +80,24 @@
                               </td>
                               <td class="truncate-with-tooltip" data-full-text="<%= file.location %>">
                                 <span>
-                                  <%= file.location %>
+                                  <% if (file.location) { %>
+                                    <%= file.location %>
+                                      <% } else { %>
+                                        /trash/<%= file.fileName %>
+                                          <% } %>
+                                </span>
+                              </td>
+                              <td class="truncate-with-tooltip" data-full-text="<%= file.fileSize %>">
+                                <span>
+                                  <% if (file.fileSize) { %>
+                                    <% if (file.fileSize < 1048576) { %>
+                                      <%= Math.floor(file.fileSize / 1024) %> KB
+                                        <% } else { %>
+                                          <%= Math.floor(file.fileSize / 1048576) %> MB
+                                            <% } %>
+                                              <% } else { %>
+                                                N/A
+                                                <% } %>
                                 </span>
                               </td>
                               <% if (typeof action==='undefined' ) { %>
