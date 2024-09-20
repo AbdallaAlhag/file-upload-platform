@@ -774,4 +774,28 @@ tbody .files.active {
   }
 }
 
-
+/* Empty state styling */
+.empty-state {
+  height: 200px;
+  text-align: center;
+}
+.empty-state div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.empty-state svg {
+  margin-bottom: 10px;
+  color: #888;
+}
+.empty-state .message {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0 5px;
+}
+.empty-state .sub-message {
+  font-size: 14px;
+  color: #666;
+}
