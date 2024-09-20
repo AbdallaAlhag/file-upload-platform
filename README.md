@@ -15,7 +15,6 @@ reference:
         - gif works, quite large but scrolls x and y
     - Work on actions:
         - share -> copy link => have no idea yet (save for later)
-    - Add filters functionality
     - !!! LET's leave folder alone for now(can't access files in folders)
     -> delete from recently deleted after 30 days!
     -> restore files from recently deleted
@@ -24,6 +23,7 @@ reference:
     -> Add file size label
     -> drag and drop files would be cool but idk
 # Bug: 
+    -> if you delete a shared file, it just goes  to the recently deleted of the person who owns it, interesting
     -> filter resets after results
     -> people filter doesn't work correctly with shared with me
     -> box view resets every time we reload :/

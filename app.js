@@ -8,6 +8,7 @@ const { PrismaClient } = require('@prisma/client');
 const authRouter = require('./routes/authRouter');
 const appRouter = require('./routes/appRouter');
 const uploadRouter = require('./routes/uploadRouter');
+const setupCronJobs = require('./utils/cronJobs');
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
@@ -95,9 +96,13 @@ app.use('/', appRouter);
 app.use('/', authRouter);
 
 
+setupCronJobs();
+
 app.use((req, res) => {
     res.status(404).render('404', { title: '404' });
 });
+
+
 
 app.listen(3000, () => console.log("app listening on port 3000!"));
 
