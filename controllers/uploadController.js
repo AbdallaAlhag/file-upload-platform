@@ -7,24 +7,38 @@ const fs = require('fs');
 exports.fileUpload = (req, res) => {
     upload(req, res, async (err) => {
 
+        // if (err) {
+        //     console.error('Upload Error:', err);
+        //     return res.redirect('/');
+        //     // return res.status(400).render('index', { error: 'Error uploading file: ' + err });
+        // }
+
+        // // Check if req.file is undefined (meaning no file was uploaded)
+        // if (!req.file) {
+        //     return res.redirect('/');
+        //     // return res.status(400).render('index', { error: 'No file uploaded or invalid file type' });
+        // }
+
+        // // Check if the destination is undefined (shouldn't happen, but good to check)
+        // if (!req.file.destination) {
+        //     return res.redirect('/');
+        //     // return res.status(500).render('index', { error: 'File upload failed, destination not set' });
+        // }
         if (err) {
             console.error('Upload Error:', err);
-            return res.redirect('/');
-            // return res.status(400).render('index', { error: 'Error uploading file: ' + err });
+            // Display the error on the index page
+            return res.status(400).render('index', { error: 'Error uploading file: ' + err });
         }
 
-        // Check if req.file is undefined (meaning no file was uploaded)
+        // Check if req.file is undefined
         if (!req.file) {
-            return res.redirect('/');
-            // return res.status(400).render('index', { error: 'No file uploaded or invalid file type' });
+            return res.status(400).render('index', { error: 'No file uploaded or invalid file type' });
         }
 
-        // Check if the destination is undefined (shouldn't happen, but good to check)
+        // Check if the destination is undefined
         if (!req.file.destination) {
-            return res.redirect('/');
-            // return res.status(500).render('index', { error: 'File upload failed, destination not set' });
+            return res.status(500).render('index', { error: 'File upload failed, destination not set' });
         }
-
         const fileUploadPath = path.join(req.file.destination, req.file.filename);
         // Ensure user is authenticated
         if (!req.user) {
@@ -69,7 +83,8 @@ exports.fileUpload = (req, res) => {
 
         } catch (dbError) {
             console.error('Database Error:', dbError);
-            return res.status(500).send('Error saving file information to the database.');
+            return res.status(500).render('index', { error: 'Error saving file information to the database.' });
+
         }
     });
 };

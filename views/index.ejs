@@ -8,155 +8,165 @@
         <%- include("./partials/sidebar.ejs") %>
           <main>
             <!-- <h1> Welcome to FileVault</h1> -->
-            <h1>
-              <% if (typeof title !=='undefined' && title) { %>
-                <%= title %>
-                  <% } else { %>
-                    Welcome to FileVault
-                    <% } %>
-            </h1>
-            <header>
-              <form action="/search" method="GET">
-                <div class="search-bar">
-                  <input type="search" name="query" placeholder="Search files and folders" />
-                  <button type="submit"><i class="fas fa-search"></i></button>
-                </div>
-              </form>
-              <!-- Replace the existing view-options div with this: -->
-              <%- include("./partials/viewOption.ejs") %>
-            </header>
-            <%- include("./partials/filter.ejs") %>
-              <div id="fileContainer" class="file-list">
-                <table>
-                  <%- include("./partials/tableHead.ejs") %>
-                    <tbody>
-                      <% if (indexData.length===0) { %>
-                        <tr>
-                          <td colspan="6" class="empty-state">
-                            <div>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                                <polyline points="14 2 14 8 20 8" />
-                                <line x1="9" y1="15" x2="15" y2="15" />
-                              </svg>
-                              <p class="message">No results found</p>
-                              <p class="sub-message">Try adjusting your search or filters to find what you're looking
-                                for.</p>
-                            </div>
-                          </td>
-                        </tr>
+            <% if (typeof error !=='undefined' && error) { %>
+              <p style="color: red">
+                <%= error %>
+              </p>
+              <% } %>
+                <h1>
+                  <% if (typeof title !=='undefined' && title) { %>
+                    <%= title %>
+                      <% } else { %>
+                        Welcome to FileVault
                         <% } %>
-                          <% for (const file of indexData) { %>
-                            <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>"
-                              data-filePath="<%= file.filePath %>" data-folder="<%= JSON.stringify(folders) %>"
-                              data-file-type="<%= file.fileType %>">
-                              <td class="truncate-with-tooltip" data-full-text="<%= file.fileName %>">
-                                <span>
-                                  <i class="fas fa-file-alt"></i>
-                                  <%= file.fileName %>
-                                </span>
+                </h1>
+                <header>
+                  <form action="/search" method="GET">
+                    <div class="search-bar">
+                      <input type="search" name="query" placeholder="Search files and folders" />
+                      <button type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                  </form>
+                  <!-- Replace the existing view-options div with this: -->
+                  <%- include("./partials/viewOption.ejs") %>
+                </header>
+                <%- include("./partials/filter.ejs") %>
+                  <div id="fileContainer" class="file-list">
+                    <table>
+                      <%- include("./partials/tableHead.ejs") %>
+                        <tbody>
+                          <% if (typeof indexData==='undefined' || indexData.length===0) { %>
+                            <tr>
+                              <td colspan="6" class="empty-state">
+                                <div>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                    <line x1="9" y1="15" x2="15" y2="15" />
+                                  </svg>
+                                  <p class="message">No results found</p>
+                                  <p class="sub-message">Try adjusting your search or filters to find what you're
+                                    looking
+                                    for.</p>
+                                </div>
                               </td>
-                              <td class="truncate-with-tooltip"
-                                data-full-text="<%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }).format(file.lastOpenedAt) : 'N/A' %>">
-                                <span>
-                                  <%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric' ,
-                                    month: '2-digit' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12:
-                                    true }).format(file.lastOpenedAt) : file.deletedAt ? new
-                                    Intl.DateTimeFormat('en-US', { year: 'numeric' , month: '2-digit' , day: '2-digit' ,
-                                    hour: '2-digit' , minute: '2-digit' , hour12: true }).format(file.deletedAt) : 'N/A'
-                                    %>
-                                </span>
-                              </td>
-                              <td class="truncate-with-tooltip"
-                                data-full-text="<%= file.user ? file.user.username : '' %>">
-                                <span>
-                                  <% if (file.user && currentUser && file.user.username===currentUser.username) { %>
-                                    Me
-                                    <% } else if (file.user && file.user.username) { %>
-                                      <%= file.user.username %>
-                                        <% } %>
-                                </span>
-                              </td>
-                              <td class="truncate-with-tooltip" data-full-text="<%= file.location %>">
-                                <span>
-                                  <% if (file.location) { %>
-                                    <%= file.location %>
-                                      <% } else { %>
-                                        /trash/<%= file.fileName %>
-                                          <% } %>
-                                </span>
-                              </td>
-                              <td class="truncate-with-tooltip" data-full-text="<%= file.fileSize %>">
-                                <span>
-                                  <% if (file.fileSize) { %>
-                                    <% if (file.fileSize < 1048576) { %>
-                                      <%= Math.floor(file.fileSize / 1024) %> KB
-                                        <% } else { %>
-                                          <%= Math.floor(file.fileSize / 1048576) %> MB
-                                            <% } %>
-                                              <% } else { %>
-                                                N/A
-                                                <% } %>
-                                </span>
-                              </td>
-                              <% if (typeof action==='undefined' ) { %>
-                                <td class="actions">
-                                  <div class="tooltip" onmouseover="showTooltip(event, 'Share')"
-                                    onmouseout="hideTooltip()">
-                                    <button onclick="sharePrompt('<%= file.id %>', '<%= file.fileName %>')">
-                                      <i class="fas fa-share"></i>
-                                    </button>
-                                  </div>
-                                  <div class="tooltip" onmouseover="showTooltip(event, 'Download')"
-                                    onmouseout="hideTooltip()">
-                                    <a href="/download/<%= file.id %>"><button><i
-                                          class="fas fa-download"></i></button></a>
-                                  </div>
-                                  <div class="tooltip" onmouseover="showTooltip(event, 'Rename')"
-                                    onmouseout="hideTooltip()">
-                                    <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
-                                        class="fas fa-edit"></i></button>
-                                  </div>
-                                  <div class="tooltip" onmouseover="showTooltip(event, 'Star')"
-                                    onmouseout="hideTooltip()">
-                                    <button onclick="starFile('<%= file.id %>')">
-                                      <% if (file.starred) { %>
-                                        <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                                        <% } else { %>
-                                          <i class="fas fa-star"></i>
-                                          <% } %>
-                                    </button>
-                                  </div>
-
-                                  <div class="tooltip" onmouseover="showTooltip(event, 'More options')"
-                                    onmouseout="hideTooltip()">
-                                    <button class="more-options" data-id="<%= file.id %>"
-                                      data-name="<%= file.fileName %>" data-path="<%= file.filePath %>">
-                                      <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                  </div>
-                                </td>
-                                <% } else if (action==='recentlyDeleted' ) { %>
-                                  <td class="actions">
-                                    <div class="tooltip" onmouseover="showTooltip(event, 'Restore')"
-                                      onmouseout="hideTooltip()">
-                                      <button class="btn btn-danger" onclick="restoreFile('<%= file.id %>')"><i
-                                          class="fas fa-undo"></i></button>
-                                    </div>
-                                    <div class="tooltip" onmouseover="showTooltip(event, 'Delete')"
-                                      onmouseout="hideTooltip()">
-                                      <button class="btn btn-danger" onclick="handleDelete('<%= file.id %>')"><i
-                                          class="fas fa-trash"></i></button>
-                                    </div>
-                                  </td>
-                                  <% } %>
                             </tr>
                             <% } %>
-                    </tbody>
-                </table>
-              </div>
+                              <% if (typeof indexData !=='undefined' && indexData.length> 0) { %>
+                                <% for (const file of indexData) { %>
+                                  <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>"
+                                    data-filePath="<%= file.filePath %>" data-folder="<%= JSON.stringify(folders) %>"
+                                    data-file-type="<%= file.fileType %>">
+                                    <td class="truncate-with-tooltip" data-full-text="<%= file.fileName %>">
+                                      <span>
+                                        <i class="fas fa-file-alt"></i>
+                                        <%= file.fileName %>
+                                      </span>
+                                    </td>
+                                    <td class="truncate-with-tooltip"
+                                      data-full-text="<%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }).format(file.lastOpenedAt) : 'N/A' %>">
+                                      <span>
+                                        <%= file.lastOpenedAt ? new Intl.DateTimeFormat('en-US', { year: 'numeric' ,
+                                          month: '2-digit' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' ,
+                                          hour12: true }).format(file.lastOpenedAt) : file.deletedAt ? new
+                                          Intl.DateTimeFormat('en-US', { year: 'numeric' , month: '2-digit' ,
+                                          day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12: true
+                                          }).format(file.deletedAt) : 'N/A' %>
+                                      </span>
+                                    </td>
+                                    <td class="truncate-with-tooltip"
+                                      data-full-text="<%= file.user ? file.user.username : '' %>">
+                                      <span>
+                                        <% if (file.user && currentUser && file.user.username===currentUser.username) {
+                                          %>
+                                          Me
+                                          <% } else if (file.user && file.user.username) { %>
+                                            <%= file.user.username %>
+                                              <% } %>
+                                      </span>
+                                    </td>
+                                    <td class="truncate-with-tooltip" data-full-text="<%= file.location %>">
+                                      <span>
+                                        <% if (file.location) { %>
+                                          <%= file.location %>
+                                            <% } else { %>
+                                              /trash/<%= file.fileName %>
+                                                <% } %>
+                                      </span>
+                                    </td>
+                                    <td class="truncate-with-tooltip" data-full-text="<%= file.fileSize %>">
+                                      <span>
+                                        <% if (file.fileSize) { %>
+                                          <% if (file.fileSize < 1048576) { %>
+                                            <%= Math.floor(file.fileSize / 1024) %> KB
+                                              <% } else { %>
+                                                <%= Math.floor(file.fileSize / 1048576) %> MB
+                                                  <% } %>
+                                                    <% } else { %>
+                                                      N/A
+                                                      <% } %>
+                                      </span>
+                                    </td>
+                                    <% if (typeof action==='undefined' ) { %>
+                                      <td class="actions">
+                                        <div class="tooltip" onmouseover="showTooltip(event, 'Share')"
+                                          onmouseout="hideTooltip()">
+                                          <button onclick="sharePrompt('<%= file.id %>', '<%= file.fileName %>')">
+                                            <i class="fas fa-share"></i>
+                                          </button>
+                                        </div>
+                                        <div class="tooltip" onmouseover="showTooltip(event, 'Download')"
+                                          onmouseout="hideTooltip()">
+                                          <a href="/download/<%= file.id %>"><button><i
+                                                class="fas fa-download"></i></button></a>
+                                        </div>
+                                        <div class="tooltip" onmouseover="showTooltip(event, 'Rename')"
+                                          onmouseout="hideTooltip()">
+                                          <button
+                                            onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
+                                              class="fas fa-edit"></i></button>
+                                        </div>
+                                        <div class="tooltip" onmouseover="showTooltip(event, 'Star')"
+                                          onmouseout="hideTooltip()">
+                                          <button onclick="starFile('<%= file.id %>')">
+                                            <% if (file.starred) { %>
+                                              <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
+                                              <% } else { %>
+                                                <i class="fas fa-star"></i>
+                                                <% } %>
+                                          </button>
+                                        </div>
+
+                                        <div class="tooltip" onmouseover="showTooltip(event, 'More options')"
+                                          onmouseout="hideTooltip()">
+                                          <button class="more-options" data-id="<%= file.id %>"
+                                            data-name="<%= file.fileName %>" data-path="<%= file.filePath %>">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                          </button>
+                                        </div>
+                                      </td>
+                                      <% } else if (action==='recentlyDeleted' ) { %>
+                                        <td class="actions">
+                                          <div class="tooltip" onmouseover="showTooltip(event, 'Restore')"
+                                            onmouseout="hideTooltip()">
+                                            <button class="btn btn-danger" onclick="restoreFile('<%= file.id %>')"><i
+                                                class="fas fa-undo"></i></button>
+                                          </div>
+                                          <div class="tooltip" onmouseover="showTooltip(event, 'Delete')"
+                                            onmouseout="hideTooltip()">
+                                            <button class="btn btn-danger" onclick="handleDelete('<%= file.id %>')"><i
+                                                class="fas fa-trash"></i></button>
+                                          </div>
+                                        </td>
+                                        <% } %>
+                                  </tr>
+                                  <% } %>
+                                    <% } %>
+                        </tbody>
+                    </table>
+                  </div>
           </main>
 
       </div>
