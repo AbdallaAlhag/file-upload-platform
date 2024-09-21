@@ -775,28 +775,32 @@ tbody .files.active {
 }
 
 /* Empty state styling */
-.empty-state {
+.empty-state,
+.empty-state-box {
   height: 200px;
   text-align: center;
-  
 }
-.empty-state div {
+.empty-state div,
+.empty-state-box div {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
 }
-.empty-state svg {
+.empty-state svg,
+.empty-state-box svg {
   margin-bottom: 10px;
   color: #888;
 }
-.empty-state .message {
+.empty-state .message,
+.empty-state-box .message {
   font-size: 18px;
   font-weight: bold;
   margin: 10px 0 5px;
 }
-.empty-state .sub-message {
+.empty-state .sub-message,
+.empty-state-box .sub-message {
   font-size: 14px;
   color: #666;
 }

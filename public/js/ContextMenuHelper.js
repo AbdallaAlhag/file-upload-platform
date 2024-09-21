@@ -67,7 +67,7 @@ window.initializeModal = function () {
         });
     }
 }
-window.handlePreview = function (fileName, filePath) {
+window.handlePreview = function (fileName, filePath, fileType) {
     const menu = document.querySelector('.vanillaContextMenu');
     if (menu) {
         menu.style.display = 'none'; // Hides the context menu
@@ -79,12 +79,19 @@ window.handlePreview = function (fileName, filePath) {
     }
     const modalLabel = document.getElementById('previewModalLabel');
     const filePreview = document.getElementById('filePreview');
-
+    console.log('filePreview: ', filePreview);
 
     // Check if elements exist before accessing properties
     if (modalLabel && filePreview && previewModal) {
         modalLabel.textContent = fileName;
-        filePreview.src = filePath;
+        if (fileType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            filePreview.src = `https://docs.google.com/gview?url=${encodeURIComponent(filePath)}&embedded=true`;
+        }
+        else {
+            filePreview.src = filePath;
+            console.log('File preview: ', filePreview);
+        }
+
         // Initialize the Bootstrap modal if not already initialized
         if (!modalInstance) {
             initializeModal();

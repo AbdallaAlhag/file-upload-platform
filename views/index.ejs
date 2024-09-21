@@ -50,7 +50,8 @@
                         <% } %>
                           <% for (const file of indexData) { %>
                             <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>"
-                              data-filePath="<%= file.filePath %>" data-folder="<%= JSON.stringify(folders) %>">
+                              data-filePath="<%= file.filePath %>" data-folder="<%= JSON.stringify(folders) %>"
+                              data-file-type="<%= file.fileType %>">
                               <td class="truncate-with-tooltip" data-full-text="<%= file.fileName %>">
                                 <span>
                                   <i class="fas fa-file-alt"></i>

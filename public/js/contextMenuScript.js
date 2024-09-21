@@ -7,12 +7,13 @@ window.onload = function () {
         const fileId = file.getAttribute('data-id');
         const fileName = file.getAttribute('data-fileName');
         const filePath = file.getAttribute('data-filePath');
+        const fileType = file.getAttribute('data-file-type');
         const folder = JSON.parse(file.getAttribute('data-folder'));
 
         new VanillaContextMenu({
             scope: file, // Apply context menu to each .file-item new VanillaContextMenu({
 
-            menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder),
+            menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder, fileType),
             customThemeClass: 'vanillaContextMenu-theme',
             customClass: 'vanillaContextMenu',
             preventCloseOnClick: true,
@@ -57,11 +58,11 @@ window.onload = function () {
 };
 
 
-window.getContextMenuItems = function (fileId, fileName, filePath, folder) {
+window.getContextMenuItems = function (fileId, fileName, filePath, folder, fileType) {
     return [
         {
             label: 'Preview',
-            callback: () => handlePreview(fileName, filePath),
+            callback: () => handlePreview(fileName, filePath, fileType),
             iconClass: 'fa fa-eye',
         },
         'hr',

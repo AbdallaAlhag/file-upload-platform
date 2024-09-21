@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   function checkForNoResults() {
     const fileBoxes = document.querySelectorAll('.file-box');
-    const fileList = document.querySelector('.file-list'); // Assuming file-list is the table
+    const fileList = document.querySelector('.box-view'); // Assuming file-list is the table
 
     if (!fileList) return; // Exit if fileList doesn't exist
 
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Create and append empty state if no file boxes are present
     if (fileBoxes.length === 0) {
       const emptyStateRow = document.createElement('tr');
-      emptyStateRow.classList.add('empty-state');
+      emptyStateRow.classList.add('empty-state-box');
 
       const emptyStateCell = document.createElement('td');
       emptyStateCell.setAttribute('colspan', '7'); // Adjust colspan as necessary
@@ -102,13 +102,18 @@ document.addEventListener('DOMContentLoaded', function () {
       fileContainer.classList.remove('box-view');
       removeBoxView();
       addRowViewTooltips();
+
+      // Remove empty state if switching to row view
+      const emptyStateRow = document.querySelector('.empty-state-box');
+      if (emptyStateRow) {
+        emptyStateRow.remove();
+      }
     } else {
       boxViewSwitch.classList.add('active');
       rowViewSwitch.classList.remove('active');
       fileContainer.classList.add('box-view');
       createBoxView();
     }
-
     checkForNoResults();
 
     const fileBoxes = document.querySelectorAll('.file-box');
@@ -118,10 +123,11 @@ document.addEventListener('DOMContentLoaded', function () {
       const fileId = fileBox.getAttribute('data-id');
       const fileName = fileBox.getAttribute('data-file-name');
       const filePath = fileBox.getAttribute('data-file-path');
+      const fileType = fileBox.getAttribute('data-file-type');
       const folder = JSON.parse(fileBox.getAttribute('data-folder'));
       new VanillaContextMenu({
         scope: fileBox, // Apply context menu to each .file-item element
-        menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder),
+        menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder, fileType),
         customThemeClass: 'vanillaContextMenu-theme',
         customClass: 'vanillaContextMenu',
         preventCloseOnClick: true,

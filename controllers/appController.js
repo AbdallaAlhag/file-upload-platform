@@ -20,7 +20,7 @@ exports.getHome = async (req, res) => {
             filePath: true,
             location: true,
             starred: true,
-            fileSize: true
+            fileSize: true,
         },
         orderBy: {
             lastOpenedAt: 'desc'
@@ -45,7 +45,8 @@ exports.getHome = async (req, res) => {
                     user: true,
                     filePath: true,
                     location: true,
-                    starred: true
+                    starred: true,
+                    fileSize: true,
                 }
             }
         }

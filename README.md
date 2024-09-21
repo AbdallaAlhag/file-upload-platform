@@ -28,6 +28,7 @@ reference:
     -> would be cool to integrate a little step by step tutorial on the site to showcase features
     -> drag and drop files would be cool but idk
 # Bug: 
+    -> got empty results message working on box view, but when we switch to row view it doesn't return cuz we don't refresh page, this is a backend project so it's not a big deal, we can just leave it empty. Too much work for little results.
     -> recently deleted files action do not work(can only preview)
         -> Context menu looks for file modal and not recentlyDeleted modal, so just catches an error: file not found for these functions. Not bad, i'll stick with it for now
     -> if you delete a shared file, it just goes  to the recently deleted of the person who owns it, interesting
@@ -42,4 +43,3 @@ reference:
     - Didn't use the queries file and wrote my queries in the controller, might be useful to split it
     - had a lot of script and style files in ejs, seemed easier to group them where they belong
     - refactored views page to be more dynamic
-    

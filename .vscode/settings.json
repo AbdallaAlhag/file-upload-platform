@@ -1,6 +1,13 @@
 {
     "cSpell.words": [
+        "officedocument",
         "polyline",
         "swal"
+    ],
+    "cSpell.ignoreWords": [
+        "openxmlformats",
+        "presentationml",
+        "spreadsheetml",
+        "wordprocessingml"
     ]
 }

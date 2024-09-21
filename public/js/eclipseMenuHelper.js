@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const filePath = event.currentTarget.getAttribute('data-path');
 
             document.querySelector('[data-action="delete"]').onclick = () => handleDelete(fileId);
-            document.querySelector('[data-action="preview"]').onclick = () => togglePreviewModal(fileName, filePath);
+            document.querySelector('[data-action="preview"]').onclick = () => handlePreview(fileName, filePath);
             document.querySelector('[data-action="share"]').onclick = () => handleShare(fileId);
         });
 
