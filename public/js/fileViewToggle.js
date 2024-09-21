@@ -145,6 +145,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         this.classList.add('active');
       });
+
+      fileBox.addEventListener('contextmenu', function (e) {
+        const allBoxes = document.querySelectorAll('.file-box');
+        console.log('hi')
+        allBoxes.forEach(box => {
+          box.classList.remove('active');
+        });
+        this.classList.add('active');
+      });
+
     });
 
     if (fileList) {

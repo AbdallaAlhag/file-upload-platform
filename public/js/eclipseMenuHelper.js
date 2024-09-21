@@ -1,11 +1,8 @@
 // script to activate files row
 document.addEventListener('DOMContentLoaded', function () {
     const tbody = document.querySelector('tbody');
-    const fileContainer = document.querySelector('.file-container');
     tbody.addEventListener('click', function (e) {
         const clickedRow = e.target.closest('.files');
-        const clickedBox = e.target.closest('.file-box');
-        console.log(clickedBox);
         if (clickedRow) {
             // Remove 'active' class from all rows
             tbody.querySelectorAll('.files').forEach(row => row.classList.remove('active'));
@@ -13,15 +10,16 @@ document.addEventListener('DOMContentLoaded', function () {
             // Add 'active' class to the clicked row
             clickedRow.classList.add('active');
         }
-        if (clickedBox) {
-            console.log('hi')
-            // Remove 'active' class from all rows
-            fileContainer.querySelectorAll('.file-box').forEach(row => row.classList.remove('active'));
-
-            // Add 'active' class to the clicked row
-            clickedBox.classList.add('active');
-        };
     });
+
+    const rows = tbody.querySelectorAll('.files');
+    rows.forEach(row => {
+        row.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            rows.forEach(row => row.classList.remove('active'));
+            row.classList.add('active');
+        })
+    })
 
 });
 
