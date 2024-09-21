@@ -4,12 +4,11 @@ window.onload = function () {
     const fileList = document.querySelector('.file-list');
     const main = document.querySelector('main');
     const mainH1 = main.querySelector('h1');
+    // Disable context menu on recently deleted page,
+    //  probably should do the same for folder and shared lol
     if (mainH1 && mainH1.textContent.trim() === '➤ Recently Deleted') {
-        console.log('detected h1')
         return;
     }
-    console.log(main, mainH1);
-    console.log('didn not detect h1');
     files.forEach(file => {
         const fileId = file.getAttribute('data-id');
         const fileName = file.getAttribute('data-fileName');

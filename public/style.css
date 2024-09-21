@@ -804,3 +804,22 @@ tbody .files.active {
   font-size: 14px;
   color: #666;
 }
+
+/* tool tip hover */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltiptext {
+  position: absolute;
+  background-color: black;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  z-index: 1000;
+  visibility: hidden; /* Keep it hidden by default */
+  opacity: 0; /* Keep it transparent */
+  transition: opacity 0.3s, visibility 0.3s; /* Add visibility transition */
+}

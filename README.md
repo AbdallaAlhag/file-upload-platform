@@ -13,7 +13,6 @@ reference:
         - pdf is super clean, probably the best results
         - png works, same as jpg
         - gif works, quite large but scrolls x and y
-    -> Work on getting preview working on all?
     -> Work on actions:
         - share -> copy link => have no idea yet (save for later)
     -> Day's work:
