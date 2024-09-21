@@ -132,6 +132,10 @@ document.addEventListener('DOMContentLoaded', function () {
         customClass: 'vanillaContextMenu',
         preventCloseOnClick: true,
       });
+
+      fileBox.addEventListener('dblclick', () => {
+        handlePreview(fileName, filePath, fileType);
+      });
     });
 
     if (fileList) {

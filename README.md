@@ -20,7 +20,6 @@ reference:
             ->have a root folder in my root directory that I need to move to uploads folder
             -> create add folder 
     EXTRA(Low Priority, not essential):
-    -> Add little popdown to tell you what action name is   
     -> right click should active file.active 
     -> double click should preview file
     -> Add sort asc, desc and sort by option (name, modified, types, size)

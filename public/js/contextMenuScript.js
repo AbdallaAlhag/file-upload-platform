@@ -24,6 +24,11 @@ window.onload = function () {
             customClass: 'vanillaContextMenu',
             preventCloseOnClick: true,
         });
+
+        file.addEventListener('dblclick', () => {
+            handlePreview(fileName, filePath, fileType);
+        });
+
     });
 
     // remove contextMenu when right clicked inside our file list class and right click outside the file list
@@ -61,6 +66,25 @@ window.onload = function () {
             }
         });
     });
+
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     const tbody = document.querySelector('tbody');
+    //     console.log('hello')
+    //     tbody.addEventListener('dblclick', function (e) {
+    //         const clickedRow = e.target.closest('.files');
+    //         if (clickedRow) {
+    //             const fileName = clickedRow.getAttribute('data-fileName');
+    //             const filePath = clickedRow.getAttribute('data-filePath');
+    //             const fileType = clickedRow.getAttribute('data-file-type');
+
+
+    //             console.log('handling preview');
+    //             handlePreview(fileName, filePath, fileType);
+    //             console.log('showing preview');
+    //         }
+    //     });
+    // });
+
 };
 
 
