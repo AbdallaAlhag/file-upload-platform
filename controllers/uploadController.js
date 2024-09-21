@@ -7,23 +7,7 @@ const fs = require('fs');
 exports.fileUpload = (req, res) => {
     upload(req, res, async (err) => {
 
-        // if (err) {
-        //     console.error('Upload Error:', err);
-        //     return res.redirect('/');
-        //     // return res.status(400).render('index', { error: 'Error uploading file: ' + err });
-        // }
-
-        // // Check if req.file is undefined (meaning no file was uploaded)
-        // if (!req.file) {
-        //     return res.redirect('/');
-        //     // return res.status(400).render('index', { error: 'No file uploaded or invalid file type' });
-        // }
-
-        // // Check if the destination is undefined (shouldn't happen, but good to check)
-        // if (!req.file.destination) {
-        //     return res.redirect('/');
-        //     // return res.status(500).render('index', { error: 'File upload failed, destination not set' });
-        // }
+        
         if (err) {
             console.error('Upload Error:', err);
             // Display the error on the index page

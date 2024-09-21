@@ -79,17 +79,16 @@ window.handlePreview = function (fileName, filePath, fileType) {
     }
     const modalLabel = document.getElementById('previewModalLabel');
     const filePreview = document.getElementById('filePreview');
-    console.log('filePreview: ', filePreview);
 
     // Check if elements exist before accessing properties
     if (modalLabel && filePreview && previewModal) {
         modalLabel.textContent = fileName;
         if (fileType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            // doesn't work like i wanted on local host but does show not available to preview
             filePreview.src = `https://docs.google.com/gview?url=${encodeURIComponent(filePath)}&embedded=true`;
         }
         else {
             filePreview.src = filePath;
-            console.log('File preview: ', filePreview);
         }
 
         // Initialize the Bootstrap modal if not already initialized

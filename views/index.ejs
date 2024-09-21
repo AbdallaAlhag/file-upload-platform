@@ -7,11 +7,10 @@
       <div class="container">
         <%- include("./partials/sidebar.ejs") %>
           <main>
-            <!-- <h1> Welcome to FileVault</h1> -->
             <% if (typeof error !=='undefined' && error) { %>
-              <p style="color: red">
+              <h1 style="color: red">
                 <%= error %>
-              </p>
+              </h1>
               <% } %>
                 <h1>
                   <% if (typeof title !=='undefined' && title) { %>

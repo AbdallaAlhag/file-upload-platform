@@ -136,6 +136,15 @@ document.addEventListener('DOMContentLoaded', function () {
       fileBox.addEventListener('dblclick', () => {
         handlePreview(fileName, filePath, fileType);
       });
+
+      fileBox.addEventListener('click', function (e) {
+        const allBoxes = document.querySelectorAll('.file-box');
+        console.log('hi')
+        allBoxes.forEach(box => {
+          box.classList.remove('active');
+        });
+        this.classList.add('active');
+      });
     });
 
     if (fileList) {

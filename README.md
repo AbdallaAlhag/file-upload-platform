@@ -25,6 +25,7 @@ reference:
     -> would be cool to integrate a little step by step tutorial on the site to showcase features
     -> drag and drop files would be cool but idk
 # Bug: 
+    -> Got upload error message displaying but indexData and folders not loading
     -> txt files are black background and white text, kinda annoying
     -> got empty results message working on box view, but when we switch to row view it doesn't return cuz we don't refresh page, this is a backend project so it's not a big deal, we can just leave it empty. Too much work for too little results.
     -> if you delete a shared file, it just goes  to the recently deleted of the person who owns it, interesting
