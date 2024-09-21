@@ -29,8 +29,7 @@ reference:
     -> drag and drop files would be cool but idk
 # Bug: 
     -> got empty results message working on box view, but when we switch to row view it doesn't return cuz we don't refresh page, this is a backend project so it's not a big deal, we can just leave it empty. Too much work for little results.
-    -> recently deleted files action do not work(can only preview)
-        -> Context menu looks for file modal and not recentlyDeleted modal, so just catches an error: file not found for these functions. Not bad, i'll stick with it for now
+
     -> if you delete a shared file, it just goes  to the recently deleted of the person who owns it, interesting
     -> filter resets after results
     -> people filter doesn't work!!! correctly with shared with me
@@ -38,6 +37,7 @@ reference:
         -> attempted but kinda broke it so left it alone
     - Can't style the iframe document and some files don't work (Not working = microsoft office files)
         - docs not working: https://stackoverflow.com/questions/27957766/how-do-i-render-a-word-document-doc-docx-in-the-browser-using-javascript
+        -> implemented solution above but doesn't work on local host and have to test when deployed. The pro is that it doesn't download and shows can't preview except when you click on the action button to preview. = better.
 
 # Realization:
     - Didn't use the queries file and wrote my queries in the controller, might be useful to split it
