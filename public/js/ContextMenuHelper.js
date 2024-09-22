@@ -156,6 +156,9 @@ window.handleShare = function (fileId) {
 }
 
 window.handleMove = async function (folderId, fileId) {
+    if (folderId === null) {
+        return
+    }
     const menu = document.querySelector('.vanillaContextMenu');
     const nestedMenu = document.querySelector('.nested-context-menu');
     if (menu) {

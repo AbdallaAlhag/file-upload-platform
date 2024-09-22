@@ -14,8 +14,7 @@ window.onload = function () {
         const fileName = file.getAttribute('data-fileName');
         const filePath = file.getAttribute('data-filePath');
         const fileType = file.getAttribute('data-file-type');
-        const folder = JSON.parse(file.getAttribute('data-folder'));
-
+        const folder = file.hasAttribute('data-folder') ? JSON.parse(file.getAttribute('data-folder')) : null;
         new VanillaContextMenu({
             scope: file, // Apply context menu to each .file-item new VanillaContextMenu({
 
@@ -136,11 +135,11 @@ window.getContextMenuItems = function (fileId, fileName, filePath, folder, fileT
         {
             label: 'Move',
             iconClass: 'fa fa-right-long',
-            nestedMenu: folder.map(f => ({
+            nestedMenu: Array.isArray(folder) ? folder.map(f => ({
                 label: f.name,
                 callback: () => handleMove(f.id, fileId),
                 iconClass: 'fa fa-folder',
-            }))
+            })) : []
         },
         'hr',
         {

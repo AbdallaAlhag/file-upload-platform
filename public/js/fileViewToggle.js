@@ -6,10 +6,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const files = document.querySelectorAll('.files');
 
   fetch('/get-view')
-    .then(response => response.json())
+    .then(response => {
+      response.json()
+    })
     .then(data => {
-      const savedView = data.view || 'row'; // Default to 'row' if no saved preference
-      setActiveView(data.view);
+      const savedView = data?.view || 'row'; // Default to 'row' if no saved preference
+      setActiveView(savedView);
     })
     .catch(err => console.error('Error fetching view preference:', err));
 
@@ -124,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const fileName = fileBox.getAttribute('data-file-name');
       const filePath = fileBox.getAttribute('data-file-path');
       const fileType = fileBox.getAttribute('data-file-type');
-      const folder = JSON.parse(fileBox.getAttribute('data-folder'));
+      const folder = fileBox.getAttribute('data-folder') ? JSON.parse(JSON.stringify(fileBox.getAttribute('data-folder'))) : null;
       new VanillaContextMenu({
         scope: fileBox, // Apply context menu to each .file-item element
         menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder, fileType),
@@ -147,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       fileBox.addEventListener('contextmenu', function (e) {
         const allBoxes = document.querySelectorAll('.file-box');
-        console.log('hi')
         allBoxes.forEach(box => {
           box.classList.remove('active');
         });
@@ -156,26 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-    if (fileList) {
-      fileList.addEventListener('contextmenu', (event) => {
-        event.preventDefault();
-        const contextMenu = document.getElementById('contextMenu');
-        contextMenu.style.top = `${event.clientY}px`;
-        contextMenu.style.left = `${event.clientX}px`;
-        contextMenu.classList.remove('visible');
-      });
-    }
-    // Hide context menu on right-click outside the file list
-    document.addEventListener('contextmenu', (event) => {
-      const contextMenu = document.getElementById('contextMenu');
-      const fileList = document.querySelector('.file-list');
 
-      if (contextMenu && contextMenu.classList.contains('visible') && !fileList.contains(event.target)) {
-        contextMenu.classList.remove('visible');
-      }
-    });
-
-    // if user right clicks, it activetes the row and highlights it
     document.addEventListener('DOMContentLoaded', function () {
       const tbody = document.querySelector('tbody');
 
@@ -202,44 +184,53 @@ document.addEventListener('DOMContentLoaded', function () {
       boxElement.dataset.id = file.dataset.id;
       boxElement.dataset.fileName = file.dataset.filename;
       boxElement.dataset.filePath = file.dataset.filepath;
-      boxElement.dataset.folder = file.dataset.folder;
+      if (file.dataset.folder) {
+        boxElement.dataset.folder = JSON.parse(file.dataset.folder);
+      }
       boxElement.dataset.fileType = file.dataset.fileType;
       const fileIcon = document.createElement('div');
       fileIcon.className = 'file-icon';
       const fileType = boxElement.dataset.fileType;
+      const filePath = boxElement.dataset.filePath;
       let fileIconColor = 'text-primary';
       let fileIconType = 'file';
-      switch (fileType) {
-        case 'application/pdf':
-          fileIconColor = 'text-danger';
-          fileIconType = 'file-pdf';
-          break;
-        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-          fileIconColor = 'text-primary';
-          fileIconType = 'file-word';
-          break;
-        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-          fileIconColor = 'text-warning';
-          fileIconType = 'file-powerpoint';
-          break;
-        case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-          fileIconColor = 'text-success';
-          fileIconType = 'file-excel';
-          break;
-        case 'text/plain':
-          fileIconColor = 'text-light';
-          fileIconType = 'file-alt';
-          break;
-        case 'image/jpeg':
-        case 'image/png':
-        case 'image/gif':
-          fileIconColor = 'text-danger';
-          fileIconType = 'file-image';
-          break;
-        default:
-          break;
+      if (filePath.includes('/')) {
+        fileIconColor = 'text-brown';
+        fileIconType = 'folder';
+      } else {
+        switch (fileType) {
+          case 'application/pdf':
+            fileIconColor = 'text-danger';
+            fileIconType = 'file-pdf';
+            break;
+          case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            fileIconColor = 'text-primary';
+            fileIconType = 'file-word';
+            break;
+          case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+            fileIconColor = 'text-warning';
+            fileIconType = 'file-powerpoint';
+            break;
+          case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            fileIconColor = 'text-success';
+            fileIconType = 'file-excel';
+            break;
+          case 'text/plain':
+            fileIconColor = 'text-light';
+            fileIconType = 'file-alt';
+            break;
+          case 'image/jpeg':
+          case 'image/png':
+          case 'image/gif':
+            fileIconColor = 'text-danger';
+            fileIconType = 'file-image';
+            break;
+          default:
+            break;
+        }
       }
-      fileIcon.innerHTML = `<i class="fas fa-${fileIconType} ${fileIconColor}"></i>`; const fileName = document.createElement('div');
+      fileIcon.innerHTML = `<i class="fas fa-${fileIconType} ${fileIconColor}"></i>`;
+      const fileName = document.createElement('div');
       fileName.className = 'file-name truncate-with-tooltip';
       const fileNameText = file.querySelector('td:first-child span').textContent.trim();
       fileName.textContent = fileNameText;

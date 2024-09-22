@@ -31,11 +31,11 @@
                     <tbody>
                       <% for (const file of indexData) { %>
                         <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>"
-                          data-filePath="<%= file.filePath %>" data-folder="<%= JSON.stringify(file) %>">
+                          data-file-type="<%= file.fileType %>" data-filePath="<%= file.filePath %>">
                           <td class="truncate-with-tooltip" data-full-text="<%= file.fileName %>">
                             <span>
                               <i class="fa fa-folder"></i>
-                              <%= file.name %>
+                              <%= file.fileName %>
                             </span>
                           </td>
                           <td class="truncate-with-tooltip"
@@ -74,22 +74,38 @@
                             </span>
                           </td>
                           <td class="actions">
-                            <button onclick="sharePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
-                                class="fas fa-share"></i></button>
-                            <a href="/download/<%= file.id %>"><button><i class="fas fa-download"></i></button></a>
-                            <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
-                                class="fas fa-edit"></i></button>
-                            <button onclick="starFile('<%= file.id %>')">
-                              <% if (file.starred) { %>
-                                <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                                <% } else { %>
-                                  <i class="fas fa-star"></i>
-                                  <% } %>
-                            </button>
-                            <button class="more-options" data-id="<%= file.id %>" data-name="<%= file.fileName %>"
-                              data-path="<%= file.filePath %>">
-                              <i class="fas fa-ellipsis-v"></i>
-                            </button>
+                            <div class="tooltip" onmouseover="showTooltip(event, 'Share')" onmouseout="hideTooltip()">
+                              <button onclick="sharePrompt('<%= file.id %>', '<%= file.fileName %>')"
+                                style="opacity: 0.5; cursor: not-allowed;">
+                                <i class="fas fa-share"></i>
+                              </button>
+                            </div>
+                            <div class="tooltip" onmouseover="showTooltip(event, 'Download')"
+                              onmouseout="hideTooltip()">
+                              <a href="/download/<%= file.id %>"><button style="opacity: 0.5; cursor: not-allowed;"><i
+                                    class="fas fa-download"></i></button></a>
+                            </div>
+                            <div class="tooltip" onmouseover="showTooltip(event, 'Rename')" onmouseout="hideTooltip()">
+                              <button onclick="showRenamePrompt('<%= file.id %>', '<%= file.fileName %>')"><i
+                                  class="fas fa-edit"></i></button>
+                            </div>
+                            <div class="tooltip" onmouseover="showTooltip(event, 'Star')" onmouseout="hideTooltip()">
+                              <button onclick="starFile('<%= file.id %>')" style="opacity: 0.5; cursor: not-allowed;">
+                                <% if (file.starred) { %>
+                                  <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
+                                  <% } else { %>
+                                    <i class="fas fa-star"></i>
+                                    <% } %>
+                              </button>
+                            </div>
+
+                            <div class="tooltip" onmouseover="showTooltip(event, 'More options')"
+                              onmouseout="hideTooltip()">
+                              <button class="more-options" data-id="<%= file.id %>" data-name="<%= file.fileName %>"
+                                data-path="<%= file.filePath %>" style="opacity: 0.5; cursor: not-allowed;">
+                                <i class="fas fa-ellipsis-v"></i>
+                              </button>
+                            </div>
                           </td>
                         </tr>
                         <% } %>
@@ -122,7 +138,30 @@
             </div>
           </div>
         </div>
+        <script>
+          function showTooltip(event, actionName) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltiptext';
+            tooltip.textContent = actionName;
 
+            document.body.appendChild(tooltip);
+
+            const rect = event.currentTarget.getBoundingClientRect();
+            tooltip.style.left = `${rect.left + window.scrollX + (rect.width / 2) - (tooltip.offsetWidth / 2)}px`;
+            tooltip.style.top = `${rect.top + window.scrollY - tooltip.offsetHeight - 10}px`; // Adjust this to position above the button
+
+            // Show the tooltip
+            tooltip.style.visibility = 'visible';
+            tooltip.style.opacity = '1'; // Set to visible
+          }
+
+          function hideTooltip() {
+            const tooltip = document.querySelector('.tooltiptext');
+            if (tooltip) {
+              tooltip.remove();
+            }
+          }
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vanilla-context-menu/dist/vanilla-context-menu.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

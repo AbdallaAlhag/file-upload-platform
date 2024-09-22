@@ -73,6 +73,7 @@ exports.getFolder = async (req, res) => {
             files: true,
             user: true,
             updatedAt: true,
+            filePath: true
         },
         orderBy: {
             updatedAt: 'desc'
@@ -84,7 +85,8 @@ exports.getFolder = async (req, res) => {
 
     // Sort indexData by starred in descending order
     // indexData.sort((a, b) => (a.starred < b.starred) ? 1 : -1);
-    res.render('folder', { indexData, title: '➤ Folders' });
+    const folderData = indexData.map(folder => ({ ...folder, fileName: folder.name }));
+    res.render('folder', { indexData: folderData, title: '➤ Folders' });
 }
 
 exports.getRecent = async (req, res) => {
