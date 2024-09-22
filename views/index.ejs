@@ -60,8 +60,24 @@
                                     data-file-type="<%= file.fileType %>">
                                     <td class="truncate-with-tooltip" data-full-text="<%= file.fileName %>">
                                       <span>
-                                        <i class="fas fa-file-alt"></i>
-                                        <%= file.fileName %>
+                                        <% switch (file.fileType) { case 'application/pdf' : %><i
+                                            class="fas fa-file-pdf text-danger"></i>
+                                          <%; break;
+                                            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                                            : %><i class="fas fa-file-word text-primary"></i>
+                                            <%; break;
+                                              case 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+                                              : %><i class="fas fa-file-powerpoint text-warning"></i>
+                                              <%; break;
+                                                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                                                : %><i class="fas fa-file-excel text-success"></i>
+                                                <%; break; case 'text/plain' : %><i
+                                                    class="fas fa-file-alt text-light"></i>
+                                                  <%; break; case 'image/jpeg' : case 'image/png' : case 'image/gif' :
+                                                    %><i class="fas fa-file-image text-danger"></i>
+                                                    <%; break; default: %><i class="fas fa-file text-primary"></i>
+                                                      <%; } %>
+                                                        <%= file.fileName %>
                                       </span>
                                     </td>
                                     <td class="truncate-with-tooltip"

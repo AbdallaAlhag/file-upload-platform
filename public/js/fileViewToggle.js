@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       fileBox.addEventListener('click', function (e) {
         const allBoxes = document.querySelectorAll('.file-box');
-        console.log('hi')
         allBoxes.forEach(box => {
           box.classList.remove('active');
         });
@@ -204,12 +203,43 @@ document.addEventListener('DOMContentLoaded', function () {
       boxElement.dataset.fileName = file.dataset.filename;
       boxElement.dataset.filePath = file.dataset.filepath;
       boxElement.dataset.folder = file.dataset.folder;
-
+      boxElement.dataset.fileType = file.dataset.fileType;
       const fileIcon = document.createElement('div');
       fileIcon.className = 'file-icon';
-      fileIcon.innerHTML = '<i class="fas fa-file-alt"></i>';
-
-      const fileName = document.createElement('div');
+      const fileType = boxElement.dataset.fileType;
+      let fileIconColor = 'text-primary';
+      let fileIconType = 'file';
+      switch (fileType) {
+        case 'application/pdf':
+          fileIconColor = 'text-danger';
+          fileIconType = 'file-pdf';
+          break;
+        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+          fileIconColor = 'text-primary';
+          fileIconType = 'file-word';
+          break;
+        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+          fileIconColor = 'text-warning';
+          fileIconType = 'file-powerpoint';
+          break;
+        case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+          fileIconColor = 'text-success';
+          fileIconType = 'file-excel';
+          break;
+        case 'text/plain':
+          fileIconColor = 'text-light';
+          fileIconType = 'file-alt';
+          break;
+        case 'image/jpeg':
+        case 'image/png':
+        case 'image/gif':
+          fileIconColor = 'text-danger';
+          fileIconType = 'file-image';
+          break;
+        default:
+          break;
+      }
+      fileIcon.innerHTML = `<i class="fas fa-${fileIconType} ${fileIconColor}"></i>`; const fileName = document.createElement('div');
       fileName.className = 'file-name truncate-with-tooltip';
       const fileNameText = file.querySelector('td:first-child span').textContent.trim();
       fileName.textContent = fileNameText;
