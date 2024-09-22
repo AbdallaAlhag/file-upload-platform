@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const boxViewSwitch = document.getElementById('boxViewSwitch');
   const fileContainer = document.getElementById('fileContainer');
   const files = document.querySelectorAll('.files');
+  const main = document.querySelector('main');
+  const mainH1 = main.querySelector('h1');
 
   fetch('/get-view')
     .then(response => response.json())
@@ -120,6 +122,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // const fileList = document.querySelector('.file-list');
 
     fileBoxes.forEach(fileBox => {
+      if (mainH1 && mainH1.textContent.trim() === '➤ Recently Deleted') {
+        return;
+      }
+
       const fileId = fileBox.getAttribute('data-id');
       const fileName = fileBox.getAttribute('data-file-name');
       const filePath = fileBox.getAttribute('data-file-path');
@@ -127,13 +133,15 @@ document.addEventListener('DOMContentLoaded', function () {
       const folder = fileBox.getAttribute('data-folder') ? JSON.parse(JSON.stringify(fileBox.getAttribute('data-folder'))) : null;
       const isFolder = fileBox.hasAttribute('data-isFolder') ? JSON.parse(fileBox.getAttribute('data-isFolder')) : false;
 
-      new VanillaContextMenu({
-        scope: fileBox, // Apply context menu to each .file-item element
-        menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder, fileType),
-        customThemeClass: 'vanillaContextMenu-theme',
-        customClass: 'vanillaContextMenu',
-        preventCloseOnClick: true,
-      });
+      if (mainH1 && mainH1.textContent.trim() !== '➤ Folders') {
+        new VanillaContextMenu({
+          scope: fileBox, // Apply context menu to each .file-item element
+          menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder, fileType),
+          customThemeClass: 'vanillaContextMenu-theme',
+          customClass: 'vanillaContextMenu',
+          preventCloseOnClick: true,
+        });
+      }
 
       console.log(isFolder)
       if (!isFolder) {

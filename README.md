@@ -6,9 +6,8 @@ reference:
 # todo:
     - validate and sanitize sign up form
     -> Work on copy link => have no idea yet (save for later)
-    ->have a root folder in my root directory that I need to move to uploads folder
-    -> create add folder 
-    EXTRA(Low Priority, not essential):
+    -> remove context menu from box of deleted and folders page
+    ------> EXTRA(Low Priority, not essential):
     -> Add sort asc, desc and sort by option (name, modified, types, size)
     -> would be cool to integrate a little step by step tutorial on the site to showcase features
     -> drag and drop files would be cool but idk
