@@ -31,7 +31,8 @@
                     <tbody>
                       <% for (const file of indexData) { %>
                         <tr class="files" data-id="<%= file.id %>" data-fileName="<%= file.fileName %>"
-                          data-file-type="<%= file.fileType %>" data-filePath="<%= file.filePath %>">
+                          data-file-type="<%= file.fileType %>" data-filePath="<%= file.filePath %>"
+                          data-isFolder="true">
                           <td class="truncate-with-tooltip" data-full-text="<%= file.fileName %>">
                             <span>
                               <i class="fa fa-folder"></i>

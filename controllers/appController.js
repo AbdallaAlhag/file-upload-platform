@@ -89,6 +89,64 @@ exports.getFolder = async (req, res) => {
     res.render('folder', { indexData: folderData, title: '➤ Folders' });
 }
 
+exports.getFolderFiles = async (req, res) => {
+
+    const folderId = req.params.id;
+
+    const folderName = (await prisma.folder.findUnique({ where: { id: folderId }, select: { name: true } })).name;
+
+    const folders = await prisma.folder.findMany({
+        where: {
+            userId: req.user.id
+        }
+    });
+
+    let folderFiles = await prisma.folder.findUnique({
+        where: {
+            id: folderId
+        },
+        include: {
+            files: true, // Include the files associated with the folder
+        }
+    });
+
+    folderFiles = folderFiles?.files;
+
+
+    const sharedFiles = await prisma.sharedFile.findMany({
+        where: {
+            userId: req.user.id,
+            file: {
+                folderId
+            }
+        },
+        select: {
+            file: {
+                select: {
+                    id: true,
+                    fileName: true,
+                    fileType: true,
+                    lastOpenedAt: true,
+                    user: true,
+                    filePath: true,
+                    location: true,
+                    starred: true,
+                    fileSize: true,
+                }
+            }
+        }
+    });
+
+    const sharedFilesData = sharedFiles.map(shared => shared.file);
+    const indexData = [...folderFiles, ...sharedFilesData];
+    // const indexData = [...sharedFilesData];
+
+    // const folderData = indexData.map(folder => ({ ...folder, fileName: folder.name }));
+
+
+    res.render('index', { indexData, folders, title: `➤ Folders ⇴ ${folderName}` });
+}
+
 exports.getRecent = async (req, res) => {
     const folders = await prisma.folder.findMany({
         where: {
@@ -122,6 +180,7 @@ exports.getRecent = async (req, res) => {
     });
     res.render('index', { indexData, folders, title: '➤ Recent Files' });
 }
+
 
 exports.getStarred = async (req, res) => {
     const folders = await prisma.folder.findMany({

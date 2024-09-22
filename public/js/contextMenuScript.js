@@ -15,6 +15,7 @@ window.onload = function () {
         const filePath = file.getAttribute('data-filePath');
         const fileType = file.getAttribute('data-file-type');
         const folder = file.hasAttribute('data-folder') ? JSON.parse(file.getAttribute('data-folder')) : null;
+        const isFolder = file.hasAttribute('data-isFolder') ? JSON.parse(file.getAttribute('data-isFolder')) : false;
         new VanillaContextMenu({
             scope: file, // Apply context menu to each .file-item new VanillaContextMenu({
 
@@ -23,10 +24,19 @@ window.onload = function () {
             customClass: 'vanillaContextMenu',
             preventCloseOnClick: true,
         });
+        if (!isFolder) {
+            file.addEventListener('dblclick', () => {
+                handlePreview(fileName, filePath, fileType);
+            });
+        }
+        else {
+            file.addEventListener('dblclick', () => {
+                // this is where we want to open the folder
+                console.log('Pretending to open folder...');
+                window.location.href = `/folder/${fileId}`;
+            });
+        }
 
-        file.addEventListener('dblclick', () => {
-            handlePreview(fileName, filePath, fileType);
-        });
 
     });
 
@@ -66,23 +76,7 @@ window.onload = function () {
         });
     });
 
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     const tbody = document.querySelector('tbody');
-    //     console.log('hello')
-    //     tbody.addEventListener('dblclick', function (e) {
-    //         const clickedRow = e.target.closest('.files');
-    //         if (clickedRow) {
-    //             const fileName = clickedRow.getAttribute('data-fileName');
-    //             const filePath = clickedRow.getAttribute('data-filePath');
-    //             const fileType = clickedRow.getAttribute('data-file-type');
 
-
-    //             console.log('handling preview');
-    //             handlePreview(fileName, filePath, fileType);
-    //             console.log('showing preview');
-    //         }
-    //     });
-    // });
 
 };
 
@@ -127,7 +121,7 @@ window.getContextMenuItems = function (fileId, fileName, filePath, folder, fileT
                 },
                 {
                     label: 'Copy Link',
-                    callback: handleCopyLink,
+                    callback: () => handleCopyLink(),
                     iconClass: 'fa fa-link',
                 }
             ]

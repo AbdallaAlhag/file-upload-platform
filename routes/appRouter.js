@@ -18,4 +18,6 @@ router.get('/recentlyDeleted', appController.getRecentlyDeleted);
 
 router.get('/shared', appController.getShared);
 
+router.get('/folder/:id', appController.getFolderFiles);
+
 module.exports = router

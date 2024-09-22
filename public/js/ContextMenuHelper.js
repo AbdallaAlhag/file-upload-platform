@@ -102,13 +102,7 @@ window.handlePreview = function (fileName, filePath, fileType) {
 
 }
 
-// window.hideModal = function () {
-//     if (modalInstance) {
-//         modalInstance.hide();
-//     } else {
-//         console.error("Modal instance not initialized.");
-//     }
-// };
+
 document.addEventListener('DOMContentLoaded', initializeModal);
 
 window.handleCopy = async function (fileId) {
@@ -185,6 +179,7 @@ window.handleMove = async function (folderId, fileId) {
 
 window.handleCopyLink = function () {
     // Add your functionality here
+    console.log('Copy link clicked');
 }
 
 

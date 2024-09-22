@@ -6,9 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const files = document.querySelectorAll('.files');
 
   fetch('/get-view')
-    .then(response => {
-      response.json()
-    })
+    .then(response => response.json())
     .then(data => {
       const savedView = data?.view || 'row'; // Default to 'row' if no saved preference
       setActiveView(savedView);
@@ -119,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
     checkForNoResults();
 
     const fileBoxes = document.querySelectorAll('.file-box');
-    const fileList = document.querySelector('.file-list');
+    // const fileList = document.querySelector('.file-list');
 
     fileBoxes.forEach(fileBox => {
       const fileId = fileBox.getAttribute('data-id');
@@ -127,6 +125,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const filePath = fileBox.getAttribute('data-file-path');
       const fileType = fileBox.getAttribute('data-file-type');
       const folder = fileBox.getAttribute('data-folder') ? JSON.parse(JSON.stringify(fileBox.getAttribute('data-folder'))) : null;
+      const isFolder = fileBox.hasAttribute('data-isFolder') ? JSON.parse(fileBox.getAttribute('data-isFolder')) : false;
+
       new VanillaContextMenu({
         scope: fileBox, // Apply context menu to each .file-item element
         menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder, fileType),
@@ -135,10 +135,17 @@ document.addEventListener('DOMContentLoaded', function () {
         preventCloseOnClick: true,
       });
 
-      fileBox.addEventListener('dblclick', () => {
-        handlePreview(fileName, filePath, fileType);
-      });
-
+      console.log(isFolder)
+      if (!isFolder) {
+        fileBox.addEventListener('dblclick', () => {
+          handlePreview(fileName, filePath, fileType);
+        });
+      }
+      else {
+        fileBox.addEventListener('dblclick', () => {
+          window.location.href = `/folder/${fileId}`;
+        });
+      }
       fileBox.addEventListener('click', function (e) {
         const allBoxes = document.querySelectorAll('.file-box');
         allBoxes.forEach(box => {
@@ -186,6 +193,9 @@ document.addEventListener('DOMContentLoaded', function () {
       boxElement.dataset.filePath = file.dataset.filepath;
       if (file.dataset.folder) {
         boxElement.dataset.folder = JSON.parse(file.dataset.folder);
+      }
+      if (file.dataset.isfolder) {
+        boxElement.dataset.isfolder = file.dataset.isfolder;
       }
       boxElement.dataset.fileType = file.dataset.fileType;
       const fileIcon = document.createElement('div');
