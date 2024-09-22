@@ -16,14 +16,19 @@ window.onload = function () {
         const fileType = file.getAttribute('data-file-type');
         const folder = file.hasAttribute('data-folder') ? JSON.parse(file.getAttribute('data-folder')) : null;
         const isFolder = file.hasAttribute('data-isFolder') ? JSON.parse(file.getAttribute('data-isFolder')) : false;
-        new VanillaContextMenu({
-            scope: file, // Apply context menu to each .file-item new VanillaContextMenu({
 
-            menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder, fileType),
-            customThemeClass: 'vanillaContextMenu-theme',
-            customClass: 'vanillaContextMenu',
-            preventCloseOnClick: true,
-        });
+        if (!mainH1.textContent.trim() === '➤ Folders') {
+            new VanillaContextMenu({
+                scope: file, // Apply context menu to each .file-item new VanillaContextMenu({
+
+                menuItems: window.getContextMenuItems(fileId, fileName, filePath, folder, fileType),
+                customThemeClass: 'vanillaContextMenu-theme',
+                customClass: 'vanillaContextMenu',
+                preventCloseOnClick: true,
+            });
+        }
+
+
         if (!isFolder) {
             file.addEventListener('dblclick', () => {
                 handlePreview(fileName, filePath, fileType);
@@ -32,7 +37,6 @@ window.onload = function () {
         else {
             file.addEventListener('dblclick', () => {
                 // this is where we want to open the folder
-                console.log('Pretending to open folder...');
                 window.location.href = `/folder/${fileId}`;
             });
         }

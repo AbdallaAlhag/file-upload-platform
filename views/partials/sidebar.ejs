@@ -1,8 +1,12 @@
 <aside class="sidebar">
   <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
     <input type="file" name="file" id="fileInput" style="display: none;" />
-    <button type="button" class="new-button" id="uploadButton">New</button>
+    <button type="button" class="new-button" id="uploadButton">Upload File</button>
   </form>
+
+  <button type="button" class="new-button" onclick="createNewFolder()">New
+    Folder</button>
+  <form id="newFolderForm" action="/folder" method="POST" style="display: none;"></form>
 
   <script>
     const fileInput = document.getElementById('fileInput');
@@ -21,6 +25,8 @@
       }
     });
   </script>
+  <script src="/js/sweetAlertUtils.js"></script>
+
 
   <nav>
     <ul>

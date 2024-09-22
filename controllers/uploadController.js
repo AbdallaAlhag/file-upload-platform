@@ -7,7 +7,7 @@ const fs = require('fs');
 exports.fileUpload = (req, res) => {
     upload(req, res, async (err) => {
 
-        
+
         if (err) {
             console.error('Upload Error:', err);
             // Display the error on the index page
@@ -371,5 +371,25 @@ exports.fileRestore = async (req, res) => {
     } catch (error) {
         console.error('Error restoring file:', error);
         res.status(500).send('Server Error');
+    }
+}
+
+exports.createNewFolder = async (req, res) => {
+    const folderName = req.params.name;
+    try {
+        const newFolder = await prisma.folder.create({
+            data: {
+                name: folderName,
+                filePath: `/${folderName}`,
+                userId: req.user.id,
+            }
+        });
+        res.status(201).send(`Folder created successfully: ${newFolder.name}`);
+
+    }
+
+    catch (error) {
+        console.error('Error creating folder:', error);
+        res.status(500).send('Error creating folder');
     }
 }

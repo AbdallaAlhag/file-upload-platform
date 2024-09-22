@@ -5,8 +5,11 @@ const uploadController = require('../controllers/uploadController');
 // Post files to upload and create new file entries in Prisma DB
 router.post('/upload', uploadController.fileUpload);
 
+// Add a new folder
+router.post('/folder/:name', uploadController.createNewFolder);
+
 // Get files from server and download them
-router.get('/download/:id', uploadController.fileDownload);
+router.post('/download/:id', uploadController.fileDownload);
 
 // rename file
 router.patch('/rename/:id', uploadController.fileRename);

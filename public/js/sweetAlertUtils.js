@@ -136,3 +136,69 @@ window.sharePrompt = async function (fileId) {
         }
     }
 }
+
+window.createNewFolder = async function () {
+
+    const { value: folderName } = await Swal.fire({
+        title: 'Insert Folder Name',
+        input: 'text',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        confirmButtonText: 'Create',
+        customClass: {
+            confirmButton: 'custom-button',
+        },
+
+        inputValidator: (value) => {
+            if (!value) {
+                return 'You need to enter a new file name!';
+            }
+        }
+    });
+
+    if (folderName) {
+        try {
+            const response = await fetch(`/folder/${folderName}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                const swalPopup = Swal.fire({
+                    title: 'Success!',
+                    text: 'Folder Created.',
+                    icon: 'success',
+                    confirmButtonText: 'Close',
+                    customClass: {
+                        confirmButton: 'custom-button',
+                    },
+                });
+                await swalPopup.then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload(); // Or update the UI to reflect changes
+                    }
+                });
+
+            } else {
+                const swalPopup = Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to Create Folder.',
+                    icon: 'error',
+                    confirmButtonText: 'Close',
+                    customClass: {
+                        confirmButton: 'custom-button',
+                    },
+                });
+            }
+        } catch (error) {
+            const swalPopup = Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while Creating Folder.',
+                icon: 'error',
+                confirmButtonText: 'Close',
+                customClass: {
+                    confirmButton: 'custom-button',
+                },
+            });
+        }
+    }
+}

@@ -162,6 +162,7 @@ header {
 
 tbody .files {
   transition: background-color 0.2s ease;
+  cursor: pointer;
 }
 
 tbody .files:hover {
@@ -560,6 +561,7 @@ tbody .files.active {
   justify-content: space-between;
   transition: all 0.2s ease;
   overflow: hidden; /* Ensure content doesn't overflow */
+  cursor: pointer;
 }
 
 .file-name,
