@@ -3,9 +3,12 @@
         <div class="logo">
             <a href="/">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M16 2L2 10L16 18L30 10L16 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M2 22L16 30L30 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M2 16L16 24L30 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16 2L2 10L16 18L30 10L16 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M2 22L16 30L30 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M2 16L16 24L30 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
                 </svg>
                 <span>FileVault</span>
             </a>
@@ -13,7 +16,22 @@
         <nav class="main-nav">
             <ul>
                 <li><a href="/">Dashboard</a></li>
-                <li><a href="/">Upload</a></li>
+                <li class="dropdown">
+                    <span style="color: #4d8ff7; cursor: pointer;"><strong>Upload</strong></span>
+                    <div class="dropdown-content">
+                        <form id="uploadForm" class="uplaod-form" action="/upload" method="POST"
+                            enctype="multipart/form-data">
+                            <input type="file" name="file" id="fileInput" style="display: none;" />
+                            <button type="button" id="uploadButton" class="upload-btn upload-btn-primary">Upload
+                                File</button>
+                        </form>
+
+                        <button type="button" class="upload-btn" onclick="createNewFolder()">New
+                            Folder</button>
+                        <form id="newFolderForm" action="/folder" method="POST" style="display: none;"></form>
+
+                    </div>
+                </li>
                 <li><a href="/">Account</a></li>
             </ul>
         </nav>
@@ -22,3 +40,101 @@
         </div>
     </div>
 </header>
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const uploadButton = document.getElementById('uploadButton');
+    const uploadForm = document.getElementById('uploadForm');
+
+    // When the button is clicked, trigger the file input
+    uploadButton.addEventListener('click', () => {
+        fileInput.click(); // Open file explorer
+    });
+
+    // When a file is selected, submit the form
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            uploadForm.submit(); // Submit form after selecting file
+        }
+    });
+</script>
+<script src="/js/sweetAlertUtils.js"></script>
+
+<script>
+    document.getElementById('uploadFile').addEventListener('click', function (e) {
+        e.preventDefault();
+        console.log('Upload File clicked');
+        // Add your file upload logic here
+    });
+
+    document.getElementById('uploadFolder').addEventListener('click', function (e) {
+        e.preventDefault();
+        console.log('Upload Folder clicked');
+        // Add your folder upload logic here
+    });
+</script>
+
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 95px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        left: 50%;
+        /* Center the dropdown */
+        transform: translateX(-50%);
+        /* Adjust for centering */
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .upload-form {
+        margin-bottom: 10px;
+    }
+
+    .upload-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        /* margin-bottom: 8px; */
+        background-color: #f0f0f0;
+        border: none;
+        /* border-radius: 10px; */
+        cursor: pointer;
+        font-size: 14px;
+        text-align: left;
+        transition: background-color 0.3s;
+    }
+
+    .upload-btn:hover {
+        background-color: #e0e0e0;
+    }
+
+    .upload-btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .upload-btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
