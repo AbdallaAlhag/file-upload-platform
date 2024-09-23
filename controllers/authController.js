@@ -64,6 +64,33 @@ exports.login = (req, res, next) => {
         });
     })(req, res, next);
 };
+exports.loginAsGuest = (req, res, next) => {
+    // Set guest credentials in the request body
+    req.body.username = 'guest';
+    req.body.password = 'guestguest';
+
+    // Use passport's local strategy for authentication
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            return next(err); // Handle internal server error
+        }
+        if (!user) {
+            // Authentication failed, return a JSON error response
+            return res.status(401).json({ error: info.message });
+        }
+
+        req.logIn(user, (err) => {
+            if (err) {
+                console.error('Login error:', err); // Log any errors
+                return next(err);
+            }
+
+            // No need to send a token, session is managed via cookies
+            return res.status(200).json({ message: 'Logged in as guest' });
+        });
+    })(req, res, next);
+};
+
 
 exports.logOut = (req, res, next) => {
     req.logout((err) => {

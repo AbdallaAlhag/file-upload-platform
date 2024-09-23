@@ -9,11 +9,13 @@ const authRouter = require('./routes/authRouter');
 const appRouter = require('./routes/appRouter');
 const uploadRouter = require('./routes/uploadRouter');
 const setupCronJobs = require('./utils/cronJobs');
+const bodyParser = require('body-parser');
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
 app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "ejs");
+app.use(bodyParser.json());
 
 app.use(
     expressSession({
@@ -63,13 +65,14 @@ app.use((req, res, next) => {
         next();
     } else {
         // Allow access to login and signup pages even if not authenticated
-        if (req.path === '/login' || req.path === '/signup') {
-            return next(); // Proceed to the login or signup page
+        if (req.path === '/login' || req.path === '/signup' || req.path === '/login/guest') {
+            return next(); // Proceed to the login, signup, or guest login page
         }
         // Redirect to login page if not authenticated and trying to access other routes
         return res.redirect('/login');
     }
 });
+
 
 // The following code is for handling graceful shutdowns of the server
 // We use these events to disconnect from the database before the process exits

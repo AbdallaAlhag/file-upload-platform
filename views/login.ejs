@@ -13,7 +13,8 @@
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input id="password" name="password" placeholder="Enter your password" type="password" required />
+            <input id="password" name="password" placeholder="Enter your password" type="password" required
+              autocomplete="current-password" />
           </div>
           <% if (errorMessage) { %>
             <div class="error-box">
@@ -23,6 +24,29 @@
             </div>
             <% } %>
               <button type="submit" class="auth-button">Log In</button>
+              <button type="button" class="auth-button guest-button" onclick="loginAsGuest(event)">Guest</button>
+              <script>
+                async function loginAsGuest(event) {
+                  event.preventDefault(); // Prevent form submission if this is inside a form
+
+                  try {
+                    const response = await fetch('/login/guest', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ username: 'guest', password: 'guest' }),
+                    });
+
+                    if (response.ok) {
+                      window.location.href = '/';
+                    } else {
+                      const errorText = await response.text();
+                      console.error('Error:', errorText);
+                    }
+                  } catch (error) {
+                    console.error('Failed to log in as guest', error);
+                  }
+                }
+              </script>
         </form>
         <p class="auth-link">
           Don't have an account? <a href="/signup">Sign up</a>
