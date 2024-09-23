@@ -13,13 +13,13 @@ passport.use(
             });
 
             // If user is not found
-            if (!user) return done(null, false, { message: 'Incorrect username' });
+            if (!user) return done(null, false, { message: 'Incorrect Username' });
 
             // Compare the password with the hashed password stored in the database
             const match = await bcrypt.compare(password, user.password);
 
             // If password does not match
-            if (!match) return done(null, false, { message: 'Incorrect password' });
+            if (!match) return done(null, false, { message: 'Incorrect Password' });
 
             // If everything is fine, return the user
             return done(null, user);

@@ -8,7 +8,7 @@ exports.getSignupForm = (req, res) => {
 };
 
 exports.getLoginForm = (req, res) => {
-    res.render('login');
+    res.render('login', { errorMessage: '' });
 }
 exports.signUp = async (req, res, next) => {
     try {
@@ -38,14 +38,32 @@ exports.signUp = async (req, res, next) => {
     }
 };
 
-// basic login
+// // basic login
+// exports.login = (req, res, next) => {
+//     passport.authenticate("local", {
+//         successRedirect: "/",
+//         failureRedirect: "/"
+//     })(req, res, next)
+//     // don't know if i need (req,res, next) but it works
+// }
+
 exports.login = (req, res, next) => {
-    passport.authenticate("local", {
-        successRedirect: "/",
-        failureRedirect: "/"
-    })(req, res, next)
-    // don't know if i need (req,res, next) but it works
-}
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            return next(err); // If there's an internal server error
+        }
+        if (!user) {
+            // Authentication failed, display the error message from the `info` object
+            return res.render('login', { errorMessage: info.message });
+        }
+        req.logIn(user, (err) => {
+            if (err) {
+                return next(err);
+            }
+            return res.redirect('/');
+        });
+    })(req, res, next);
+};
 
 exports.logOut = (req, res, next) => {
     req.logout((err) => {
