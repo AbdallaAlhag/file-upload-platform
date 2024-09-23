@@ -30,11 +30,10 @@ exports.fileUpload = (req, res) => {
         }
 
         try {
-            // Create new file entry in Prisma DB
-            // FIX THIS 
-            const rootFolderName = 'root';
-            const rootFolder = await prisma.folder.findFirst({ where: { name: 'root' } });
+            // Create new folder root if it doesn't exist in Prisma DB for the current user
 
+            const rootFolderName = 'root';
+            const rootFolder = await prisma.folder.findFirst({ where: { name: 'root', userId: req.user.id } });
             if (!rootFolder) {
                 // Handle the case where the root folder is not found
                 // You may want to create it here if it's critical for your application
@@ -61,7 +60,6 @@ exports.fileUpload = (req, res) => {
                     }
                 }
             });
-
             // Redirect to the index or a success page
             res.redirect('/'); // or res.render('successPage');
 
@@ -76,6 +74,7 @@ exports.fileUpload = (req, res) => {
 exports.fileDownload = async (req, res) => {
     try {
         const fileId = req.params.id;
+        console.log('file id in controller:', fileId)
         // Fetch file information from the database
         const file = await prisma.file.findUnique({
             where: { id: fileId }
@@ -279,7 +278,6 @@ exports.fileCopy = async (req, res) => {
                 userId: originalFile.userId, // Ensure the file is associated with the same user
             },
         });
-
         // Send success response
         return res.status(200).send('File copied successfully');
     } catch (error) {

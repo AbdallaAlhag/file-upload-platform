@@ -19,10 +19,10 @@
                 <li class="dropdown">
                     <span style="color: #4d8ff7; cursor: pointer;"><strong>Upload</strong></span>
                     <div class="dropdown-content">
-                        <form id="uploadForm" class="uplaod-form" action="/upload" method="POST"
+                        <form id="uploadForm-head" class="uplaod-form" action="/upload" method="POST"
                             enctype="multipart/form-data">
-                            <input type="file" name="file" id="fileInput" style="display: none;" />
-                            <button type="button" id="uploadButton" class="upload-btn upload-btn-primary">Upload
+                            <input type="file" name="file" id="fileInput-head" style="display: none;" />
+                            <button type="button" id="uploadButton-head" class="upload-btn upload-btn-primary">Upload
                                 File</button>
                         </form>
 
@@ -41,9 +41,9 @@
     </div>
 </header>
 <script>
-    const fileInput = document.getElementById('fileInput');
-    const uploadButton = document.getElementById('uploadButton');
-    const uploadForm = document.getElementById('uploadForm');
+    fileInput = document.getElementById('fileInput-head');
+    uploadButton = document.getElementById('uploadButton-head');
+    uploadForm = document.getElementById('uploadForm-head');
 
     // When the button is clicked, trigger the file input
     uploadButton.addEventListener('click', () => {

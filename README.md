@@ -4,9 +4,6 @@ reference:
     - filePenguin: aaa, aaa
     - nolesdrive: aaa, aaa@aaa,aaa
 # todo:
-    -> Add a button to log in as guest 
-        -> Should seed default files if it's first time logging in,
-        Guest account will always reset when logged out.
     -> fix media query
     -> step by step intro 
     -> look into cloud storage supabase for storage

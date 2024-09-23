@@ -1,5 +1,6 @@
 // Menu item handlers
 window.handleDelete = async function (fileId) {
+
     const menu = document.querySelector('.vanillaContextMenu');
     if (menu) {
         menu.style.display = 'none'; // Hides the context menu
@@ -35,7 +36,7 @@ window.handleDownload = async function (fileId, fileName) {
     const name = fileName.split('.').slice(0, -1).join('.');
     try {
         const response = await fetch(`/download/${fileId}`, {
-            method: 'GET',
+            method: 'POST',
         });
 
         if (!response.ok) {

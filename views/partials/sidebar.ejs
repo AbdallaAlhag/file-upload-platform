@@ -9,9 +9,9 @@
   <form id="newFolderForm" action="/folder" method="POST" style="display: none;"></form>
 
   <script>
-    const fileInput = document.getElementById('fileInput');
-    const uploadButton = document.getElementById('uploadButton');
-    const uploadForm = document.getElementById('uploadForm');
+    let fileInput = document.getElementById('fileInput');
+    let uploadButton = document.getElementById('uploadButton');
+    let uploadForm = document.getElementById('uploadForm');
 
     // When the button is clicked, trigger the file input
     uploadButton.addEventListener('click', () => {
