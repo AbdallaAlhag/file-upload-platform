@@ -143,7 +143,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
 
-      console.log(isFolder)
       if (!isFolder) {
         fileBox.addEventListener('dblclick', () => {
           handlePreview(fileName, filePath, fileType);

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include("./partials/head.ejs") %>
+<%- include("./partials/head.ejs") %>
+
   <body>
     <div class="container auth-container">
       <main class="auth-main">
@@ -8,33 +9,50 @@
         <form action="/signup" method="POST" class="auth-form">
           <div class="form-group">
             <label for="username">Username</label>
-            <input
-              id="username"
-              name="username"
-              placeholder="Choose a username"
-              type="text"
-              required
-            />
+            <input id="username" name="username" placeholder="Choose a username" type="text" required
+              value="<%= data && data.username ? data.username : '' %>" />
+            <% if (errors && errors.username) { %>
+              <div class="error-box">
+                <span class="error">
+                  <%= errors.username %>
+                </span>
+              </div>
+              <% } %>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              type="email"
-              required
-            />
+            <input id="email" name="email" placeholder="Enter your email" type="email" required
+              value="<%= data && data.email ? data.email : '' %>" />
+            <% if (errors && errors.email) { %>
+              <div class="error-box">
+                <span class="error">
+                  <%= errors.email %>
+                </span>
+              </div>
+              <% } %>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              placeholder="Create a password"
-              type="password"
-              required
-            />
+            <input id="password" name="password" placeholder="Create a password" type="password" required />
+            <% if (errors && errors.password) { %>
+              <div class="error-box">
+                <span class="error">
+                  <%= errors.password %>
+                </span>
+              </div>
+              <% } %>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input id="confirmPassword" name="confirmPassword" placeholder="Confirm password" type="password"
+              required />
+            <% if (errors && errors.confirmPassword) { %>
+              <div class="error-box">
+                <span class="error">
+                  <%= errors.confirmPassword %>
+                </span>
+              </div>
+              <% } %>
           </div>
           <button type="submit" class="auth-button">Sign Up</button>
         </form>
@@ -44,4 +62,5 @@
       </main>
     </div>
   </body>
+
 </html>

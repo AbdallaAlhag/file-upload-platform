@@ -17,7 +17,6 @@ window.onload = function () {
         const folder = file.hasAttribute('data-folder') ? JSON.parse(file.getAttribute('data-folder')) : null;
         const isFolder = file.hasAttribute('data-isFolder') ? JSON.parse(file.getAttribute('data-isFolder')) : false;
 
-        console.log('main h1', mainH1.textContent.trim());
         if (mainH1 && mainH1.textContent.trim() !== '➤ Folders') {
             new VanillaContextMenu({
                 scope: file, // Apply context menu to each .file-item new VanillaContextMenu({

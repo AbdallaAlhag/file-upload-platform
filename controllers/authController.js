@@ -4,7 +4,7 @@ const prisma = require('../db/prisma');
 
 
 exports.getSignupForm = (req, res) => {
-    res.render('signup');
+    res.render('signup', { errors: {}, data: {} });
 };
 
 exports.getLoginForm = (req, res) => {

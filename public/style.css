@@ -825,3 +825,18 @@ tbody .files.active {
   opacity: 0; /* Keep it transparent */
   transition: opacity 0.3s, visibility 0.3s; /* Add visibility transition */
 }
+
+.error {
+  color: #e74c3c; /* Red color to indicate error */
+  font-size: 14px; /* Smaller font size for error messages */
+  display: block; /* Make sure it appears as a block element */
+}
+
+.error-box {
+  padding: 10px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}

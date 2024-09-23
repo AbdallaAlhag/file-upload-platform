@@ -4,7 +4,7 @@ reference:
     - filePenguin: aaa, aaa
     - nolesdrive: aaa, aaa@aaa,aaa
 # todo:
-    - validate and sanitize sign up form
+    -> validate and sanitize sign up form
     -> Work on copy link => have no idea yet (save for later)
     
 # EXTRA(Low Priority, not essential):
@@ -30,12 +30,13 @@ reference:
         - docs not working: https://stackoverflow.com/questions/27957766/how-do-i-render-a-word-document-doc-docx-in-the-browser-using-javascript
         -> implemented solution above but doesn't work on local host and have to test when deployed. The pro is that it doesn't download and shows can't preview except when you click on the action button to preview. = better.
 # Bug: 
-    -> people filter doesn't work!!! correctly with shared with me
+    -> toggle between box and row view 10 times breaks the box view
+    -> people filter doesn't work correctly with shared with me !!!
     -> right click is working but placement is weird
         -> attempted but kinda broke it so left it alone
-
+    -> get Uncaught SyntaxError: Identifier 'fileInput' has already been declared (at (index):159:11) at my header.ejs file but when i remove or fix it, it breaks lol
 # Realization:
-    - Didn't use the queries file and wrote my queries in the controller, might be useful to split it
+    - Didn't use the queries file and wrote my queries in the controller, might be useful to split it but easier to have them together, rewriting some code but easier to tweak it 
     - had a lot of script and style files in ejs, seemed easier to group them where they belong
     - refactored views page to be more dynamic
-    -> sweetAlert is soooo clean and easy to use
+    -> sweetAlert2 is soooo clean and easy to use
