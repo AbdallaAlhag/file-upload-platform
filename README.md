@@ -4,8 +4,6 @@ reference:
     - filePenguin: aaa, aaa
     - nolesdrive: aaa, aaa@aaa,aaa
 # todo:
-    -> fix media query
-    -> step by step intro 
     -> look into cloud storage supabase for storage
 # EXTRA(Low Priority, not essential):
     -> Add sort asc, desc and sort by option (name, modified, types, size)

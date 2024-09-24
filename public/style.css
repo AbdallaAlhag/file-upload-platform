@@ -261,7 +261,6 @@ tbody .files.active {
   background-color: var(--secondary-color);
 }
 
-
 .auth-link {
   text-align: center;
   margin-top: 16px;
@@ -840,4 +839,165 @@ tbody .files.active {
   border: 1px solid #f5c6cb;
   border-radius: 4px;
   margin-bottom: 10px;
+}
+/* Comprehensive Media Queries */
+@media screen and (max-width: 1200px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .sidebar {
+    width: 200px;
+  }
+
+  .search-bar input {
+    width: 250px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px;
+  }
+
+  .new-button {
+    max-width: 200px;
+    margin: 0 auto 20px;
+  }
+
+  .sidebar nav ul {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .sidebar nav ul li {
+    margin: 0 10px 10px 0;
+  }
+
+  main {
+    padding: 15px;
+  }
+
+  .search-bar input {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .file-list.box-view {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-actions {
+    margin-top: 15px;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+  }
+
+  .filters button {
+    margin-bottom: 10px;
+  }
+
+  .file-list th:nth-child(3),
+  .file-list th:nth-child(4),
+  .file-list td:nth-child(3),
+  .file-list td:nth-child(4) {
+    display: none;
+  }
+
+  .file-box {
+    width: calc(50% - 10px);
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar input {
+    margin-bottom: 10px;
+  }
+
+  .view-options {
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .file-box {
+    width: 100%;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 2.5% auto;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .filters button {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .file-list th:nth-child(2),
+  .file-list td:nth-child(2) {
+    display: none;
+  }
+
+  .auth-main {
+    padding: 20px;
+  }
+}
+
+/* Adjust font sizes for better readability on smaller screens */
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  .new-button,
+  .logout-button {
+    font-size: 0.9em;
+  }
+}
+
+/* Improve touch targets for mobile devices */
+@media (hover: none) and (pointer: coarse) {
+  .sidebar nav ul li a,
+  .filters button,
+  .actions button,
+  .logout-button {
+    padding: 12px;
+  }
+
+  .custom-context-menu li {
+    padding: 12px 16px;
+  }
 }

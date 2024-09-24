@@ -4,12 +4,13 @@ const prisma = require('../db/prisma');
 
 async function main() {
 
-    // // Reset the database
-    // await prisma.$executeRaw`DELETE FROM public."RecentlyDeleted";`;
-    // await prisma.$executeRaw`DELETE FROM public."Folder";`;
-    // await prisma.$executeRaw`DELETE FROM public."File";`;
-    // await prisma.$executeRaw`DELETE FROM public."User";`;
+    // Reset the database
+    await prisma.$executeRaw`DELETE FROM public."RecentlyDeleted";`;
+    await prisma.$executeRaw`DELETE FROM public."Folder";`;
+    await prisma.$executeRaw`DELETE FROM public."File";`;
+    await prisma.$executeRaw`DELETE FROM public."User";`;
 
+    // Can't artificially create users since the password never gets hashed!!! unless we create that script -todo?
     // Create initial users
     // await prisma.user.createMany({
     //     data: [
@@ -21,13 +22,7 @@ async function main() {
     //     ],
     // });
 
-
-    // Create initial files for the guest user
-    if (!info) {
-        console.error('Cannot read properties of undefined (reading \'map\')');
-        return;
-    }
-
+    console.log('Seeding completed!');
 }
 
 main()

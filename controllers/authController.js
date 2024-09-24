@@ -26,7 +26,7 @@ exports.signUp = async (req, res, next) => {
         const rootFolder = await prisma.folder.create({
             data: {
                 name: 'root', // The root folder name
-                filePath: '/', // File path for the root folder
+                filePath: '/root', // File path for the root folder
                 userId: newAccount.id, // Associate it with the newly created user
             },
         });

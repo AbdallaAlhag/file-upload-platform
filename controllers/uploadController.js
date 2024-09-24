@@ -1,80 +1,184 @@
 const upload = require("../middleware/upload");
 const prisma = require("../db/prisma");
+const supabase = require('../db/supabaseClient');
 const path = require("path");
 const fs = require('fs');
 
 
-exports.fileUpload = (req, res) => {
+// exports.fileUpload = (req, res) => {
+//     upload(req, res, async (err) => {
+
+
+//         if (err) {
+//             console.error('Upload Error:', err);
+//             // Display the error on the index page
+//             return res.status(400).render('index', { error: 'Error uploading file: ' + err });
+//         }
+
+//         // Check if req.file is undefined
+//         if (!req.file) {
+//             return res.status(400).render('index', { error: 'No file uploaded or invalid file type' });
+//         }
+
+//         // Check if the destination is undefined
+//         if (!req.file.destination) {
+//             return res.status(500).render('index', { error: 'File upload failed, destination not set' });
+//         }
+//         const fileUploadPath = path.join(req.file.destination, req.file.filename);
+//         // Ensure user is authenticated
+//         if (!req.user) {
+//             return res.status(403).send('User not authenticated!');
+//         }
+
+//         try {
+//             // Create new folder root if it doesn't exist in Prisma DB for the current user
+
+//             const rootFolderName = 'root';
+//             const rootFolder = await prisma.folder.findFirst({ where: { name: 'root', userId: req.user.id } });
+//             if (!rootFolder) {
+//                 // Handle the case where the root folder is not found
+//                 // You may want to create it here if it's critical for your application
+//                 rootFolder = await prisma.folder.create({
+//                     data: {
+//                         name: rootFolderName,
+//                         filePath: '/root',  // Or another default value if needed
+//                         userId: req.user.id // Ensure you provide the correct user ID
+//                     }
+//                 });
+//             }
+
+// Create a new file
+// const newFile = await prisma.file.create({
+//     data: {
+//         fileName: req.file.originalname,
+//         fileType: req.file.mimetype,
+//         fileSize: req.file.size,
+//         filePath: fileUploadPath,
+//         location: rootFolder.name + '/' + req.file.originalname,
+//         Folder: { connect: { id: rootFolder.id } },
+//         user: {
+//             connect: { id: req.user.id }  // Correct relation mapping
+//         }
+//     }
+// });
+//             // Redirect to the index or a success page
+//             res.redirect('/'); // or res.render('successPage');
+
+//         } catch (dbError) {
+//             console.error('Database Error:', dbError);
+//             return res.status(500).render('index', { error: 'Error saving file information to the database.' });
+
+//         }
+//     });
+// };
+
+exports.fileUpload = async (req, res) => {
+    // Handle file upload
     upload(req, res, async (err) => {
-
-
         if (err) {
             console.error('Upload Error:', err);
-            // Display the error on the index page
             return res.status(400).render('index', { error: 'Error uploading file: ' + err });
         }
 
-        // Check if req.file is undefined
+        // Check if file is uploaded
         if (!req.file) {
             return res.status(400).render('index', { error: 'No file uploaded or invalid file type' });
         }
 
-        // Check if the destination is undefined
-        if (!req.file.destination) {
-            return res.status(500).render('index', { error: 'File upload failed, destination not set' });
-        }
-        const fileUploadPath = path.join(req.file.destination, req.file.filename);
-        // Ensure user is authenticated
+        // Ensure user is authenticated (assuming req.user is set by auth middleware)
         if (!req.user) {
             return res.status(403).send('User not authenticated!');
         }
 
         try {
-            // Create new folder root if it doesn't exist in Prisma DB for the current user
-
-            const rootFolderName = 'root';
-            const rootFolder = await prisma.folder.findFirst({ where: { name: 'root', userId: req.user.id } });
-            if (!rootFolder) {
-                // Handle the case where the root folder is not found
-                // You may want to create it here if it's critical for your application
-                rootFolder = await prisma.folder.create({
-                    data: {
-                        name: rootFolderName,
-                        filePath: '/root',  // Or another default value if needed
-                        userId: req.user.id // Ensure you provide the correct user ID
-                    }
+            // Upload file to Supabase Storage
+            const { data, error: uploadError } = await supabase.storage
+                .from('File-Upload-app')  // Replace with your actual bucket name
+                .upload(`${req.file.filename}`, req.file.buffer, { // Removed 'uploads/' from here
+                    contentType: req.file.mimetype,
+                    upsert: true,  // Overwrite existing file with the same name if needed
                 });
+            if (uploadError) {
+                console.error('Supabase upload error:', uploadError);
+                return res.status(500).render('index', { error: 'Error uploading file to Supabase: ' + uploadError.message });
             }
 
-            // Create a new file
+            // Create a new folder root if it doesn't exist in Prisma DB for the current user
+            const rootFolderName = 'root';
+            let rootFolder = await prisma.folder.findFirst({ where: { name: rootFolderName, userId: req.user.id } });
+
+            // if (!rootFolder) {
+            //     // Create the root folder
+            //     rootFolder = await prisma.folder.create({
+            //         data: {
+            //             name: rootFolderName,
+            //             filePath: '/root',  // Define how you want the root folder's path to look
+            //             userId: req.user.id // Ensure you provide the correct user ID
+            //         }
+            //     });
+            // }
+
+            // Create a new file entry in the database
             const newFile = await prisma.file.create({
                 data: {
                     fileName: req.file.originalname,
                     fileType: req.file.mimetype,
                     fileSize: req.file.size,
-                    filePath: fileUploadPath,
-                    location: rootFolder.name + '/' + req.file.originalname,
-                    Folder: { connect: { id: rootFolder.id } },
-                    user: {
-                        connect: { id: req.user.id }  // Correct relation mapping
-                    }
+                    filePath: data.fullPath,  // Path to file in Supabase storage
+                    location: rootFolder.filePath + '/' + req.file.originalname, // Use root folder's filePath
+                    Folder: { connect: { id: rootFolder.id } },  // Connect to the root folder
+                    user: { connect: { id: req.user.id } }
                 }
             });
-            // Redirect to the index or a success page
-            res.redirect('/'); // or res.render('successPage');
+
+            // Redirect to success page or index
+            res.redirect('/');  // Adjust as necessary
 
         } catch (dbError) {
             console.error('Database Error:', dbError);
             return res.status(500).render('index', { error: 'Error saving file information to the database.' });
-
         }
     });
 };
 
+
+// exports.fileDownload = async (req, res) => {
+//     try {
+//         const fileId = req.params.id;
+//         console.log('file id in controller:', fileId)
+//         // Fetch file information from the database
+//         const file = await prisma.file.findUnique({
+//             where: { id: fileId }
+//         });
+
+//         if (!file) {
+//             return res.status(404).send('File not found');
+//         }
+
+//         // Generate the correct file path
+//         const filePath = file.filePath;
+//         fs.access(file.filePath, fs.constants.F_OK, (err) => {
+//             if (err) {
+//                 console.error('File not found:', err);
+//                 return res.status(404).send('File not found');
+//             }
+
+//             res.download(filePath, file.fileName, (err) => {
+//                 if (err) {
+//                     console.error('Error downloading file:', err);
+//                     res.status(500).send('Error downloading file');
+//                 }
+//             });
+//         });
+//     } catch (err) {
+//         console.error('Error fetching file from database:', err);
+//         res.status(500).send('Error fetching file information');
+//     }
+// };
 exports.fileDownload = async (req, res) => {
+    const fileId = req.params.id;
+
     try {
-        const fileId = req.params.id;
-        console.log('file id in controller:', fileId)
         // Fetch file information from the database
         const file = await prisma.file.findUnique({
             where: { id: fileId }
@@ -84,21 +188,19 @@ exports.fileDownload = async (req, res) => {
             return res.status(404).send('File not found');
         }
 
-        // Generate the correct file path
-        const filePath = file.filePath;
-        fs.access(file.filePath, fs.constants.F_OK, (err) => {
-            if (err) {
-                console.error('File not found:', err);
-                return res.status(404).send('File not found');
-            }
+        // Generate the public URL for the file in Supabase Storage
+        const { data: publicURL, error: urlError } = supabase.storage
+            .from('File-Upload-app')  // Replace with your bucket name
+            .getPublicUrl(file.fileName);
 
-            res.download(filePath, file.fileName, (err) => {
-                if (err) {
-                    console.error('Error downloading file:', err);
-                    res.status(500).send('Error downloading file');
-                }
-            });
-        });
+        if (urlError) {
+            console.error('Error generating public URL:', urlError);
+            return res.status(500).send('Error generating download link');
+        }
+
+        // Redirect or send the file to the user
+        res.redirect(publicURL.publicUrl);  // Redirect to the public URL
+
     } catch (err) {
         console.error('Error fetching file from database:', err);
         res.status(500).send('Error fetching file information');
