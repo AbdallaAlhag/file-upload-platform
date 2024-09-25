@@ -86,6 +86,18 @@ exports.login = (req, res, next) => {
 
             // Store Supabase session data if needed
             req.session.supabaseAccessToken = session.access_token; // Store the access token
+            req.session.supabaseRefreshToken = session.refresh_token; // Store the refresh token
+
+            // Set the access token using setSession
+            const { data: userSession, error: sessionError } = await supabase.auth.setSession({
+                access_token: req.session.supabaseAccessToken,
+                refresh_token: req.session.supabaseRefreshToken,
+            });
+
+            if (sessionError) {
+                console.error('Error setting Supabase session:', sessionError);
+                return res.status(401).send('User not authenticated');
+            }
 
             return res.redirect('/');
         });
