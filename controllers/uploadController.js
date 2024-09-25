@@ -26,20 +26,25 @@ exports.fileUpload = async (req, res) => {
 
         // Step 1: Read the uploaded file from the 'uploads/' directory
         const filePath = path.join('uploads', req.file.filename);
-
+        // console.log(req)
         try {
 
             // Step 2: Read file from disk
-            const fileBuffer = await fs.readFile(filePath);
+            // const fileBuffer = await fs.readFile(filePath);
+
+            const fileBuffer = req.file.buffer; // Assuming you're using multer and have file in memory
 
             // Step 3: Upload file to Supabase storage bucket
             const { data, error: uploadError } = await supabase.storage
                 .from('File-Upload-app')  // Replace with your actual bucket name
-                .upload(req.file.filename, fileBuffer, {
+                // .upload(req.file.filename, fileBuffer, {
+                //     contentType: req.file.mimetype,
+                //     upsert: true  // Allows overwriting existing files with the same name
+                // });
+                .upload(req.file.originalname, fileBuffer, {
                     contentType: req.file.mimetype,
                     upsert: true  // Allows overwriting existing files with the same name
                 });
-
             if (uploadError) {
                 console.error('Supabase upload error:', uploadError);
                 return res.status(500).render('index', { error: 'Error uploading file to Supabase: ' + uploadError.message });
@@ -285,53 +290,118 @@ exports.fileMove = async (req, res) => {
 }
 
 
+// exports.fileCopy = async (req, res) => {
+//     const fileId = req.params.id; // Get the file ID from the request body
+
+//     // Retrieve the original file from the database
+//     const originalFile = await prisma.file.findUnique({ where: { id: fileId }, select: { id: true, fileName: true, fileType: true, filePath: true, location: true, fileSize: true, userId: true } });
+
+//     if (!originalFile) {
+//         return res.status(404).send('File not found');
+//     }
+
+
+//     // Extract the file extension from the original file name
+//     const ext = path.extname(originalFile.fileName); // '.txt'
+//     const baseName = path.basename(originalFile.fileName, ext); // 'teststest'
+//     const newFileName = `${baseName}_copy${ext}`; // 'teststest_copy.txt'
+
+//     // Construct the new file path
+//     const newFilePath = `uploads/${newFileName}`;
+
+
+//     const oldFilePath = originalFile.filePath;
+
+//     // Create the directory if it doesn't exist
+
+//     const dir = path.dirname(newFilePath);
+
+//     if (!fs.existsSync(dir)) {
+//         fs.mkdirSync(dir, { recursive: true });
+//     }
+//     try {
+//         // Copy the file in the file system
+//         fs.copyFileSync(oldFilePath, newFilePath);
+//         // console.log('File copied successfully!');
+
+
+
+//         // Insert the new file entry into the database
+//         const rootFolder = await prisma.folder.findFirst({ where: { name: 'root' } });
+//         const newFile = await prisma.file.create({
+//             data: {
+//                 fileName: newFileName,
+//                 filePath: newFilePath,
+//                 fileType: originalFile.fileType,
+//                 fileSize: originalFile.fileSize,
+//                 location: rootFolder.name + '/' + newFileName,
+//                 userId: originalFile.userId, // Ensure the file is associated with the same user
+//             },
+//         });
+//         // Send success response
+//         return res.status(200).send('File copied successfully');
+//     } catch (error) {
+//         console.error('Error copying file:', error);
+//         return res.status(500).send('Error copying file');
+//     }
+// }
 exports.fileCopy = async (req, res) => {
-    const fileId = req.params.id; // Get the file ID from the request body
+    const fileId = req.params.id; // Get the file ID from the request parameters
 
     // Retrieve the original file from the database
-    const originalFile = await prisma.file.findUnique({ where: { id: fileId }, select: { id: true, fileName: true, fileType: true, filePath: true, location: true, fileSize: true, userId: true } });
+    const originalFile = await prisma.file.findUnique({
+        where: { id: fileId },
+        select: { id: true, fileName: true, fileType: true, filePath: true, userId: true, fileSize: true },
+    });
 
     if (!originalFile) {
         return res.status(404).send('File not found');
     }
 
-
-    // Extract the file extension from the original file name
-    const ext = path.extname(originalFile.fileName); // '.txt'
-    const baseName = path.basename(originalFile.fileName, ext); // 'teststest'
-
     // Construct the new file name
-    const newFileName = `${baseName}_copy${ext}`; // 'teststest_copy.txt'
+    const ext = path.extname(originalFile.fileName); // Get the file extension
+    const baseName = path.basename(originalFile.fileName, ext); // Get the base name
+    const newFileName = `${baseName}_copy${ext}`; // Create new file name
 
-    // Construct the new file path
-    const newFilePath = `uploads/${newFileName}`;
-
-
-    const oldFilePath = originalFile.filePath;
-
-    // Create the directory if it doesn't exist
-
-    const dir = path.dirname(newFilePath);
-
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
     try {
-        // Copy the file in the file system
-        fs.copyFileSync(oldFilePath, newFilePath);
-        // console.log('File copied successfully!');
+        // Download the original file from Supabase storage
+        const { data: originalFileData, error: downloadError } = await supabase
+            .storage
+            .from('File-Upload-app') // Replace with your bucket name
+            .download(originalFile.filePath); // Use the original file path
+
+        if (downloadError) {
+            throw downloadError;
+        }
+
+        // Read the original file data
+        const originalFileBuffer = await originalFileData.arrayBuffer();
+        // Upload the new file to Supabase storage
+        const { data, error: uploadError } = await supabase.storage
+            .from('File-Upload-app')  // Replace with your actual bucket name
+            .upload(newFileName, originalFileBuffer, {
+                contentType: originalFile.fileType,
+                upsert: true  // Allows overwriting existing files with the same name
+            });
+        console.log(data);
+        if (uploadError) {
+            console.error('Supabase upload error:', uploadError);
+            return res.status(500).render('index', { error: 'Error uploading file to Supabase: ' + uploadError.message });
+        }
+
         // Insert the new file entry into the database
         const rootFolder = await prisma.folder.findFirst({ where: { name: 'root' } });
-        const newFile = await prisma.file.create({
+        await prisma.file.create({
             data: {
                 fileName: newFileName,
-                filePath: newFilePath,
+                filePath: data.path, // New path in Supabase
                 fileType: originalFile.fileType,
-                fileSize: originalFile.fileSize,
+                fileSize: originalFile.fileSize, // You might need to calculate or retrieve the size if needed
                 location: rootFolder.name + '/' + newFileName,
                 userId: originalFile.userId, // Ensure the file is associated with the same user
             },
         });
+
         // Send success response
         return res.status(200).send('File copied successfully');
     } catch (error) {
@@ -363,16 +433,17 @@ exports.fileDelete = async (req, res) => {
             //     }
 
             // });
+            console.log(filePath)
             const { data, error } = await supabase
                 .storage
                 .from('File-Upload-app')
-                .remove(filePath)
+                .remove([filePath])
 
             if (error) {
-                console.error('Error deleting bucket:', error.message);
-                return res.status(500).send('Error deleting bucket');
+                console.error('Error deleting file:', error.message);
+                return res.status(500).send('Error deleting file');
             } else {
-                console.log('Bucket deleted successfully');
+                console.log('File deleted successfully');
                 // res.status(200).send('Bucket deleted successfully');
             }
 
