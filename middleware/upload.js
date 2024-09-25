@@ -9,14 +9,21 @@ const path = require('path');
 // Error Handling: Handles errors for both the upload process and local file deletion.
 
 // Multer setup with custom file filter to accept various work-related files
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // Directory where files will be saved
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
+
+// disk storage
+
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, 'uploads/'); // Directory where files will be saved
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+//     }
+// });
+
+
+const storage = multer.memoryStorage(); // Store files in memory
+
 
 const upload = multer({
     storage: storage,

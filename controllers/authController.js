@@ -23,7 +23,6 @@ exports.signUp = async (req, res, next) => {
             },
         });
 
-        console.log('New account created:', newAccount);
         // Create the root folder for the user
         const rootFolder = await prisma.folder.create({
             data: {
@@ -38,12 +37,12 @@ exports.signUp = async (req, res, next) => {
             password: req.body.password,
         });
 
+        // this will get called when i create guest account becuase I reset database but not my supabase accounts, no biggie
         if (supabaseError) {
             console.error('Supabase sign up error:', supabaseError);
             return res.redirect('/signup');
         }
 
-        console.log('New account created:', newAccount);
         res.redirect('/login');
     } catch (err) {
         next(err);
@@ -137,8 +136,6 @@ exports.loginAsGuest = (req, res, next) => {
             // // Store Supabase session data if needed
             req.session.supabaseAccessToken = session.access_token;
             req.session.supabaseRefreshToken = session.refresh_token;
-            console.log('Access Token:', req.session.supabaseAccessToken);
-            console.log('Refresh Token:', req.session.supabaseRefreshToken);
 
             // Set the access token using setSession
             const { data: userSession, error: sessionError } = await supabase.auth.setSession({

@@ -25,13 +25,12 @@ exports.fileUpload = async (req, res) => {
 
 
         // Step 1: Read the uploaded file from the 'uploads/' directory
-        const filePath = path.join('uploads', req.file.filename);
+        // const filePath = path.join('uploads', req.file.filename);
         // console.log(req)
         try {
 
             // Step 2: Read file from disk
             // const fileBuffer = await fs.readFile(filePath);
-
             const fileBuffer = req.file.buffer; // Assuming you're using multer and have file in memory
 
             // Step 3: Upload file to Supabase storage bucket
@@ -69,7 +68,7 @@ exports.fileUpload = async (req, res) => {
             });
 
             // Step 4: Optionally, delete the file from the local disk (cleanup)
-            await fs.unlink(filePath); // This will delete the file from 'uploads/' after uploading to Supabase
+            // await fs.unlink(filePath); // This will delete the file from 'uploads/' after uploading to Supabase
 
             // Redirect to success page or index
             res.redirect('/');  // Adjust as necessary
@@ -290,61 +289,6 @@ exports.fileMove = async (req, res) => {
 }
 
 
-// exports.fileCopy = async (req, res) => {
-//     const fileId = req.params.id; // Get the file ID from the request body
-
-//     // Retrieve the original file from the database
-//     const originalFile = await prisma.file.findUnique({ where: { id: fileId }, select: { id: true, fileName: true, fileType: true, filePath: true, location: true, fileSize: true, userId: true } });
-
-//     if (!originalFile) {
-//         return res.status(404).send('File not found');
-//     }
-
-
-//     // Extract the file extension from the original file name
-//     const ext = path.extname(originalFile.fileName); // '.txt'
-//     const baseName = path.basename(originalFile.fileName, ext); // 'teststest'
-//     const newFileName = `${baseName}_copy${ext}`; // 'teststest_copy.txt'
-
-//     // Construct the new file path
-//     const newFilePath = `uploads/${newFileName}`;
-
-
-//     const oldFilePath = originalFile.filePath;
-
-//     // Create the directory if it doesn't exist
-
-//     const dir = path.dirname(newFilePath);
-
-//     if (!fs.existsSync(dir)) {
-//         fs.mkdirSync(dir, { recursive: true });
-//     }
-//     try {
-//         // Copy the file in the file system
-//         fs.copyFileSync(oldFilePath, newFilePath);
-//         // console.log('File copied successfully!');
-
-
-
-//         // Insert the new file entry into the database
-//         const rootFolder = await prisma.folder.findFirst({ where: { name: 'root' } });
-//         const newFile = await prisma.file.create({
-//             data: {
-//                 fileName: newFileName,
-//                 filePath: newFilePath,
-//                 fileType: originalFile.fileType,
-//                 fileSize: originalFile.fileSize,
-//                 location: rootFolder.name + '/' + newFileName,
-//                 userId: originalFile.userId, // Ensure the file is associated with the same user
-//             },
-//         });
-//         // Send success response
-//         return res.status(200).send('File copied successfully');
-//     } catch (error) {
-//         console.error('Error copying file:', error);
-//         return res.status(500).send('Error copying file');
-//     }
-// }
 exports.fileCopy = async (req, res) => {
     const fileId = req.params.id; // Get the file ID from the request parameters
 
