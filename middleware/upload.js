@@ -1,6 +1,13 @@
 const multer = require('multer');
 const path = require('path');
 
+// Read from disk and saved locally
+// Multer Setup: Multer is configured to save files to the uploads/ directory.
+// File Reading: We use fs.readFile to read the file from the disk (uploads/ directory).
+// Supabase Upload: After reading the file, we upload it to the Supabase storage using the supabase.storage.from().upload() method.
+// File Deletion (Optional): Once the file is uploaded successfully to Supabase, we delete the local copy using fs.unlink() to avoid cluttering the server's disk.
+// Error Handling: Handles errors for both the upload process and local file deletion.
+
 // Multer setup with custom file filter to accept various work-related files
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {

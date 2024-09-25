@@ -2,7 +2,7 @@ const upload = require("../middleware/upload");
 const prisma = require("../db/prisma");
 const supabase = require('../db/supabaseClient');
 const path = require("path");
-const fs = require('fs');
+const fs = require('fs').promises; // Import fs with promises support
 
 
 // exports.fileUpload = (req, res) => {
@@ -90,14 +90,23 @@ exports.fileUpload = async (req, res) => {
             return res.status(403).send('User not authenticated!');
         }
 
+
+        // Step 1: Read the uploaded file from the 'uploads/' directory
+        const filePath = path.join('uploads', req.file.filename);
+
         try {
-            // Upload file to Supabase Storage
+
+            // Step 2: Read file from disk
+            const fileBuffer = await fs.readFile(filePath);
+
+            // Step 3: Upload file to Supabase storage bucket
             const { data, error: uploadError } = await supabase.storage
                 .from('File-Upload-app')  // Replace with your actual bucket name
-                .upload(`${req.file.filename}`, req.file.buffer, { // Removed 'uploads/' from here
+                .upload(req.file.filename, fileBuffer, {
                     contentType: req.file.mimetype,
-                    upsert: true,  // Overwrite existing file with the same name if needed
+                    upsert: true  // Allows overwriting existing files with the same name
                 });
+
             if (uploadError) {
                 console.error('Supabase upload error:', uploadError);
                 return res.status(500).render('index', { error: 'Error uploading file to Supabase: ' + uploadError.message });
@@ -117,19 +126,21 @@ exports.fileUpload = async (req, res) => {
             //         }
             //     });
             // }
-
             // Create a new file entry in the database
             const newFile = await prisma.file.create({
                 data: {
                     fileName: req.file.originalname,
                     fileType: req.file.mimetype,
                     fileSize: req.file.size,
-                    filePath: data.fullPath,  // Path to file in Supabase storage
+                    filePath: data.path,  // Path to file in Supabase storage
                     location: rootFolder.filePath + '/' + req.file.originalname, // Use root folder's filePath
                     Folder: { connect: { id: rootFolder.id } },  // Connect to the root folder
                     user: { connect: { id: req.user.id } }
                 }
             });
+
+            // Step 4: Optionally, delete the file from the local disk (cleanup)
+            await fs.unlink(filePath); // This will delete the file from 'uploads/' after uploading to Supabase
 
             // Redirect to success page or index
             res.redirect('/');  // Adjust as necessary
@@ -188,24 +199,84 @@ exports.fileDownload = async (req, res) => {
             return res.status(404).send('File not found');
         }
 
-        // Generate the public URL for the file in Supabase Storage
-        const { data: publicURL, error: urlError } = supabase.storage
-            .from('File-Upload-app')  // Replace with your bucket name
-            .getPublicUrl(file.fileName);
+        console.log('File path:', file.filePath);
 
-        if (urlError) {
-            console.error('Error generating public URL:', urlError);
-            return res.status(500).send('Error generating download link');
+        // console.log('Supabase access token:', req.session.supabaseAccessToken);
+        // Ensure the session is available before calling getUser
+        const accessToken = req.session.supabaseAccessToken;
+        const refreshToken = req.session.supabaseRefreshToken;
+
+        if (!accessToken || !refreshToken) {
+            return res.status(401).send('User not authenticated');
         }
 
-        // Redirect or send the file to the user
-        res.redirect(publicURL.publicUrl);  // Redirect to the public URL
+        // Set the session using the access and refresh tokens
+        const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+        });
 
+        if (sessionError) {
+            console.error('Error setting Supabase session:', sessionError);
+            return res.status(401).send('User not authenticated');
+        }
+
+        const accessTokenExpired = sessionError?.message === 'Invalid refresh token';
+        if (accessTokenExpired) {
+            const { data: newSession, error: refreshError } = await supabase.auth.refreshSession();
+            if (refreshError) {
+                return res.status(401).send('Session expired, please log in again.');
+            }
+            req.session.supabaseAccessToken = newSession.access_token;
+            req.session.supabaseRefreshToken = newSession.refresh_token;
+        }
+
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError) {
+            console.error('Auth error:', authError);
+        }
+        console.log('Authenticated user role:', user.role);
+
+        // Generate the public URL for the file in Supabase Storage
+        // const { data: publicURL, error: urlError } = supabase.storage
+        //     .from('File-Upload-app')
+        //     .getPublicUrl(file.filePath); // Use the file's path
+
+        // if (urlError) {
+        //     console.error('Error generating public URL:', urlError);
+        //     return res.status(500).send('Error generating download link');
+        // }
+
+
+        // const { data, error } = await supabase.storage.from('File-Upload-app').download(file.filePath);
+
+        const { data: fileBlob, error: downloadError } = await supabase.storage
+            .from('File-Upload-app')
+            .download(file.filePath);
+
+
+
+        if (downloadError) {
+            console.error('Error downloading file:', downloadError.message);
+            return res.status(500).send('Error downloading the file');
+        }
+
+        console.log('file stream:', fileBlob)
+        // Convert the Blob to Buffer
+        const buffer = await fileBlob.arrayBuffer(); // Convert blob to ArrayBuffer
+        const bufferData = Buffer.from(buffer);      // Convert ArrayBuffer to Buffer
+
+        res.setHeader('Content-Disposition', `attachment; filename="${file.fileName}"`);
+        res.setHeader('Content-Type', file.fileType);
+        res.setHeader('Content-Length', file.fileSize);
+
+        res.end(bufferData);
     } catch (err) {
         console.error('Error fetching file from database:', err);
         res.status(500).send('Error fetching file information');
     }
 };
+
 
 exports.fileRename = async (req, res) => {
     const fileId = req.params.id;

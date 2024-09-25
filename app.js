@@ -23,8 +23,8 @@ app.use(
             maxAge: 7 * 24 * 60 * 60 * 1000 // ms
         },
         secret: 'a santa at nasa',
-        resave: true,
-        saveUninitialized: true,
+        resave: false,
+        saveUninitialized: false,
         store: new PrismaSessionStore(
             new PrismaClient(),
             {
@@ -105,7 +105,23 @@ app.use((req, res) => {
     res.status(404).render('404', { title: '404' });
 });
 
+// Error handling middleware
+// Example:
+// const error = new Error('You are not authorized to access this resource');
+// error.status = 401; // Set the status code
+// next(error);
 
+app.use((err, req, res, next) => {
+    if (err.status === 401) {
+        // Handle 401 Unauthorized errors
+        return res.status(401).render('404', { title: '404 - Unauthorized Access' });
+    } else if (err.status) {
+        // Handle other errors with defined status
+        return res.status(err.status).render('error', { title: `${err.status} - Error`, message: err.message });
+    }
+    // For errors without a status, pass it to the default error handler
+    next(err);
+});
 
 app.listen(3000, () => console.log("app listening on port 3000!"));
 
