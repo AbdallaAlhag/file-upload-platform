@@ -1,16 +1,11 @@
-file-upload-platform
 
-reference:
-    - filePenguin: aaa, aaa
-    - nolesdrive: aaa, aaa@aaa,aaa
-# todo:
-    -> look into cloud storage supabase for storage
 # EXTRA(Low Priority, not essential):
     -> Add sort asc, desc and sort by option (name, modified, types, size)
     -> would be cool to integrate a little step by step tutorial on the site to showcase features
     -> drag and drop files would be cool but idk
 
 # Not perfect:
+    -> Folder missing Owner section
     -> Got upload error message displaying but indexData and folders not loading
     -> txt files are black background and white text, kinda annoying
     -> got empty results message working on box view, but when we switch to row view it doesn't return cuz we don't refresh page, this is a backend project so it's not a big deal, we can just leave it empty. Too much work for too little results.
@@ -54,20 +49,6 @@ A web application to upload, manage, and share files, built with **Express.js**,
 - **Sorting and Filtering**: Sort files by name, type, size, and date. Filter by ownership or shared files.
 - **Pagination**: Display files efficiently with pagination.
 
-## Future Improvements
-
-- **Guest Login**: Add a "Login as Guest" button, which seeds default files on first-time use and resets on logout.
-- **Sorting Options**: Implement ascending and descending sorting by file name, modified date, type, and size.
-- **Interactive Tutorial**: A step-by-step tutorial to guide users through app features.
-- **Drag and Drop Upload**: Add the ability to drag and drop files for easier uploads.
-
-## Known Issues
-
-- **View Toggle Bug**: Switching between grid (box) and list (row) views multiple times can cause display issues.
-- **Shared Files Deletion**: Deleting a shared file only removes it from the owner’s "Recently Deleted" section.
-- **Right-click Menu**: Right-click placement is sometimes misaligned.
-- **File Preview Styling**: Some files (e.g., text files) are displayed with a black background and white text, which might not be ideal for readability.
-- **Microsoft Office Previews**: DOCX and XLSX files currently download instead of previewing.
 
 
 Tech Stack
@@ -107,6 +88,28 @@ Dependencies
 -   sweetalert2: Alert modals
 -   uuid: Generate unique identifiers
 
+## Future Improvements
+
+- **Guest Login**: Add a "Login as Guest" button, which seeds default files on first-time use and resets on logout.
+- **Sorting Options**: Implement ascending and descending sorting by file name, modified date, type, and size.
+- **Interactive Tutorial**: A step-by-step tutorial to guide users through app features.
+- **Drag and Drop Upload**: Add the ability to drag and drop files for easier uploads.
+
+## Known Issues
+
+- **View Toggle Bug**: Switching between grid (box) and list (row) views multiple times can cause display issues.
+- **Shared Files Deletion**: Deleting a shared file only removes it from the owner’s "Recently Deleted" section.
+- **Right-click Menu**: Right-click placement is sometimes misaligned.
+- **File Preview Styling**: Some files (e.g., text files) are displayed with a black background and white text, which might not be ideal for readability.
+- **Microsoft Office Previews**: DOCX and XLSX files currently download instead of previewing.
+
+Realizations and Refactoring
+----------------------------
+
+-   Moved scripts and styles into appropriate EJS templates for better organization.
+-   Consolidated query logic inside controllers for easier adjustments.
+-   SweetAlert2 is clean and highly effective for user notifications.
+
 ## Usage
 
 1. Clone this repository.
@@ -141,6 +144,7 @@ npm seed
 ```
 
 Navigate to http://localhost:3000 in your web browser.
+
 API Routes
 ----------
 
@@ -173,20 +177,5 @@ API Routes
 
 
 
-Bugs
----------------
-
--   Toggle Bug: Switching between list and grid view multiple times can break the layout.
--   File Upload Error: Occasional issues where uploaded files don't appear in the index.
--   Right-Click Placement: The context menu appears in the wrong position at times.
--   File Previews: Previews for text files are problematic (black background and white text).
 
 
-
-
-Realizations and Refactoring
-----------------------------
-
--   Moved scripts and styles into appropriate EJS templates for better organization.
--   Consolidated query logic inside controllers for easier adjustments.
--   SweetAlert2 is clean and highly effective for user notifications.

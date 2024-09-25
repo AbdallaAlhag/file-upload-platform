@@ -47,7 +47,7 @@
                                 }).format(file.updatedAt) : 'N/A' %>
                             </span>
                           </td>
-                          <td class="truncate-with-tooltip" data-full-text="<%= file.user.username %>">
+                          <!-- <td class="truncate-with-tooltip" data-full-text="<%= file.user.username %>">
                             <span>
                               <% if (file.user.username===currentUser.username) { %>
                                 Me
@@ -55,7 +55,8 @@
                                   <%= file.user.username %>
                                     <% } %>
                             </span>
-                          </td>
+                          </td> -->
+
                           <td class="truncate-with-tooltip" data-full-text="<%= file.location %>">
                             <span>
                               <%= '/' + file.name %>
