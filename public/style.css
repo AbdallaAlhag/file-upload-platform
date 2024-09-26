@@ -973,6 +973,7 @@ tbody .files.active {
 }
 
 /* Adjust font sizes for better readability on smaller screens */
+/* MAIN MEDIA SCREEN FOR SMALLER SCREENS! */
 @media screen and (max-width: 768px) {
   body {
     font-size: 14px;
@@ -985,6 +986,43 @@ tbody .files.active {
   .new-button,
   .logout-button {
     font-size: 0.9em;
+  }
+
+  .header-content {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-content .main-nav {
+    display: none;
+  }
+
+  .header-content .user-actions {
+    margin-top: 0;
+    align-items: center;
+  }
+  .sidebar .upload-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  .sidebar form {
+    max-width: 45%;
+  }
+
+  header {
+    margin-top: 10px;
+    flex-direction: column;
+  }
+  header form {
+    width: 100%;
+  }
+
+  .filter-row {
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 }
 

@@ -11,6 +11,8 @@
     -> Got upload error message displaying but indexData and folders not loading
     -> txt files are black background and white text, kinda annoying
     -> got empty results message working on box view, but when we switch to row view it doesn't return cuz we don't refresh page, this is a backend project so it's not a big deal, we can just leave it empty. Too much work for too little results.
+        Uncaught TypeError: Cannot read properties of undefined (reading 'remove')
+
     -> if you delete a shared file, it just goes  to the recently deleted of the person who owns it, interesting
     -> filter resets after results
     - test different types of files(working: .docx, .pdf, .txt, jpg)
