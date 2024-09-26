@@ -1,3 +1,5 @@
+
+
 // Menu item handlers
 window.handleDelete = async function (fileId) {
 
@@ -68,7 +70,7 @@ window.initializeModal = function () {
         });
     }
 }
-window.handlePreview = function (fileName, filePath, fileType) {
+window.handlePreview = async function (fileName, filePath, fileType) {
     const menu = document.querySelector('.vanillaContextMenu');
     if (menu) {
         menu.style.display = 'none'; // Hides the context menu
@@ -84,13 +86,38 @@ window.handlePreview = function (fileName, filePath, fileType) {
     // Check if elements exist before accessing properties
     if (modalLabel && filePreview && previewModal) {
         modalLabel.textContent = fileName;
-        if (fileType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-            // doesn't work like i wanted on local host but does show not available to preview
-            filePreview.src = `https://docs.google.com/gview?url=${encodeURIComponent(filePath)}&embedded=true`;
+
+
+        try {
+            // Make an API call to your backend to get the file's public URL
+            const response = await fetch(`/preview/${filePath}`, {
+                method: 'GET', // Or POST depending on how you implement it
+            });
+
+            if (!response.ok) {
+                throw new Error('Error fetching file URL');
+            }
+
+            const { fileUrl } = await response.json(); // Assuming response is in JSON and contains the URL
+
+            const filePreview = document.getElementById('filePreview');
+            const modalLabel = document.getElementById('previewModalLabel');
+
+            if (fileType.includes('application/vnd') || fileType.includes('application/pdf')) {
+                // If it's a Google Docs/Sheets compatible file type, use Google Viewer
+                filePreview.src = `https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`;
+            } else {
+                // Otherwise, preview the file directly
+                filePreview.src = fileUrl;
+            }
+
+            // Display the modal or update UI as needed
+            modalInstance.show();
+
+        } catch (error) {
+            console.error('Error fetching file preview:', error);
         }
-        else {
-            filePreview.src = filePath;
-        }
+
 
         // Initialize the Bootstrap modal if not already initialized
         if (!modalInstance) {

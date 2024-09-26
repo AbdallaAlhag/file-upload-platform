@@ -29,4 +29,6 @@ router.delete('/delete/:id', uploadController.fileDelete);
 router.patch('/move/:folder/:id', uploadController.fileMove);
 
 router.patch('/restore/:id', uploadController.fileRestore);
+
+router.get('/preview/:path', uploadController.filePreview);
 module.exports = router;

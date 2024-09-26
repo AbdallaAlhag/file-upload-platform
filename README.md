@@ -1,5 +1,6 @@
 # todo:
-    Deploy on railway
+    -> preview is not working
+    -> media query on phone is weird, check it out
 # EXTRA(Low Priority, not essential):
     -> Add sort asc, desc and sort by option (name, modified, types, size)
     -> would be cool to integrate a little step by step tutorial on the site to showcase features
@@ -37,6 +38,7 @@
 
 
 # File Upload Platform
+[View Live](https://file-upload-platform-production.up.railway.app/)
 
 A web application to upload, manage, and share files, built with **Express.js**, **Node.js**, and **Prisma**. This project includes features like file previews, sharing, recently deleted files, and guest account functionality.
 

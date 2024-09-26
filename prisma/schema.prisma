@@ -51,7 +51,7 @@ model Folder {
   name      String
   files     File[] // Files inside the folder
   // maybe get rid of filePath
-  filePath  String    
+  filePath  String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   createdAt DateTime @default(now())
@@ -67,7 +67,6 @@ model RecentlyDeleted {
   deletedAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-
 }
 
 model SharedFile {

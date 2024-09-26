@@ -473,3 +473,24 @@ exports.createNewFolder = async (req, res) => {
         res.status(500).send('Error creating folder');
     }
 }
+
+exports.filePreview = async (req, res) => {
+    const  fileId  = req.params.path;
+    console.log(fileId)
+    try {
+        // Fetch the public URL from Supabase
+        const { data, error } = await supabase
+            .storage
+            .from('File-Upload-app') // Replace with your actual bucket name
+            .getPublicUrl(fileId);
+
+        if (error) {
+            return res.status(400).json({ error: 'Unable to get file URL' });
+        }
+
+        res.json({ fileUrl: data.publicUrl });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+};
